@@ -1,0 +1,9 @@
+Flask==2.3.3
+Flask-RESTful==0.3.10
+cfenv==0.5.3
+hdbcli==2.17.22
+nlopt==2.7.1
+numpy==1.25.1
+sympy==1.12
+regex==2023.10.3
+scipy==1.11.3

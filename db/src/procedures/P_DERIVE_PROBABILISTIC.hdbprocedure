@@ -1,0 +1,1040 @@
+-- Level 1 Iteration
+-- 1.	Derive Level 1: The engine fires rules for Level 1 characters (e.g., CHASSIS_TYPE).
+-- 2.	Calculate Gaps: It adds the UNRESOLVED row for Level 1.
+-- 3.	Normalize Level 1: It looks at the sum of Level 1 (Resolved + Unresolved). If the sum is 0.78 or 1.10, it scales every Level 1 row so the sum is exactly 1.0.
+-- 4.	Update Buffer: The #BUFFER now contains the Normalized Level 1 values.
+-- Level 2 Iteration
+-- 1.	Derive Level 2: The engine fires rules for Level 2 characters (e.g., BRAKE_SYSTEM). Crucially, the math for these rules (EXP(SUM(LN(prob)))) now uses the Normalized probabilities from the Level 1 buffer.
+-- 2.	Calculate Gaps: It adds the UNRESOLVED row for Level 2.
+-- 3.	Normalize Level 2: It scales every Level 2 row so their sum is exactly 1.0.
+-- 4.	Update Buffer: The #BUFFER is updated with Normalized Level 2 values.
+
+-- Normalization Excluding Gaps
+-- json{
+--     "CHASSIS_TYPE": "['ECO_CHASSIS', 'SPORT_CHASSIS']",
+--     "COOLING_TYPE": "['HYBRID_THERMAL', 'STANDARD_LIQUID']"
+-- }
+-- Result of this "Flattening":	
+-- CHARKEY	VALUECODE
+-- CHASSIS_TYPE	ECO_CHASSIS
+-- CHASSIS_TYPE	SPORT_CHASSIS
+-- COOLING_TYPE	HYBRID_THERMAL
+-- COOLING_TYPE	STANDARD_LIQUID
+
+
+-- Procedure With DAG_PRODUCT_CONFIG
+PROCEDURE "P_DERIVE_PROBABILISTIC"(
+    IN  iv_session_id NVARCHAR(36),
+    OUT ov_status     NVARCHAR(20),
+    OUT ov_message    NVARCHAR(500)
+) 
+LANGUAGE SQLSCRIPT 
+SQL SECURITY INVOKER AS
+BEGIN
+    -- ── 1. INITIALIZATION ───────────────────────────────────────────────
+    DECLARE v_current_level INTEGER := 1;
+    DECLARE v_max_level     INTEGER := 0;
+    DECLARE v_region        NVARCHAR(10);
+    DECLARE v_product       NVARCHAR(20);
+    DECLARE v_json_config   NCLOB; 
+
+    DELETE FROM "DAG_DERIVATIONRESULTS" WHERE "SESSIONID" = :iv_session_id;
+
+    -- Fetch Session Context
+    SELECT "REGIONID", "PRODUCTID" INTO v_region, v_product 
+    FROM "DAG_SESSIONS" WHERE "SESSIONID" = :iv_session_id;
+
+    -- PRE-FETCH JSON (Using the correct column 'PRODUCT')
+    SELECT "INF_COND_CHAR_VALUES" INTO v_json_config 
+    FROM "DAG_PRODUCT_CONFIG" 
+    WHERE "PRODUCT" = :v_product;
+
+    CREATE LOCAL TEMPORARY TABLE #BUFFER (
+        "CHARKEY"    NVARCHAR(50),
+        "VALUECODE"  NVARCHAR(50),
+        "PROBABILITY" DOUBLE,
+        PRIMARY KEY ("CHARKEY", "VALUECODE")
+    );
+
+    -- ── 2. SEEDING ────────────────────────────────────
+    INSERT INTO #BUFFER ("CHARKEY", "VALUECODE", "PROBABILITY")
+    SELECT "CHARKEY", "VALUECODE", CAST("PROBABILITY" AS DOUBLE)
+    FROM "DAG_SESSIONINPUTS" WHERE "SESSIONID" = :iv_session_id;
+
+    IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'REGION') THEN 
+        INSERT INTO #BUFFER VALUES ('REGION', COALESCE(NULLIF(:v_region, ''), 'ALL'), 1.0); 
+    END IF;
+    -- IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'REGION') THEN INSERT INTO #BUFFER VALUES ('REGION', :v_region, 1.0); END IF;
+    IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'PRODUCT') THEN INSERT INTO #BUFFER VALUES ('PRODUCT', :v_product, 1.0); END IF;
+
+    SELECT COALESCE(MAX(PATH_LENGTH), 0) INTO v_max_level FROM "T_DERIVATION_PATHS";
+
+    -- ── 3. ITERATIVE DERIVATION ENGINE ──────────────────────────────────
+    WHILE :v_current_level <= :v_max_level DO
+        
+        -- STEP A: Find Fired Rules with Improved JSON Key/Value Mapping
+        lt_fired = SELECT 
+            p.TARGET_CHAR,
+            p.TARGET_VALUE,
+            SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN) as RULE_ID,
+            rules.rule_prob
+        FROM "T_DERIVATION_PATHS" p
+        INNER JOIN (
+            -- This handles JSON objects like {"CHAR1": "['VAL1']"} 
+            -- by mapping the key as the CHARKEY.
+            SELECT 
+                jt.CHAR_KEY, 
+                jt.VAL_CODE
+            FROM JSON_TABLE(:v_json_config, '$.*' 
+                COLUMNS (
+                    CHAR_KEY NVARCHAR(50) PATH '$' ,
+                    NESTED PATH '$[*]' COLUMNS (
+                        VAL_CODE NVARCHAR(50) PATH '$'
+                    )
+                )
+            ) AS jt
+        ) allow
+           ON allow.CHAR_KEY   = p.TARGET_CHAR
+          AND allow.VAL_CODE   = p.TARGET_VALUE
+        INNER JOIN (
+            SELECT 
+                rc.RULE_ID,
+                EXP(SUM(LN(NULLIF(b.PROBABILITY, 0)))) as rule_prob
+            FROM "T_RULE_CONDITIONS" rc
+            JOIN #BUFFER b ON b."CHARKEY" = rc."COND_CHAR" AND b."VALUECODE" = rc."COND_VALUE"
+            GROUP BY rc.RULE_ID
+            HAVING COUNT(*) = (SELECT COUNT(*) FROM "T_RULE_CONDITIONS" sub WHERE sub.RULE_ID = rc.RULE_ID)
+        ) AS rules ON rules.RULE_ID = SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN)
+        WHERE p.PATH_LENGTH = :v_current_level;
+
+        -- STEP B: Log Resolved Rules
+        INSERT INTO "DAG_DERIVATIONRESULTS" 
+            ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+        SELECT 
+            "SQ_RESULT_ID".NEXTVAL, :iv_session_id, f.TARGET_CHAR, f.TARGET_VALUE, f.rule_prob,        
+            :v_current_level, 'RESOLVED', f.RULE_ID, CURRENT_TIMESTAMP
+        FROM (
+            SELECT 
+                TARGET_CHAR, 
+                TARGET_VALUE, 
+                RULE_ID, 
+                rule_prob,
+                ROW_NUMBER() OVER (PARTITION BY TARGET_CHAR, TARGET_VALUE ORDER BY rule_prob DESC, RULE_ID ASC) as rank
+            FROM :lt_fired
+        ) f
+        WHERE f.rank = 1;
+
+        -- STEP C: NORMALIZATION
+        MERGE INTO "DAG_DERIVATIONRESULTS" AS r
+        USING (
+            SELECT CHARKEY, SUM(PROBABILITY) as total_prob
+            FROM "DAG_DERIVATIONRESULTS"
+            WHERE SESSIONID = :iv_session_id AND DERIVELEVEL = :v_current_level
+            GROUP BY CHARKEY
+        ) AS s
+        ON r.SESSIONID = :iv_session_id 
+           AND r.DERIVELEVEL = :v_current_level 
+           AND r.CHARKEY = s.CHARKEY
+        WHEN MATCHED AND s.total_prob > 0 THEN 
+            UPDATE SET r."PROBABILITY" = r."PROBABILITY" / s.total_prob;
+
+        -- STEP D: Update Buffer
+        MERGE INTO #BUFFER AS b
+        USING (
+            SELECT "CHARKEY", "VALUECODE", SUM("PROBABILITY") as TOTAL_PROB
+            FROM "DAG_DERIVATIONRESULTS" 
+            WHERE "SESSIONID" = :iv_session_id AND "DERIVELEVEL" = :v_current_level
+            GROUP BY "CHARKEY", "VALUECODE"
+        ) AS src
+        ON b."CHARKEY" = src."CHARKEY" AND b."VALUECODE" = src."VALUECODE"
+        WHEN MATCHED THEN UPDATE SET b."PROBABILITY" = src.TOTAL_PROB
+        WHEN NOT MATCHED THEN INSERT VALUES (src."CHARKEY", src."VALUECODE", src.TOTAL_PROB);
+
+        v_current_level := :v_current_level + 1;
+    END WHILE;
+
+    DROP TABLE #BUFFER;
+    ov_status := 'SUCCESS';
+    ov_message := 'Derivation complete.';
+END;
+
+
+
+
+
+
+
+
+
+-- --Procedure Without DAG_PRODUCT_CONFIG
+-- PROCEDURE "P_DERIVE_PROBABILISTIC"(
+--     IN  iv_session_id NVARCHAR(36),
+--     OUT ov_status     NVARCHAR(20),
+--     OUT ov_message    NVARCHAR(500)
+-- ) 
+-- LANGUAGE SQLSCRIPT 
+-- SQL SECURITY INVOKER AS
+-- BEGIN
+--     -- ── 1. INITIALIZATION ───────────────────────────────────────────────
+--     DECLARE v_current_level INTEGER := 1;
+--     DECLARE v_max_level     INTEGER := 0;
+--     DECLARE v_region        NVARCHAR(10);
+--     DECLARE v_product       NVARCHAR(20);
+
+--     DELETE FROM "DAG_DERIVATIONRESULTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     SELECT "REGIONID", "PRODUCTID" INTO v_region, v_product 
+--     FROM "DAG_SESSIONS" WHERE "SESSIONID" = :iv_session_id;
+
+--     CREATE LOCAL TEMPORARY TABLE #BUFFER (
+--         "CHARKEY"    NVARCHAR(50),
+--         "VALUECODE"  NVARCHAR(50),
+--         "PROBABILITY" DOUBLE,
+--         PRIMARY KEY ("CHARKEY", "VALUECODE")
+--     );
+
+--     -- ── 2. SEEDING ────────────────────────────────────
+--     INSERT INTO #BUFFER ("CHARKEY", "VALUECODE", "PROBABILITY")
+--     SELECT "CHARKEY", "VALUECODE", CAST("PROBABILITY" AS DOUBLE)
+--     FROM "DAG_SESSIONINPUTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'REGION') THEN 
+--         INSERT INTO #BUFFER VALUES ('REGION', COALESCE(NULLIF(:v_region, ''), 'ALL'), 1.0); 
+--     END IF;
+--     -- IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'REGION') THEN INSERT INTO #BUFFER VALUES ('REGION', :v_region, 1.0); END IF;
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'PRODUCT') THEN INSERT INTO #BUFFER VALUES ('PRODUCT', :v_product, 1.0); END IF;
+
+--     SELECT COALESCE(MAX(PATH_LENGTH), 0) INTO v_max_level FROM "T_DERIVATION_PATHS";
+
+--     -- ── 3. ITERATIVE DERIVATION ENGINE ──────────────────────────────────
+--     WHILE :v_current_level <= :v_max_level DO
+        
+--         -- STEP A: Find Fired Rules
+--         lt_fired = SELECT 
+--             p.TARGET_CHAR,
+--             p.TARGET_VALUE,
+--             SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN) as RULE_ID,
+--             rules.rule_prob
+--         FROM "T_DERIVATION_PATHS" p
+--         INNER JOIN (
+--             SELECT 
+--                 rc.RULE_ID,
+--                 EXP(SUM(LN(NULLIF(b.PROBABILITY, 0)))) as rule_prob
+--             FROM "T_RULE_CONDITIONS" rc
+--             JOIN #BUFFER b ON b."CHARKEY" = rc."COND_CHAR" AND b."VALUECODE" = rc."COND_VALUE"
+--             GROUP BY rc.RULE_ID
+--             HAVING COUNT(*) = (SELECT COUNT(*) FROM "T_RULE_CONDITIONS" sub WHERE sub.RULE_ID = rc.RULE_ID)
+--         ) AS rules ON rules.RULE_ID = SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN)
+--         WHERE p.PATH_LENGTH = :v_current_level;
+
+--         -- STEP B: Log Resolved Rules (Audit-Grade Traceability)
+--         INSERT INTO "DAG_DERIVATIONRESULTS" 
+--             ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         SELECT 
+--             "SQ_RESULT_ID".NEXTVAL, :iv_session_id, f.TARGET_CHAR, f.TARGET_VALUE, f.rule_prob,        
+--             :v_current_level, 'RESOLVED', f.RULE_ID, CURRENT_TIMESTAMP
+--         FROM (
+--             SELECT 
+--                 TARGET_CHAR, 
+--                 TARGET_VALUE, 
+--                 RULE_ID, 
+--                 rule_prob,
+--                 ROW_NUMBER() OVER (PARTITION BY TARGET_CHAR, TARGET_VALUE ORDER BY rule_prob DESC, RULE_ID ASC) as rank
+--             FROM :lt_fired
+--         ) f
+--         WHERE f.rank = 1;
+
+--         -- STEP C: FORCED 100% NORMALIZATION
+--         -- Scales only the 'RESOLVED' values to fill the 1.0 space per character.
+--         -- This satisfies the requirement: Char Level Prob must be 1, no UNRESOLVED values.
+--         MERGE INTO "DAG_DERIVATIONRESULTS" AS r
+--         USING (
+--             SELECT CHARKEY, SUM(PROBABILITY) as total_prob
+--             FROM "DAG_DERIVATIONRESULTS"
+--             WHERE SESSIONID = :iv_session_id AND DERIVELEVEL = :v_current_level
+--             GROUP BY CHARKEY
+--         ) AS s
+--         ON r.SESSIONID = :iv_session_id 
+--            AND r.DERIVELEVEL = :v_current_level 
+--            AND r.CHARKEY = s.CHARKEY
+--         WHEN MATCHED AND s.total_prob > 0 THEN 
+--             UPDATE SET r."PROBABILITY" = r."PROBABILITY" / s.total_prob;
+
+--         -- STEP D: Update Buffer for Next Level
+--         -- Now using the Normalized values so downstream rules receive 100% coverage.
+--         MERGE INTO #BUFFER AS b
+--         USING (
+--             SELECT "CHARKEY", "VALUECODE", SUM("PROBABILITY") as TOTAL_PROB
+--             FROM "DAG_DERIVATIONRESULTS" 
+--             WHERE "SESSIONID" = :iv_session_id AND "DERIVELEVEL" = :v_current_level
+--             GROUP BY "CHARKEY", "VALUECODE"
+--         ) AS src
+--         ON b."CHARKEY" = src."CHARKEY" AND b."VALUECODE" = src."VALUECODE"
+--         WHEN MATCHED THEN UPDATE SET b."PROBABILITY" = src.TOTAL_PROB
+--         WHEN NOT MATCHED THEN INSERT VALUES (src."CHARKEY", src."VALUECODE", src.TOTAL_PROB);
+
+--         v_current_level := :v_current_level + 1;
+--     END WHILE;
+
+--     DROP TABLE #BUFFER;
+--     ov_status := 'SUCCESS';
+--     ov_message := 'Derivation complete. All characteristics 100% resolved via level-wise normalization.';
+-- END;
+
+
+-- Normalization Including Gaps
+-- PROCEDURE "P_DERIVE_PROBABILISTIC"(
+--     IN  iv_session_id NVARCHAR(36),
+--     OUT ov_status     NVARCHAR(20),
+--     OUT ov_message    NVARCHAR(500)
+-- ) 
+-- LANGUAGE SQLSCRIPT 
+-- SQL SECURITY INVOKER AS
+-- BEGIN
+--     -- ── 1. INITIALIZATION ───────────────────────────────────────────────
+--     DECLARE v_current_level INTEGER := 1;
+--     DECLARE v_max_level     INTEGER := 0;
+--     DECLARE v_region        NVARCHAR(10);
+--     DECLARE v_product       NVARCHAR(20);
+
+--     DELETE FROM "DAG_DERIVATIONRESULTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     SELECT "REGIONID", "PRODUCTID" INTO v_region, v_product 
+--     FROM "DAG_SESSIONS" WHERE "SESSIONID" = :iv_session_id;
+
+--     CREATE LOCAL TEMPORARY TABLE #BUFFER (
+--         "CHARKEY"    NVARCHAR(50),
+--         "VALUECODE"  NVARCHAR(50),
+--         "PROBABILITY" DOUBLE,
+--         PRIMARY KEY ("CHARKEY", "VALUECODE")
+--     );
+
+--     -- ── 2. SEEDING ────────────────────────────────────
+--     INSERT INTO #BUFFER ("CHARKEY", "VALUECODE", "PROBABILITY")
+--     SELECT "CHARKEY", "VALUECODE", CAST("PROBABILITY" AS DOUBLE)
+--     FROM "DAG_SESSIONINPUTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'REGION') THEN INSERT INTO #BUFFER VALUES ('REGION', :v_region, 1.0); END IF;
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'PRODUCT') THEN INSERT INTO #BUFFER VALUES ('PRODUCT', :v_product, 1.0); END IF;
+
+--     SELECT COALESCE(MAX(PATH_LENGTH), 0) INTO v_max_level FROM "T_DERIVATION_PATHS";
+
+--     -- ── 3. ITERATIVE DERIVATION ENGINE ──────────────────────────────────
+--     WHILE :v_current_level <= :v_max_level DO
+        
+--         -- STEP A: Find Fired Rules
+--         lt_fired = SELECT 
+--             p.TARGET_CHAR,
+--             p.TARGET_VALUE,
+--             SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN) as RULE_ID,
+--             rules.rule_prob
+--         FROM "T_DERIVATION_PATHS" p
+--         INNER JOIN (
+--             SELECT 
+--                 rc.RULE_ID,
+--                 EXP(SUM(LN(NULLIF(b.PROBABILITY, 0)))) as rule_prob
+--             FROM "T_RULE_CONDITIONS" rc
+--             JOIN #BUFFER b ON b."CHARKEY" = rc."COND_CHAR" AND b."VALUECODE" = rc."COND_VALUE"
+--             GROUP BY rc.RULE_ID
+--             HAVING COUNT(*) = (SELECT COUNT(*) FROM "T_RULE_CONDITIONS" sub WHERE sub.RULE_ID = rc.RULE_ID)
+--         ) AS rules ON rules.RULE_ID = SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN)
+--         WHERE p.PATH_LENGTH = :v_current_level;
+
+--         -- STEP B: Log Resolved Rules (Exact Traceability with MAX Probability)
+--         INSERT INTO "DAG_DERIVATIONRESULTS" 
+--             ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         SELECT 
+--             "SQ_RESULT_ID".NEXTVAL, :iv_session_id, f.TARGET_CHAR, f.TARGET_VALUE, f.rule_prob,        
+--             :v_current_level, 'RESOLVED', f.RULE_ID, CURRENT_TIMESTAMP
+--         FROM (
+--             SELECT 
+--                 TARGET_CHAR, 
+--                 TARGET_VALUE, 
+--                 RULE_ID, 
+--                 rule_prob,
+--                 ROW_NUMBER() OVER (PARTITION BY TARGET_CHAR, TARGET_VALUE ORDER BY rule_prob DESC, RULE_ID ASC) as rank
+--             FROM :lt_fired
+--         ) f
+--         WHERE f.rank = 1;
+
+--         -- STEP C: GAP LOGGING
+--         INSERT INTO "DAG_DERIVATIONRESULTS" 
+--             ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         SELECT 
+--             "SQ_RESULT_ID".NEXTVAL, :iv_session_id, t.TARGET_CHAR, 'UNRESOLVED',
+--             (1.0 - COALESCE(curr.total_prob, 0)), 
+--             :v_current_level, 'UNRESOLVED', 'GAP_LEVEL_' || :v_current_level, CURRENT_TIMESTAMP
+--         FROM (SELECT DISTINCT TARGET_CHAR FROM "T_DERIVATION_PATHS" WHERE PATH_LENGTH = :v_current_level) t
+--         LEFT JOIN (
+--             SELECT CHARKEY, SUM(PROBABILITY) as total_prob 
+--             FROM (
+--                 SELECT CHARKEY, PROBABILITY FROM #BUFFER WHERE VALUECODE <> 'UNRESOLVED'
+--                 UNION ALL
+--                 SELECT CHARKEY, PROBABILITY FROM "DAG_DERIVATIONRESULTS" 
+--                 WHERE SESSIONID = :iv_session_id AND DERIVELEVEL = :v_current_level AND VALUECODE <> 'UNRESOLVED'
+--             ) GROUP BY CHARKEY
+--         ) curr ON t.TARGET_CHAR = curr.CHARKEY
+--         WHERE (1.0 - COALESCE(curr.total_prob, 0)) > 0.0001;
+
+--         -- STEP D: LEVEL-BY-LEVEL NORMALIZATION (HANA CLOUD COMPLIANT)
+--         -- Replaces UPDATE FROM with MERGE INTO to avoid syntax errors
+--         MERGE INTO "DAG_DERIVATIONRESULTS" AS r
+--         USING (
+--             SELECT CHARKEY, SUM(PROBABILITY) as total_prob
+--             FROM "DAG_DERIVATIONRESULTS"
+--             WHERE SESSIONID = :iv_session_id AND DERIVELEVEL = :v_current_level
+--             GROUP BY CHARKEY
+--         ) AS s
+--         ON r.SESSIONID = :iv_session_id 
+--            AND r.DERIVELEVEL = :v_current_level 
+--            AND r.CHARKEY = s.CHARKEY
+--         WHEN MATCHED AND s.total_prob > 0 THEN 
+--             UPDATE SET r."PROBABILITY" = r."PROBABILITY" / s.total_prob;
+
+--         -- STEP E: Update Buffer for Next Level
+--         MERGE INTO #BUFFER AS b
+--         USING (
+--             SELECT "CHARKEY", "VALUECODE", SUM("PROBABILITY") as TOTAL_PROB
+--             FROM "DAG_DERIVATIONRESULTS" 
+--             WHERE "SESSIONID" = :iv_session_id AND "DERIVELEVEL" = :v_current_level
+--             GROUP BY "CHARKEY", "VALUECODE"
+--         ) AS src
+--         ON b."CHARKEY" = src."CHARKEY" AND b."VALUECODE" = src."VALUECODE"
+--         WHEN MATCHED THEN UPDATE SET b."PROBABILITY" = src.TOTAL_PROB
+--         WHEN NOT MATCHED THEN INSERT VALUES (src."CHARKEY", src."VALUECODE", src.TOTAL_PROB);
+
+--         v_current_level := :v_current_level + 1;
+--     END WHILE;
+
+--     -- ── 4. POST-PROCESS CLEANUP ──────────────────────────────────────────
+    
+--     DELETE FROM "DAG_DERIVATIONRESULTS" r1
+--     WHERE "SESSIONID" = :iv_session_id 
+--       AND "VALUECODE" = 'UNRESOLVED'
+--       AND "PROBABILITY" >= 0.9999 
+--       AND EXISTS (
+--           SELECT 1 FROM "DAG_DERIVATIONRESULTS" r2 
+--           WHERE r2."SESSIONID" = r1."SESSIONID" 
+--             AND r2."CHARKEY" = r1."CHARKEY" 
+--             AND r2."STATUS" = 'RESOLVED'
+--       );
+
+--     DELETE FROM "DAG_DERIVATIONRESULTS" r1
+--     WHERE "SESSIONID" = :iv_session_id 
+--       AND "VALUECODE" = 'UNRESOLVED'
+--       AND EXISTS (
+--           SELECT 1 FROM "DAG_DERIVATIONRESULTS" r2 
+--           WHERE r2."SESSIONID" = r1."SESSIONID" 
+--             AND r2."CHARKEY" = r1."CHARKEY" 
+--             AND r2."VALUECODE" = 'UNRESOLVED' 
+--             AND r2."DERIVELEVEL" > r1."DERIVELEVEL"
+--       );
+
+--     DROP TABLE #BUFFER;
+--     ov_status := 'SUCCESS';
+--     ov_message := 'Derivation complete. Pinned to final state with level-wise normalization.';
+-- END;
+
+
+-- Working Limit to MAX() WHEN CHARACTERS HAVE PROBABILITIES EXCEEDING 1 due to AGGREGATION OF MULTIPLE RULES for Downstram Levels
+
+-- PROCEDURE "P_DERIVE_PROBABILISTIC"(
+--     IN  iv_session_id NVARCHAR(36),
+--     OUT ov_status     NVARCHAR(20),
+--     OUT ov_message    NVARCHAR(500)
+-- ) 
+-- LANGUAGE SQLSCRIPT 
+-- SQL SECURITY INVOKER AS
+-- BEGIN
+--     -- ── 1. INITIALIZATION ───────────────────────────────────────────────
+--     DECLARE v_current_level INTEGER := 1;
+--     DECLARE v_max_level     INTEGER := 0;
+--     DECLARE v_region        NVARCHAR(10);
+--     DECLARE v_product       NVARCHAR(20);
+
+--     DELETE FROM "DAG_DERIVATIONRESULTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     SELECT "REGIONID", "PRODUCTID" INTO v_region, v_product 
+--     FROM "DAG_SESSIONS" WHERE "SESSIONID" = :iv_session_id;
+
+--     CREATE LOCAL TEMPORARY TABLE #BUFFER (
+--         "CHARKEY"    NVARCHAR(50),
+--         "VALUECODE"  NVARCHAR(50),
+--         "PROBABILITY" DOUBLE,
+--         PRIMARY KEY ("CHARKEY", "VALUECODE")
+--     );
+
+--     -- ── 2. SEEDING ────────────────────────────────────
+--     INSERT INTO #BUFFER ("CHARKEY", "VALUECODE", "PROBABILITY")
+--     SELECT "CHARKEY", "VALUECODE", CAST("PROBABILITY" AS DOUBLE)
+--     FROM "DAG_SESSIONINPUTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'REGION') THEN INSERT INTO #BUFFER VALUES ('REGION', :v_region, 1.0); END IF;
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'PRODUCT') THEN INSERT INTO #BUFFER VALUES ('PRODUCT', :v_product, 1.0); END IF;
+
+--     SELECT COALESCE(MAX(PATH_LENGTH), 0) INTO v_max_level FROM "T_DERIVATION_PATHS";
+
+--     -- ── 3. ITERATIVE DERIVATION ENGINE ──────────────────────────────────
+--     WHILE :v_current_level <= :v_max_level DO
+        
+--         -- STEP A: Find Fired Rules
+--         lt_fired = SELECT 
+--             p.TARGET_CHAR,
+--             p.TARGET_VALUE,
+--             SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN) as RULE_ID,
+--             rules.rule_prob
+--         FROM "T_DERIVATION_PATHS" p
+--         INNER JOIN (
+--             SELECT 
+--                 rc.RULE_ID,
+--                 EXP(SUM(LN(NULLIF(b.PROBABILITY, 0)))) as rule_prob
+--             FROM "T_RULE_CONDITIONS" rc
+--             JOIN #BUFFER b ON b."CHARKEY" = rc."COND_CHAR" AND b."VALUECODE" = rc."COND_VALUE"
+--             GROUP BY rc.RULE_ID
+--             HAVING COUNT(*) = (SELECT COUNT(*) FROM "T_RULE_CONDITIONS" sub WHERE sub.RULE_ID = rc.RULE_ID)
+--         ) AS rules ON rules.RULE_ID = SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN)
+--         WHERE p.PATH_LENGTH = :v_current_level;
+
+--         -- STEP B: Log Resolved Rules (Grouped by Value to prevent Prob > 1.0)
+--         -- This step picks the STRONGEST rule if multiple rules target the same value.
+--         -- STEP B: Log Resolved Rules (Exact Traceability)
+--         INSERT INTO "DAG_DERIVATIONRESULTS" 
+--             ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         SELECT 
+--             "SQ_RESULT_ID".NEXTVAL, :iv_session_id, f.TARGET_CHAR, f.TARGET_VALUE, f.rule_prob,        
+--             :v_current_level, 'RESOLVED', f.RULE_ID, CURRENT_TIMESTAMP
+--         FROM (
+--             SELECT 
+--                 TARGET_CHAR, 
+--                 TARGET_VALUE, 
+--                 RULE_ID, 
+--                 rule_prob,
+--                 ROW_NUMBER() OVER (PARTITION BY TARGET_CHAR, TARGET_VALUE ORDER BY rule_prob DESC, RULE_ID ASC) as rank
+--             FROM :lt_fired
+--         ) f
+--         WHERE f.rank = 1;
+--         -- INSERT INTO "DAG_DERIVATIONRESULTS" 
+--         --     ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         -- SELECT 
+--         --     "SQ_RESULT_ID".NEXTVAL, :iv_session_id, f.TARGET_CHAR, f.TARGET_VALUE, f.rule_prob,        
+--         --     :v_current_level, 'RESOLVED', f.RULE_ID, CURRENT_TIMESTAMP
+--         -- FROM (
+--         --     SELECT 
+--         --         TARGET_CHAR, 
+--         --         TARGET_VALUE, 
+--         --         MAX(RULE_ID) AS RULE_ID, 
+--         --         MAX(rule_prob) as rule_prob 
+--         --     FROM :lt_fired 
+--         --     GROUP BY TARGET_CHAR, TARGET_VALUE
+--         -- ) f;
+
+--         -- STEP C: GAP LOGGING
+--         INSERT INTO "DAG_DERIVATIONRESULTS" 
+--             ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         SELECT 
+--             "SQ_RESULT_ID".NEXTVAL, :iv_session_id, t.TARGET_CHAR, 'UNRESOLVED',
+--             (1.0 - COALESCE(curr.total_prob, 0)), 
+--             :v_current_level, 'UNRESOLVED', 'GAP_LEVEL_' || :v_current_level, CURRENT_TIMESTAMP
+--         FROM (SELECT DISTINCT TARGET_CHAR FROM "T_DERIVATION_PATHS" WHERE PATH_LENGTH = :v_current_level) t
+--         LEFT JOIN (
+--             SELECT CHARKEY, SUM(PROBABILITY) as total_prob 
+--             FROM (
+--                 SELECT CHARKEY, PROBABILITY FROM #BUFFER WHERE VALUECODE <> 'UNRESOLVED'
+--                 UNION ALL
+--                 SELECT CHARKEY, PROBABILITY FROM "DAG_DERIVATIONRESULTS" 
+--                 WHERE SESSIONID = :iv_session_id AND DERIVELEVEL = :v_current_level AND VALUECODE <> 'UNRESOLVED'
+--             ) GROUP BY CHARKEY
+--         ) curr ON t.TARGET_CHAR = curr.CHARKEY
+--         WHERE (1.0 - COALESCE(curr.total_prob, 0)) > 0.0001;
+
+--         -- STEP D: Update Buffer
+--         MERGE INTO #BUFFER AS b
+--         USING (
+--             SELECT "CHARKEY", "VALUECODE", SUM("PROBABILITY") as TOTAL_PROB
+--             FROM "DAG_DERIVATIONRESULTS" 
+--             WHERE "SESSIONID" = :iv_session_id AND "DERIVELEVEL" = :v_current_level
+--             GROUP BY "CHARKEY", "VALUECODE"
+--         ) AS src
+--         ON b."CHARKEY" = src."CHARKEY" AND b."VALUECODE" = src."VALUECODE"
+--         WHEN MATCHED THEN UPDATE SET b."PROBABILITY" = src.TOTAL_PROB
+--         WHEN NOT MATCHED THEN INSERT VALUES (src."CHARKEY", src."VALUECODE", src.TOTAL_PROB);
+
+--         v_current_level := :v_current_level + 1;
+--     END WHILE;
+
+--     -- ── 4. POST-PROCESS CLEANUP ──────────────────────────────────────────
+    
+--     -- Remove 100% ghost gaps if successful derivation happened later
+--     DELETE FROM "DAG_DERIVATIONRESULTS" r1
+--     WHERE "SESSIONID" = :iv_session_id 
+--       AND "VALUECODE" = 'UNRESOLVED'
+--       AND "PROBABILITY" >= 0.9999 
+--       AND EXISTS (
+--           SELECT 1 FROM "DAG_DERIVATIONRESULTS" r2 
+--           WHERE r2."SESSIONID" = r1."SESSIONID" 
+--             AND r2."CHARKEY" = r1."CHARKEY" 
+--             AND r2."STATUS" = 'RESOLVED'
+--       );
+
+--     -- Pin to Final State (Keep only the latest gap)
+--     DELETE FROM "DAG_DERIVATIONRESULTS" r1
+--     WHERE "SESSIONID" = :iv_session_id 
+--       AND "VALUECODE" = 'UNRESOLVED'
+--       AND EXISTS (
+--           SELECT 1 FROM "DAG_DERIVATIONRESULTS" r2 
+--           WHERE r2."SESSIONID" = r1."SESSIONID" 
+--             AND r2."CHARKEY" = r1."CHARKEY" 
+--             AND r2."VALUECODE" = 'UNRESOLVED'
+--             AND r2."DERIVELEVEL" > r1."DERIVELEVEL"
+--       );
+
+--     DROP TABLE #BUFFER;
+--     ov_status := 'SUCCESS';
+--     ov_message := 'Derivation complete. Mathematical integrity (max probability) enforced.';
+-- END;
+
+
+-- Working but some of the CHARACTERS HAVE PROBABILITIES EXCEEDING 1 due to AGGREGATION OF MULTIPLE RULES for Downstram Levels
+-- PROCEDURE "P_DERIVE_PROBABILISTIC_V2"(
+--     IN  iv_session_id NVARCHAR(36),
+--     OUT ov_status     NVARCHAR(20),
+--     OUT ov_message    NVARCHAR(500)
+-- ) 
+-- LANGUAGE SQLSCRIPT 
+-- SQL SECURITY INVOKER AS
+-- BEGIN
+--     DECLARE v_current_level INTEGER := 1;
+--     DECLARE v_max_level     INTEGER := 0;
+--     DECLARE v_region        NVARCHAR(10);
+--     DECLARE v_product       NVARCHAR(20);
+
+--     DELETE FROM "DAG_DERIVATIONRESULTS" WHERE "SESSIONID" = :iv_session_id;
+--     SELECT "REGIONID", "PRODUCTID" INTO v_region, v_product FROM "DAG_SESSIONS" WHERE "SESSIONID" = :iv_session_id;
+
+--     CREATE LOCAL TEMPORARY TABLE #BUFFER (
+--         "CHARKEY"    NVARCHAR(50),
+--         "VALUECODE"  NVARCHAR(50),
+--         "PROBABILITY" DOUBLE,
+--         PRIMARY KEY ("CHARKEY", "VALUECODE")
+--     );
+
+--     INSERT INTO #BUFFER ("CHARKEY", "VALUECODE", "PROBABILITY")
+--     SELECT "CHARKEY", "VALUECODE", CAST("PROBABILITY" AS DOUBLE)
+--     FROM "DAG_SESSIONINPUTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'REGION') THEN INSERT INTO #BUFFER VALUES ('REGION', :v_region, 1.0); END IF;
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'PRODUCT') THEN INSERT INTO #BUFFER VALUES ('PRODUCT', :v_product, 1.0); END IF;
+
+--     SELECT COALESCE(MAX(PATH_LENGTH), 0) INTO v_max_level FROM "T_DERIVATION_PATHS";
+
+--     WHILE :v_current_level <= :v_max_level DO
+--         lt_fired = SELECT p.TARGET_CHAR, p.TARGET_VALUE, SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN) as RULE_ID, rules.rule_prob
+--         FROM "T_DERIVATION_PATHS" p
+--         INNER JOIN (
+--             SELECT rc.RULE_ID, EXP(SUM(LN(NULLIF(b.PROBABILITY, 0)))) as rule_prob
+--             FROM "T_RULE_CONDITIONS" rc
+--             JOIN #BUFFER b ON b."CHARKEY" = rc."COND_CHAR" AND b."VALUECODE" = rc."COND_VALUE"
+--             GROUP BY rc.RULE_ID
+--             HAVING COUNT(*) = (SELECT COUNT(*) FROM "T_RULE_CONDITIONS" sub WHERE sub.RULE_ID = rc.RULE_ID)
+--         ) AS rules ON rules.RULE_ID = SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN)
+--         WHERE p.PATH_LENGTH = :v_current_level;
+
+--         INSERT INTO "DAG_DERIVATIONRESULTS" ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         SELECT "SQ_RESULT_ID".NEXTVAL, :iv_session_id, f.TARGET_CHAR, f.TARGET_VALUE, f.rule_prob, :v_current_level, 'RESOLVED', f.RULE_ID, CURRENT_TIMESTAMP
+--         FROM (SELECT TARGET_CHAR, TARGET_VALUE, RULE_ID, MAX(rule_prob) as rule_prob FROM :lt_fired GROUP BY TARGET_CHAR, TARGET_VALUE, RULE_ID) f;
+
+--         INSERT INTO "DAG_DERIVATIONRESULTS" ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         SELECT "SQ_RESULT_ID".NEXTVAL, :iv_session_id, t.TARGET_CHAR, 'UNRESOLVED', (1.0 - COALESCE(curr.total_prob, 0)), :v_current_level, 'UNRESOLVED', 'GAP_LEVEL_' || :v_current_level, CURRENT_TIMESTAMP
+--         FROM (SELECT DISTINCT TARGET_CHAR FROM "T_DERIVATION_PATHS" WHERE PATH_LENGTH = :v_current_level) t
+--         LEFT JOIN (
+--             SELECT CHARKEY, SUM(PROBABILITY) as total_prob FROM (
+--                 SELECT CHARKEY, PROBABILITY FROM #BUFFER WHERE VALUECODE <> 'UNRESOLVED'
+--                 UNION ALL
+--                 SELECT CHARKEY, PROBABILITY FROM "DAG_DERIVATIONRESULTS" WHERE SESSIONID = :iv_session_id AND DERIVELEVEL = :v_current_level AND VALUECODE <> 'UNRESOLVED'
+--             ) GROUP BY CHARKEY
+--         ) curr ON t.TARGET_CHAR = curr.CHARKEY
+--         WHERE (1.0 - COALESCE(curr.total_prob, 0)) > 0.0001;
+
+--         MERGE INTO #BUFFER AS b
+--         USING (SELECT "CHARKEY", "VALUECODE", SUM("PROBABILITY") as TOTAL_PROB FROM "DAG_DERIVATIONRESULTS" WHERE "SESSIONID" = :iv_session_id AND "DERIVELEVEL" = :v_current_level GROUP BY "CHARKEY", "VALUECODE") AS src
+--         ON b."CHARKEY" = src."CHARKEY" AND b."VALUECODE" = src."VALUECODE"
+--         WHEN MATCHED THEN UPDATE SET b."PROBABILITY" = src.TOTAL_PROB
+--         WHEN NOT MATCHED THEN INSERT VALUES (src."CHARKEY", src."VALUECODE", src.TOTAL_PROB);
+
+--         v_current_level := :v_current_level + 1;
+--     END WHILE;
+
+--     -- Corrected Step 4
+--     DELETE FROM "DAG_DERIVATIONRESULTS" r1 WHERE "SESSIONID" = :iv_session_id AND "VALUECODE" = 'UNRESOLVED' AND "PROBABILITY" >= 0.9999 
+--     AND EXISTS (SELECT 1 FROM "DAG_DERIVATIONRESULTS" r2 WHERE r2."SESSIONID" = r1."SESSIONID" AND r2."CHARKEY" = r1."CHARKEY" AND r2."STATUS" = 'RESOLVED');
+
+--     DELETE FROM "DAG_DERIVATIONRESULTS" r1 WHERE "SESSIONID" = :iv_session_id AND "VALUECODE" = 'UNRESOLVED'
+--     AND EXISTS (SELECT 1 FROM "DAG_DERIVATIONRESULTS" r2 WHERE r2."SESSIONID" = r1."SESSIONID" AND r2."CHARKEY" = r1."CHARKEY" AND r2."VALUECODE" = 'UNRESOLVED' AND r2."DERIVELEVEL" > r1."DERIVELEVEL");
+
+--     DROP TABLE #BUFFER;
+--     ov_status := 'SUCCESS';
+--     ov_message := 'Derivation complete. Partial gaps preserved, 100% ghost gaps removed.';
+-- END;
+
+
+
+-- PROCEDURE "P_DERIVE_PROBABILISTIC_V2"(
+--     IN  iv_session_id NVARCHAR(36),
+--     OUT ov_status     NVARCHAR(20),
+--     OUT ov_message    NVARCHAR(500)
+-- ) 
+-- LANGUAGE SQLSCRIPT 
+-- SQL SECURITY INVOKER AS
+-- BEGIN
+--     -- ── 1. INITIALIZATION ───────────────────────────────────────────────
+--     DECLARE v_current_level INTEGER := 1;
+--     DECLARE v_max_level     INTEGER := 0;
+--     DECLARE v_region        NVARCHAR(10);
+--     DECLARE v_product       NVARCHAR(20);
+
+--     DELETE FROM "DAG_DERIVATIONRESULTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     SELECT "REGIONID", "PRODUCTID" INTO v_region, v_product 
+--     FROM "DAG_SESSIONS" WHERE "SESSIONID" = :iv_session_id;
+
+--     CREATE LOCAL TEMPORARY TABLE #BUFFER (
+--         "CHARKEY"    NVARCHAR(50),
+--         "VALUECODE"  NVARCHAR(50),
+--         "PROBABILITY" DOUBLE,
+--         PRIMARY KEY ("CHARKEY", "VALUECODE")
+--     );
+
+--     -- ── 2. SEEDING ────────────────────────────────────
+--     INSERT INTO #BUFFER ("CHARKEY", "VALUECODE", "PROBABILITY")
+--     SELECT "CHARKEY", "VALUECODE", CAST("PROBABILITY" AS DOUBLE)
+--     FROM "DAG_SESSIONINPUTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'REGION') THEN INSERT INTO #BUFFER VALUES ('REGION', :v_region, 1.0); END IF;
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'PRODUCT') THEN INSERT INTO #BUFFER VALUES ('PRODUCT', :v_product, 1.0); END IF;
+
+--     SELECT COALESCE(MAX(PATH_LENGTH), 0) INTO v_max_level FROM "T_DERIVATION_PATHS";
+
+--     -- ── 3. ITERATIVE DERIVATION ENGINE ──────────────────────────────────
+--     WHILE :v_current_level <= :v_max_level DO
+        
+--         -- STEP A: Find Fired Rules
+--         lt_fired = SELECT 
+--             p.TARGET_CHAR,
+--             p.TARGET_VALUE,
+--             SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN) as RULE_ID,
+--             rules.rule_prob
+--         FROM "T_DERIVATION_PATHS" p
+--         INNER JOIN (
+--             SELECT 
+--                 rc.RULE_ID,
+--                 EXP(SUM(LN(NULLIF(b.PROBABILITY, 0)))) as rule_prob
+--             FROM "T_RULE_CONDITIONS" rc
+--             JOIN #BUFFER b ON b."CHARKEY" = rc."COND_CHAR" AND b."VALUECODE" = rc."COND_VALUE"
+--             GROUP BY rc.RULE_ID
+--             HAVING COUNT(*) = (SELECT COUNT(*) FROM "T_RULE_CONDITIONS" sub WHERE sub.RULE_ID = rc.RULE_ID)
+--         ) AS rules ON rules.RULE_ID = SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN)
+--         WHERE p.PATH_LENGTH = :v_current_level;
+
+--         -- STEP B: Log Resolved Rules
+--         INSERT INTO "DAG_DERIVATIONRESULTS" 
+--             ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         SELECT 
+--             "SQ_RESULT_ID".NEXTVAL, :iv_session_id, f.TARGET_CHAR, f.TARGET_VALUE, f.rule_prob,        
+--             :v_current_level, 'RESOLVED', f.RULE_ID, CURRENT_TIMESTAMP
+--         FROM (
+--             SELECT TARGET_CHAR, TARGET_VALUE, RULE_ID, MAX(rule_prob) as rule_prob 
+--             FROM :lt_fired 
+--             GROUP BY TARGET_CHAR, TARGET_VALUE, RULE_ID
+--         ) f;
+
+--         -- STEP C: TARGET-SPECIFIC GAP LOGGING
+--         -- Measures gap against cumulative sum of REAL values (Buffer + New Rules)
+--         INSERT INTO "DAG_DERIVATIONRESULTS" 
+--             ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         SELECT 
+--             "SQ_RESULT_ID".NEXTVAL, :iv_session_id, t.TARGET_CHAR, 'UNRESOLVED',
+--             (1.0 - COALESCE(curr.total_prob, 0)), 
+--             :v_current_level, 'UNRESOLVED', 'GAP_LEVEL_' || :v_current_level, CURRENT_TIMESTAMP
+--         FROM (SELECT DISTINCT TARGET_CHAR FROM "T_DERIVATION_PATHS" WHERE PATH_LENGTH = :v_current_level) t
+--         LEFT JOIN (
+--             SELECT CHARKEY, SUM(PROBABILITY) as total_prob 
+--             FROM (
+--                 SELECT CHARKEY, PROBABILITY FROM #BUFFER WHERE VALUECODE <> 'UNRESOLVED'
+--                 UNION ALL
+--                 SELECT CHARKEY, PROBABILITY FROM "DAG_DERIVATIONRESULTS" 
+--                 WHERE SESSIONID = :iv_session_id AND DERIVELEVEL = :v_current_level AND VALUECODE <> 'UNRESOLVED'
+--             ) GROUP BY CHARKEY
+--         ) curr ON t.TARGET_CHAR = curr.CHARKEY
+--         WHERE (1.0 - COALESCE(curr.total_prob, 0)) > 0.0001;
+
+--         -- STEP D: Update Buffer
+--         MERGE INTO #BUFFER AS b
+--         USING (
+--             SELECT "CHARKEY", "VALUECODE", SUM("PROBABILITY") as TOTAL_PROB
+--             FROM "DAG_DERIVATIONRESULTS" 
+--             WHERE "SESSIONID" = :iv_session_id AND "DERIVELEVEL" = :v_current_level
+--             GROUP BY "CHARKEY", "VALUECODE"
+--         ) AS src
+--         ON b."CHARKEY" = src."CHARKEY" AND b."VALUECODE" = src."VALUECODE"
+--         WHEN MATCHED THEN UPDATE SET b."PROBABILITY" = src.TOTAL_PROB
+--         WHEN NOT MATCHED THEN INSERT VALUES (src."CHARKEY", src."VALUECODE", src.TOTAL_PROB);
+
+--         v_current_level := :v_current_level + 1;
+--     END WHILE;
+
+--     -- ── 4. POST-PROCESS CLEANUP (PIN TO FINAL STATE) ───────────────────
+--     -- Keep only the LATEST unresolved entry per character. 
+--     -- This ensures we see the most derived state (e.g. Level 4 or 5) 
+--     -- and discard early 100% gaps from Levels 1 or 2.
+--     DELETE FROM "DAG_DERIVATIONRESULTS" r1
+--     WHERE "SESSIONID" = :iv_session_id 
+--       AND "VALUECODE" = 'UNRESOLVED'
+--       AND EXISTS (
+--           SELECT 1 FROM "DAG_DERIVATIONRESULTS" r2 
+--           WHERE r2."SESSIONID" = r1."SESSIONID" 
+--             AND r2."CHARKEY" = r1."CHARKEY" 
+--             AND r2."VALUECODE" = 'UNRESOLVED'
+--             AND r2."DERIVELEVEL" > r1."DERIVELEVEL" -- Keep the LATEST level gap
+--       );
+
+--     DROP TABLE #BUFFER;
+--     ov_status := 'SUCCESS';
+--     ov_message := 'Derivation complete. Results pinned to final state probabilities.';
+-- END;
+
+
+
+
+
+
+-- Working version with UNRESOLVED For LEVEL 2, 3, 5
+-- PROCEDURE "P_DERIVE_PROBABILISTIC_V2"(
+--     IN  iv_session_id NVARCHAR(36),
+--     OUT ov_status     NVARCHAR(20),
+--     OUT ov_message    NVARCHAR(500)
+-- ) 
+-- LANGUAGE SQLSCRIPT 
+-- SQL SECURITY INVOKER AS
+-- BEGIN
+--     -- ── 1. INITIALIZATION ───────────────────────────────────────────────
+--     DECLARE v_current_level INTEGER := 1;
+--     DECLARE v_max_level     INTEGER := 0;
+--     DECLARE v_region        NVARCHAR(10);
+--     DECLARE v_product       NVARCHAR(20);
+
+--     DELETE FROM "DAG_DERIVATIONRESULTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     SELECT "REGIONID", "PRODUCTID" INTO v_region, v_product 
+--     FROM "DAG_SESSIONS" WHERE "SESSIONID" = :iv_session_id;
+
+--     -- Buffer unique by Char/Value for propagation math (Snapshot Step 3/4)
+--     CREATE LOCAL TEMPORARY TABLE #BUFFER (
+--         "CHARKEY"    NVARCHAR(50),
+--         "VALUECODE"  NVARCHAR(50),
+--         "PROBABILITY" DOUBLE,
+--         PRIMARY KEY ("CHARKEY", "VALUECODE")
+--     );
+
+--     -- ── 2. SEEDING (Snapshot Step 1) ────────────────────────────────────
+--     INSERT INTO #BUFFER ("CHARKEY", "VALUECODE", "PROBABILITY")
+--     SELECT "CHARKEY", "VALUECODE", CAST("PROBABILITY" AS DOUBLE)
+--     FROM "DAG_SESSIONINPUTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'REGION') THEN INSERT INTO #BUFFER VALUES ('REGION', :v_region, 1.0); END IF;
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'PRODUCT') THEN INSERT INTO #BUFFER VALUES ('PRODUCT', :v_product, 1.0); END IF;
+
+--     SELECT COALESCE(MAX(PATH_LENGTH), 0) INTO v_max_level FROM "T_DERIVATION_PATHS";
+
+--     -- ── 3. ITERATIVE DERIVATION ENGINE ──────────────────────────────────
+--     WHILE :v_current_level <= :v_max_level DO
+        
+--         -- STEP A: Find Fired Rules (Snapshot Step 2: Product Math)
+--         lt_fired = SELECT 
+--             p.TARGET_CHAR,
+--             p.TARGET_VALUE,
+--             SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN) as RULE_ID,
+--             rules.rule_prob
+--         FROM "T_DERIVATION_PATHS" p
+--         INNER JOIN (
+--             -- Calculate probability P(Rule) = P(A) * P(B) * ... 
+--             SELECT 
+--                 rc.RULE_ID,
+--                 EXP(SUM(LN(NULLIF(b.PROBABILITY, 0)))) as rule_prob
+--             FROM "T_RULE_CONDITIONS" rc
+--             JOIN #BUFFER b ON b."CHARKEY" = rc."COND_CHAR" AND b."VALUECODE" = rc."COND_VALUE"
+--             GROUP BY rc.RULE_ID
+--             HAVING COUNT(*) = (SELECT COUNT(*) FROM "T_RULE_CONDITIONS" sub WHERE sub.RULE_ID = rc.RULE_ID)
+--         ) AS rules ON rules.RULE_ID = SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN)
+--         WHERE p.PATH_LENGTH = :v_current_level;
+
+--         -- STEP B: Log Resolved Rules (Snapshot Step 3: Distribution)
+--         INSERT INTO "DAG_DERIVATIONRESULTS" 
+--             ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         SELECT 
+--             "SQ_RESULT_ID".NEXTVAL, :iv_session_id, f.TARGET_CHAR, f.TARGET_VALUE, f.rule_prob,        
+--             :v_current_level, 'RESOLVED', f.RULE_ID, CURRENT_TIMESTAMP
+--         FROM (
+--             SELECT TARGET_CHAR, TARGET_VALUE, RULE_ID, MAX(rule_prob) as rule_prob 
+--             FROM :lt_fired 
+--             GROUP BY TARGET_CHAR, TARGET_VALUE, RULE_ID
+--         ) f;
+
+--         -- STEP C: UNIVERSAL GAP LOGGING (Snapshot Step 5)
+--         -- Logs a gap for EVERY char targeted at this level if coverage < 1.0
+--         INSERT INTO "DAG_DERIVATIONRESULTS" 
+--             ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         SELECT 
+--             "SQ_RESULT_ID".NEXTVAL, :iv_session_id, t.TARGET_CHAR, 'UNRESOLVED',
+--             1.0 - COALESCE(d.total_prob, 0), :v_current_level, 'UNRESOLVED', 'GAP_LEVEL_' || :v_current_level, CURRENT_TIMESTAMP
+--         FROM (SELECT DISTINCT TARGET_CHAR FROM "T_DERIVATION_PATHS" WHERE PATH_LENGTH = :v_current_level) t
+--         LEFT JOIN (SELECT TARGET_CHAR, SUM(rule_prob) as total_prob FROM :lt_fired GROUP BY TARGET_CHAR) d 
+--           ON t.TARGET_CHAR = d.TARGET_CHAR
+--         WHERE COALESCE(d.total_prob, 0) < 1.0;
+
+--         -- STEP D: Update Buffer for Next Level (Snapshot Step 3 & 4: Summation)
+--         MERGE INTO #BUFFER AS b
+--         USING (
+--             SELECT "CHARKEY", "VALUECODE", SUM("PROBABILITY") as TOTAL_PROB
+--             FROM "DAG_DERIVATIONRESULTS" 
+--             WHERE "SESSIONID" = :iv_session_id AND "DERIVELEVEL" = :v_current_level
+--             GROUP BY "CHARKEY", "VALUECODE"
+--         ) AS src
+--         ON b."CHARKEY" = src."CHARKEY" AND b."VALUECODE" = src."VALUECODE"
+--         WHEN MATCHED THEN UPDATE SET b."PROBABILITY" = src.TOTAL_PROB
+--         WHEN NOT MATCHED THEN INSERT VALUES (src."CHARKEY", src."VALUECODE", src.TOTAL_PROB);
+
+--         v_current_level := :v_current_level + 1;
+--     END WHILE;
+
+--     -- ── 4. POST-PROCESS CLEANUP (THE FINAL NOISE-REDUCER) ──────────────
+--     -- This deletes any 'UNRESOLVED' row if a HIGHER level entry exists for that same Char.
+--     -- This ensures ADAS_TIER only shows its GAP_LEVEL_4 and Homologation its GAP_LEVEL_5.
+--     DELETE FROM "DAG_DERIVATIONRESULTS" r1
+--     WHERE "SESSIONID" = :iv_session_id 
+--       AND "VALUECODE" = 'UNRESOLVED'
+--       AND EXISTS (
+--           SELECT 1 FROM "DAG_DERIVATIONRESULTS" r2 
+--           WHERE r2."SESSIONID" = r1."SESSIONID" 
+--             AND r2."CHARKEY" = r1."CHARKEY" 
+--             AND r2."DERIVELEVEL" > r1."DERIVELEVEL"
+--       );
+
+--     DROP TABLE #BUFFER;
+--     ov_status := 'SUCCESS';
+--     ov_message := 'Derivation complete. Verified GAP_LEVEL_4 for ADAS and GAP_LEVEL_5 for Homologation.';
+-- END;
+
+
+
+-- Working Version for Level 1, Level 2, Level 3 
+-- PROCEDURE "P_DERIVE_PROBABILISTIC_V2"(
+--     IN  iv_session_id NVARCHAR(36),
+--     OUT ov_status     NVARCHAR(20),
+--     OUT ov_message    NVARCHAR(500)
+-- ) 
+-- LANGUAGE SQLSCRIPT 
+-- SQL SECURITY INVOKER AS
+-- BEGIN
+--     -- ── 1. DECLARATIONS & INITIAL CLEANUP ────────────────────────────────
+--     DECLARE v_current_level INTEGER := 1;
+--     DECLARE v_max_level     INTEGER := 0;
+--     DECLARE v_region        NVARCHAR(10);
+--     DECLARE v_product       NVARCHAR(20);
+
+--     DELETE FROM "DAG_DERIVATIONRESULTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     SELECT "REGIONID", "PRODUCTID" INTO v_region, v_product 
+--     FROM "DAG_SESSIONS" WHERE "SESSIONID" = :iv_session_id;
+
+--     CREATE LOCAL TEMPORARY TABLE #BUFFER (
+--         "CHARKEY"    NVARCHAR(50),
+--         "VALUECODE"  NVARCHAR(50),
+--         "PROBABILITY" DOUBLE,
+--         PRIMARY KEY ("CHARKEY", "VALUECODE")
+--     );
+
+--     -- ── 2. SEEDING (Using values from your image) ───────────────────────
+--     INSERT INTO #BUFFER ("CHARKEY", "VALUECODE", "PROBABILITY")
+--     SELECT "CHARKEY", "VALUECODE", CAST("PROBABILITY" AS DOUBLE)
+--     FROM "DAG_SESSIONINPUTS" WHERE "SESSIONID" = :iv_session_id;
+
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'REGION') THEN
+--         INSERT INTO #BUFFER VALUES ('REGION', :v_region, 1.0);
+--     END IF;
+    
+--     IF NOT EXISTS (SELECT 1 FROM #BUFFER WHERE "CHARKEY" = 'PRODUCT') THEN
+--         INSERT INTO #BUFFER VALUES ('PRODUCT', :v_product, 1.0);
+--     END IF;
+
+--     SELECT COALESCE(MAX(PATH_LENGTH), 0) INTO v_max_level FROM "T_DERIVATION_PATHS";
+
+--     -- ── 3. ITERATIVE DERIVATION ENGINE ──────────────────────────────────
+--     WHILE :v_current_level <= :v_max_level DO
+        
+--         -- STEP A: Find Fired Rules and calculate their individual probability
+--         -- This isolates the Rule math from the Path structure to prevent double-multiplication
+--         lt_fired = SELECT 
+--             p.TARGET_CHAR,
+--             p.TARGET_VALUE,
+--             SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN) as LAST_RULE_ID,
+--             rules.rule_prob as path_prob
+--         FROM "T_DERIVATION_PATHS" p
+--         INNER JOIN (
+--             -- Subquery: Product of all conditions per Rule
+--             SELECT 
+--                 rc.RULE_ID,
+--                 EXP(SUM(LN(NULLIF(b.PROBABILITY, 0)))) as rule_prob
+--             FROM "T_RULE_CONDITIONS" rc
+--             JOIN #BUFFER b ON b."CHARKEY" = rc."COND_CHAR" AND b."VALUECODE" = rc."COND_VALUE"
+--             GROUP BY rc.RULE_ID
+--             -- STRICT: All conditions of the rule must be present in #BUFFER
+--             HAVING COUNT(DISTINCT rc.COND_CHAR || rc.COND_VALUE) = (
+--                 SELECT COUNT(*) FROM "T_RULE_CONDITIONS" sub WHERE sub.RULE_ID = rc.RULE_ID
+--             )
+--         ) AS rules ON rules.RULE_ID = SUBSTRING_REGEXPR('([^"]+)(?="\]$)' IN p.RULE_CHAIN)
+--         WHERE p.PATH_LENGTH = :v_current_level;
+
+--         -- STEP B: Log Results (Deduplicated)
+--         INSERT INTO "DAG_DERIVATIONRESULTS" 
+--             ("RESULTID", "SESSIONID", "CHARKEY", "VALUECODE", "PROBABILITY", "DERIVELEVEL", "STATUS", "RULECHAIN", "COMPUTEDAT")
+--         SELECT 
+--             "SQ_RESULT_ID".NEXTVAL, 
+--             :iv_session_id, 
+--             f.TARGET_CHAR, 
+--             f.TARGET_VALUE, 
+--             MAX(f.path_prob),    -- Strongest path probability wins
+--             :v_current_level, 
+--             'RESOLVED', 
+--             '["' || f.LAST_RULE_ID || '"]', 
+--             CURRENT_TIMESTAMP
+--         FROM :lt_fired f
+--         GROUP BY f.TARGET_CHAR, f.TARGET_VALUE, f.LAST_RULE_ID;
+
+--         -- STEP C: Update Buffer for Next Level (HANA Cloud Compatible MERGE)
+--         MERGE INTO #BUFFER AS b
+--         USING (
+--             SELECT "CHARKEY", "VALUECODE", MAX("PROBABILITY") as PROBABILITY
+--             FROM "DAG_DERIVATIONRESULTS" 
+--             WHERE "SESSIONID" = :iv_session_id AND "DERIVELEVEL" = :v_current_level
+--             GROUP BY "CHARKEY", "VALUECODE"
+--         ) AS src
+--         ON b."CHARKEY" = src."CHARKEY" AND b."VALUECODE" = src."VALUECODE"
+--         WHEN MATCHED THEN 
+--             UPDATE SET b."PROBABILITY" = src."PROBABILITY"
+--         WHEN NOT MATCHED THEN 
+--             INSERT VALUES (src."CHARKEY", src."VALUECODE", src."PROBABILITY");
+
+--         v_current_level := :v_current_level + 1;
+        
+--         -- Early Exit check
+--         IF NOT EXISTS (SELECT 1 FROM "DAG_DERIVATIONRESULTS" 
+--                        WHERE "SESSIONID" = :iv_session_id AND "DERIVELEVEL" = :v_current_level - 1) 
+--         THEN 
+--             BREAK; 
+--         END IF;
+--     END WHILE;
+
+--     DROP TABLE #BUFFER;
+--     ov_status := 'SUCCESS';
+--     ov_message := 'Probabilistic derivation verified via Rule-Isolated logic.';
+-- END;

@@ -1,0 +1,35 @@
+------------------------------------------------------------------------------------------------
+-- Name:            V_CHARVALUEUPDATE
+-- Description:     View to fetch NPI Characteristics and its Dimensions
+-- Join Details:    A: CP_NPI_CHARVAL -  Table for NPI characteristics 
+--                  B: CP_NPI_CHARVAL_DIMENSION - Table for Dimensions
+-------------------------------------------------------------------------------------------------
+VIEW "V_CHARVALUEUPDATE" AS
+SELECT 
+	A.PROJECT_ID,
+	A.REF_PRODID,
+	A.CHAR_NUM,
+	A.CHAR_VALUE,
+	A.REF_CHAR_VALUE,
+	A.WEIGHT,
+	A.VALID_FROM,
+	A.VALID_TO,
+	A.REF_CHARVALUE_DESC,
+	A.CHARVAL_DESC,
+	A.CHAR_NAME,
+	B.LOCATION_ID,
+	B.LOCATION_DESC,
+	B.PRODUCT_ID,
+	B.PRODUCT_DESC,
+	B.HISTORY_DATE,
+	B.PHASE_IN_START	
+FROM 
+    CP_NPI_CHARVAL AS A
+	INNER JOIN
+	CP_NPI_CHARVAL_DIMENSION AS B
+	ON A.PROJECT_ID = B.PROJECT_ID
+    AND A.REF_PRODID = B.REF_PRODID
+    AND A.CHAR_VALUE = B.CHAR_VALUE
+    AND A.REF_CHAR_VALUE = B.REF_CHAR_VALUE
+	;
+

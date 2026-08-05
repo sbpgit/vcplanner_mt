@@ -1,0 +1,13 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_MFLOCATION
+-- Description:     Fetch Factory Location and location description master table
+-- Join Details:    A: CP_FACTORY_SALESLOC-  Master table for factorylocation
+--                  B: CP_LOCATION- Master table for location description
+-----------------------------------------------------------------------------------------
+VIEW "V_MFLOCATIONMASTER"
+AS SELECT DISTINCT
+A.FACTORY_LOC,
+B.LOCATION_DESC
+FROM "CP_FACTORY_SALESLOC" AS A
+Inner JOIN "CP_LOCATION" AS B
+ON A."FACTORY_LOC" = B."LOCATION_ID"

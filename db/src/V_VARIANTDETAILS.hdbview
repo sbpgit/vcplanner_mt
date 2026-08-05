@@ -1,0 +1,6 @@
+VIEW "V_VARIANTDETAILS" AS
+    SELECT VARIANT_NAME,
+            VARIANT_DESC,
+            PARAMETER_ID,
+            VALUE
+        FROM JS_VARIANT_ITEMS;

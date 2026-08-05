@@ -1,0 +1,19 @@
+PROCEDURE AHC_PRECALCULATED_MAIN_T(
+IN it_group_data PAL_PRECALCULATED_DATA_GRP_T,
+OUT ot_group_ahc_cp PAL_AHC_PRECALC_COMBINE_PROCESS_GRP_T,
+OUT ot_group_ahc_results PAL_AHC_PRECALC_RESULTS_GRP_T
+) 
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER
+AS
+BEGIN
+DECLARE lt_group_ahc_cp PAL_AHC_PRECALC_COMBINE_PROCESS_GRP_T;
+DECLARE lt_group_ahc_results PAL_AHC_PRECALC_RESULTS_GRP_T;
+lt_dummy = SELECT 1 a FROM dummy;
+MAP_REDUCE(:lt_dummy, AHC_PRECALCULATED_MAPPER_T(:lt_dummy.a, :it_group_data) GROUP BY "GROUP_ID" AS "GROUP_DATA",
+AHC_PRECALCULATED_REDUCER_T("GROUP_DATA"."GROUP_ID", "GROUP_DATA", lt_group_ahc_cp, lt_group_ahc_results) );
+ot_group_ahc_cp = SELECT * FROM :lt_group_ahc_cp;
+ot_group_ahc_results = SELECT * FROM :lt_group_ahc_results;
+insert into PAL_AHC_PRECALC_COMBINE_PROCESS_GRP_TAB select * from :lt_group_ahc_cp;
+insert into PAL_AHC_PRECALC_RESULTS_GRP_TAB select * from :lt_group_ahc_results;
+END;

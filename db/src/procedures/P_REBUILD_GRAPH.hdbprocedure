@@ -1,0 +1,597 @@
+PROCEDURE "P_REBUILD_GRAPH"()
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER
+AS
+BEGIN
+    /* 
+       =========================================================================
+       1. DECLARATIONS & INITIALIZATION
+       =========================================================================
+    */
+    DECLARE i_level      INTEGER := 1;
+    DECLARE v_row_count  BIGINT  := 0;
+    DECLARE v_base_id    BIGINT;
+
+    -- Results from the Topological Sort (Kahn's Algorithm)
+    DECLARE lt_topo_result TABLE (
+        "VERTEX_ID"    NVARCHAR(50),
+        "CHAR_KEY"     NVARCHAR(50),
+        "VALUE_CODE"   NVARCHAR(50),
+        "DERIVE_LEVEL" INTEGER,
+        "TOPO_ORDER"   INTEGER
+    );
+
+    -- Buffer tables for BFS path exploration
+    DECLARE lt_paths TABLE (
+        "SOURCE_CHAR"  NVARCHAR(50), "SOURCE_VALUE" NVARCHAR(50),
+        "TARGET_CHAR"  NVARCHAR(50), "TARGET_VALUE" NVARCHAR(50),
+        "PATH_LENGTH"  INTEGER,
+        "PATH_NODES"   NVARCHAR(2000), 
+        "RULE_CHAIN"   NVARCHAR(2000),
+        "LAST_VERTEX"  NVARCHAR(50)
+    );
+
+    DECLARE lt_extensions TABLE (
+        "SOURCE_CHAR"  NVARCHAR(50), "SOURCE_VALUE" NVARCHAR(50),
+        "TARGET_CHAR"  NVARCHAR(50), "TARGET_VALUE" NVARCHAR(50),
+        "PATH_LENGTH"  INTEGER,
+        "PATH_NODES"   NVARCHAR(2000), 
+        "RULE_CHAIN"   NVARCHAR(2000),
+        "LAST_VERTEX"  NVARCHAR(50)
+    );
+
+    /* 
+       =========================================================================
+       2. GRAPH RECONSTRUCTION (CLEANUP & RELEVANCE FILTERING)
+       =========================================================================
+    */
+    DELETE FROM "T_GRAPH_EDGES";
+    DELETE FROM "T_GRAPH_VERTICES";
+
+    -- Step 2.1: Create Vertices (Filters orphans like eCVT)
+    INSERT INTO "T_GRAPH_VERTICES" (VERTEX_ID, CHAR_KEY, VALUE_CODE, CHAR_TYPE, DERIVE_LEVEL, LABEL)
+    SELECT 
+        cv.CHAR_KEY || '__' || cv.VALUE_CODE, 
+        cv.CHAR_KEY, 
+        cv.VALUE_CODE, 
+        cd.CHAR_TYPE, 
+        0, 
+        cv.VALUE_LABEL
+    FROM "T_CHAR_VALUES" cv 
+    JOIN "T_CHAR_DEFINITIONS" cd ON cd.CHAR_KEY = cv.CHAR_KEY
+    WHERE cd.CHAR_TYPE = 'INPUT'
+       OR EXISTS (
+          SELECT 1 FROM "T_DERIVATION_RULES" r 
+          WHERE r.TARGET_CHAR = cv.CHAR_KEY AND r.DERIVED_VALUE = cv.VALUE_CODE AND r.ACTIVE = 1
+       )
+       OR EXISTS (
+          SELECT 1 FROM "T_RULE_CONDITIONS" rc
+          JOIN "T_DERIVATION_RULES" ar ON ar.RULE_ID = rc.RULE_ID
+          WHERE rc.COND_CHAR = cv.CHAR_KEY AND rc.COND_VALUE = cv.VALUE_CODE AND ar.ACTIVE = 1
+       );
+
+    -- Step 2.2: Create Edges
+    INSERT INTO "T_GRAPH_EDGES" (EDGE_ID, SOURCE, TARGET, RULE_ID, EDGE_WEIGHT)
+    SELECT 
+        "SQ_EDGE_ID".NEXTVAL, 
+        rc.COND_CHAR || '__' || rc.COND_VALUE, 
+        r.TARGET_CHAR || '__' || r.DERIVED_VALUE, 
+        rc.RULE_ID, 
+        rc.COND_WEIGHT
+    FROM "T_RULE_CONDITIONS" rc 
+    JOIN "T_DERIVATION_RULES" r ON r.RULE_ID = rc.RULE_ID
+    WHERE r.ACTIVE = 1;
+
+    /* 
+       =========================================================================
+       3. TOPOLOGICAL RANKING
+       =========================================================================
+    */
+    CALL "P_GRAPH_TOPO_SORT"(ot_sorted_vertices => :lt_topo_result);
+
+    MERGE INTO "T_GRAPH_VERTICES" AS v
+    USING :lt_topo_result AS t
+    ON v.VERTEX_ID = t.VERTEX_ID
+    WHEN MATCHED THEN 
+        UPDATE SET v.DERIVE_LEVEL = t.DERIVE_LEVEL;
+
+    /* 
+       =========================================================================
+       4. BFS PATH EXPLORATION
+       =========================================================================
+    */
+    DELETE FROM "T_DERIVATION_PATHS";
+
+    lt_paths = SELECT 
+        vs.CHAR_KEY AS SOURCE_CHAR, vs.VALUE_CODE AS SOURCE_VALUE,
+        vt.CHAR_KEY AS TARGET_CHAR, vt.VALUE_CODE AS TARGET_VALUE,
+        1 AS PATH_LENGTH,
+        CAST('["' || e.SOURCE || '","' || e.TARGET || '"]' AS NVARCHAR(2000)) AS PATH_NODES,
+        CAST('["' || e.RULE_ID || '"]' AS NVARCHAR(2000)) AS RULE_CHAIN,
+        e.TARGET AS LAST_VERTEX
+    FROM "T_GRAPH_EDGES" e
+    JOIN "T_GRAPH_VERTICES" vs ON vs.VERTEX_ID = e.SOURCE AND vs.CHAR_TYPE = 'INPUT'
+    JOIN "T_GRAPH_VERTICES" vt ON vt.VERTEX_ID = e.TARGET AND vt.CHAR_TYPE = 'DERIVED';
+
+    v_row_count := RECORD_COUNT(:lt_paths);
+
+    WHILE :v_row_count > 0 DO
+        lt_extensions = SELECT 
+            p.SOURCE_CHAR, p.SOURCE_VALUE,
+            vt.CHAR_KEY AS TARGET_CHAR, vt.VALUE_CODE AS TARGET_VALUE,
+            p.PATH_LENGTH + 1 AS PATH_LENGTH,
+            -- Explicit CAST to NVARCHAR(2000) avoids Type Mismatch warnings
+            CAST(SUBSTRING(p.PATH_NODES, 1, LENGTH(p.PATH_NODES) - 1) || ',"' || e.TARGET || '"]' AS NVARCHAR(2000)) AS PATH_NODES,
+            CAST(SUBSTRING(p.RULE_CHAIN, 1, LENGTH(p.RULE_CHAIN) - 1) || ',"' || e.RULE_ID || '"]' AS NVARCHAR(2000)) AS RULE_CHAIN,
+            e.TARGET AS LAST_VERTEX
+        FROM :lt_paths p
+        JOIN "T_GRAPH_EDGES" e ON e.SOURCE = p.LAST_VERTEX
+        JOIN "T_GRAPH_VERTICES" vt ON vt.VERTEX_ID = e.TARGET
+        WHERE p.PATH_LENGTH = :i_level;
+
+        v_row_count := RECORD_COUNT(:lt_extensions);
+        
+        IF :v_row_count > 0 THEN
+            lt_paths = SELECT * FROM :lt_paths UNION ALL SELECT * FROM :lt_extensions;
+        END IF;
+        
+        i_level := :i_level + 1;
+        IF :i_level > 20 THEN BREAK; END IF; 
+    END WHILE;
+
+    /* 
+       =========================================================================
+       5. PERSISTENCE & DEDUPLICATION (Sanitized for Keywords)
+       =========================================================================
+    */
+    SELECT COALESCE(MAX(PATH_ID), 0) INTO v_base_id FROM "T_DERIVATION_PATHS";
+
+    INSERT INTO "T_DERIVATION_PATHS" (
+        PATH_ID, SOURCE_CHAR, SOURCE_VALUE, TARGET_CHAR, TARGET_VALUE, 
+        PATH_LENGTH, PATH_NODES, RULE_CHAIN, COMPUTED_AT
+    )
+    SELECT 
+        :v_base_id + ROW_NUMBER() OVER(),
+        "SOURCE_CHAR", "SOURCE_VALUE", "TARGET_CHAR", "TARGET_VALUE", 
+        "PATH_LENGTH", "PATH_NODES", "RULE_CHAIN", CURRENT_TIMESTAMP
+    FROM (
+        SELECT 
+            "SOURCE_CHAR", "SOURCE_VALUE", "TARGET_CHAR", "TARGET_VALUE", 
+            "PATH_LENGTH", "PATH_NODES", "RULE_CHAIN",
+            -- Aliased to "DEPTH_INDICATOR" to avoid "Rank" keyword error
+            ROW_NUMBER() OVER (
+                PARTITION BY "TARGET_CHAR", "TARGET_VALUE" 
+                ORDER BY "PATH_LENGTH" DESC
+            ) AS "DEPTH_INDICATOR"
+        FROM :lt_paths
+    ) AS "BASE_PATHS"
+    WHERE "BASE_PATHS"."DEPTH_INDICATOR" = 1; 
+
+END;
+
+
+
+
+-- PROCEDURE "P_REBUILD_GRAPH"()
+-- LANGUAGE SQLSCRIPT
+-- SQL SECURITY INVOKER
+-- AS
+-- BEGIN
+--     -- ── 1. DECLARATIONS ──────────────────────────────────────────────────
+--     DECLARE v_max_level  INTEGER := 0;
+--     DECLARE i_level      INTEGER := 1;
+--     DECLARE v_row_count  BIGINT  := 0;
+
+--     -- Table variable for topo sort results
+--     DECLARE lt_topo_result TABLE (
+--         "VERTEX_ID"    NVARCHAR(50),
+--         "CHAR_KEY"     NVARCHAR(50),
+--         "VALUE_CODE"   NVARCHAR(50),
+--         "DERIVE_LEVEL" INTEGER,
+--         "TOPO_ORDER"   INTEGER
+--     );
+
+--     -- Buffer tables for path exploration
+--     DECLARE lt_paths TABLE (
+--         "SOURCE_CHAR"  NVARCHAR(50),
+--         "SOURCE_VALUE" NVARCHAR(50),
+--         "TARGET_CHAR"  NVARCHAR(50),
+--         "TARGET_VALUE" NVARCHAR(50),
+--         "PATH_LENGTH"  INTEGER,
+--         "PATH_NODES"   NVARCHAR(2000),
+--         "RULE_CHAIN"   NVARCHAR(2000),
+--         "LAST_VERTEX"  NVARCHAR(50)
+--     );
+--     DECLARE lt_extensions TABLE (
+--         "SOURCE_CHAR"  NVARCHAR(50),
+--         "SOURCE_VALUE" NVARCHAR(50),
+--         "TARGET_CHAR"  NVARCHAR(50),
+--         "TARGET_VALUE" NVARCHAR(50),
+--         "PATH_LENGTH"  INTEGER,
+--         "PATH_NODES"   NVARCHAR(2000),
+--         "RULE_CHAIN"   NVARCHAR(2000),
+--         "LAST_VERTEX"  NVARCHAR(50)
+--     );
+
+--     -- ── 2. REBUILD BASE GRAPH ───────────────────────────────────────────
+--     DELETE FROM "T_GRAPH_EDGES";
+--     DELETE FROM "T_GRAPH_VERTICES";
+
+--     -- Create Vertices
+--     INSERT INTO "T_GRAPH_VERTICES" (VERTEX_ID, CHAR_KEY, VALUE_CODE, CHAR_TYPE, DERIVE_LEVEL, LABEL)
+--     SELECT cv.CHAR_KEY || '__' || cv.VALUE_CODE, cv.CHAR_KEY, cv.VALUE_CODE, cd.CHAR_TYPE, 
+--            COALESCE(cd.DERIVE_LEVEL, 0), cv.VALUE_LABEL
+--     FROM "T_CHAR_VALUES" cv 
+--     JOIN "T_CHAR_DEFINITIONS" cd ON cd.CHAR_KEY = cv.CHAR_KEY;
+
+--     -- Create Edges (Conditions -> Targets)
+--     INSERT INTO "T_GRAPH_EDGES" (EDGE_ID, SOURCE, TARGET, RULE_ID, EDGE_WEIGHT)
+--     SELECT "SQ_EDGE_ID".NEXTVAL, rc.COND_CHAR || '__' || rc.COND_VALUE, 
+--            r.TARGET_CHAR || '__' || r.DERIVED_VALUE, rc.RULE_ID, rc.COND_WEIGHT
+--     FROM "T_RULE_CONDITIONS" rc 
+--     JOIN "T_DERIVATION_RULES" r ON r.RULE_ID = rc.RULE_ID
+--     WHERE r.ACTIVE = 1;
+
+--     -- ── 3. TOPOLOGICAL SORT & LEVEL UPDATE ──────────────────────────────
+--     -- Calculate correct execution order to handle dependencies
+--     CALL "P_GRAPH_TOPO_SORT"(ot_sorted_vertices => :lt_topo_result);
+
+
+--     -- HANA-compliant update using MERGE
+--     MERGE INTO "T_GRAPH_VERTICES" v
+--     USING :lt_topo_result t
+--     ON v.VERTEX_ID = t.VERTEX_ID
+--     WHEN MATCHED THEN 
+--     UPDATE SET v.DERIVE_LEVEL = t.DERIVE_LEVEL;
+
+--     -- -- Sync the calculated Topological levels back to the main Vertex table
+--     -- UPDATE "T_GRAPH_VERTICES" v
+--     -- SET v.DERIVE_LEVEL = t.DERIVE_LEVEL
+--     -- FROM "T_GRAPH_VERTICES" v
+--     -- INNER JOIN :lt_topo_result t ON v.VERTEX_ID = t.VERTEX_ID;
+
+--     -- ── 4. COMPUTE ALL DERIVATION PATHS (BFS) ───────────────────────────
+--     DELETE FROM "T_DERIVATION_PATHS";
+
+--     -- SEED: Level 1 (Direct links from INPUT to DERIVED)
+--     lt_paths = SELECT 
+--         vs.CHAR_KEY AS SOURCE_CHAR, vs.VALUE_CODE AS SOURCE_VALUE,
+--         vt.CHAR_KEY AS TARGET_CHAR, vt.VALUE_CODE AS TARGET_VALUE,
+--         1 AS PATH_LENGTH,
+--         '["' || e.SOURCE || '","' || e.TARGET || '"]' AS PATH_NODES,
+--         '["' || e.RULE_ID || '"]' AS RULE_CHAIN,
+--         e.TARGET AS LAST_VERTEX
+--     FROM "T_GRAPH_EDGES" e
+--     JOIN "T_GRAPH_VERTICES" vs ON vs.VERTEX_ID = e.SOURCE AND vs.CHAR_TYPE = 'INPUT'
+--     JOIN "T_GRAPH_VERTICES" vt ON vt.VERTEX_ID = e.TARGET AND vt.CHAR_TYPE = 'DERIVED';
+
+--     v_row_count := RECORD_COUNT(:lt_paths);
+
+--     -- EXPLORE: Iteratively extend paths until no more targets found
+--     WHILE :v_row_count > 0 DO
+--         lt_extensions = SELECT 
+--             p.SOURCE_CHAR, p.SOURCE_VALUE,
+--             vt.CHAR_KEY AS TARGET_CHAR, vt.VALUE_CODE AS TARGET_VALUE,
+--             p.PATH_LENGTH + 1 AS PATH_LENGTH,
+--             -- Append new node and rule to the JSON-style strings
+--             SUBSTRING(p.PATH_NODES, 1, LENGTH(p.PATH_NODES) - 1) || ',"' || e.TARGET || '"]' AS PATH_NODES,
+--             SUBSTRING(p.RULE_CHAIN, 1, LENGTH(p.RULE_CHAIN) - 1) || ',"' || e.RULE_ID || '"]' AS RULE_CHAIN,
+--             e.TARGET AS LAST_VERTEX
+--         FROM :lt_paths p
+--         JOIN "T_GRAPH_EDGES" e ON e.SOURCE = p.LAST_VERTEX
+--         JOIN "T_GRAPH_VERTICES" vt ON vt.VERTEX_ID = e.TARGET
+--         WHERE p.PATH_LENGTH = :i_level; -- Only extend paths from the current iteration level
+
+--         v_row_count := RECORD_COUNT(:lt_extensions);
+        
+--         IF :v_row_count > 0 THEN
+--             lt_paths = SELECT * FROM :lt_paths UNION ALL SELECT * FROM :lt_extensions;
+--         END IF;
+        
+--         i_level := :i_level + 1;
+        
+--         -- Safety break for circular dependencies
+--         IF :i_level > 20 THEN BREAK; END IF; 
+--     END WHILE;
+
+--     -- ── 5. PERSISTENCE & DEDUPLICATION ──────────────────────────────────
+--     INSERT INTO "T_DERIVATION_PATHS" (
+--         PATH_ID, SOURCE_CHAR, SOURCE_VALUE, TARGET_CHAR, TARGET_VALUE, 
+--         PATH_LENGTH, PATH_NODES, RULE_CHAIN, COMPUTED_AT
+--     )
+--     SELECT 
+--         "SQ_PATH_ID".NEXTVAL,
+--         SOURCE_CHAR, SOURCE_VALUE, TARGET_CHAR, TARGET_VALUE, 
+--         PATH_LENGTH, PATH_NODES, RULE_CHAIN, CURRENT_TIMESTAMP
+--     FROM (
+--         -- Grouping ensures we don't store duplicate logical paths
+--         SELECT 
+--             SOURCE_CHAR, SOURCE_VALUE, TARGET_CHAR, TARGET_VALUE, 
+--             PATH_LENGTH, PATH_NODES, RULE_CHAIN
+--         FROM :lt_paths
+--         GROUP BY SOURCE_CHAR, SOURCE_VALUE, TARGET_CHAR, TARGET_VALUE, 
+--                  PATH_LENGTH, PATH_NODES, RULE_CHAIN
+--     );
+
+-- END;
+
+
+-- PROCEDURE "P_REBUILD_GRAPH"()
+-- LANGUAGE SQLSCRIPT
+-- SQL SECURITY INVOKER
+-- AS
+-- BEGIN
+--     -- ── All declarations at top of BEGIN block ────────────────────────────
+--     DECLARE v_max_level  INTEGER := 6;
+--     DECLARE i_level      INTEGER := 2;
+
+--     DECLARE lt_topo_result TABLE (
+--         "VERTEX_ID"    NVARCHAR(50),
+--         "CHAR_KEY"     NVARCHAR(50),
+--         "VALUE_CODE"   NVARCHAR(50),
+--         "DERIVE_LEVEL" INTEGER,
+--         "TOPO_ORDER"   INTEGER
+--     );
+--     DECLARE lt_topo_numbered TABLE (
+--         "VERTEX_ID"  NVARCHAR(50),
+--         "REAL_ORDER" INTEGER
+--     );
+--     DECLARE lt_paths TABLE (
+--         "SOURCE_CHAR"  NVARCHAR(50),
+--         "SOURCE_VALUE" NVARCHAR(50),
+--         "TARGET_CHAR"  NVARCHAR(50),
+--         "TARGET_VALUE" NVARCHAR(50),
+--         "PATH_LENGTH"  INTEGER,
+--         "PATH_NODES"   NVARCHAR(2000),
+--         "RULE_CHAIN"   NVARCHAR(2000),
+--         "LAST_VERTEX"  NVARCHAR(50)
+--     );
+--     DECLARE lt_extensions TABLE (
+--         "SOURCE_CHAR"  NVARCHAR(50),
+--         "SOURCE_VALUE" NVARCHAR(50),
+--         "TARGET_CHAR"  NVARCHAR(50),
+--         "TARGET_VALUE" NVARCHAR(50),
+--         "PATH_LENGTH"  INTEGER,
+--         "PATH_NODES"   NVARCHAR(2000),
+--         "RULE_CHAIN"   NVARCHAR(2000),
+--         "LAST_VERTEX"  NVARCHAR(50)
+--     );
+
+--     -- ── STEP 1 & 2: Rebuild Vertices and Edges ────────────────────────────
+--     DELETE FROM "T_GRAPH_EDGES";
+--     DELETE FROM "T_GRAPH_VERTICES";
+
+--     INSERT INTO "T_GRAPH_VERTICES" (VERTEX_ID, CHAR_KEY, VALUE_CODE, CHAR_TYPE, DERIVE_LEVEL, LABEL)
+--     SELECT cv.CHAR_KEY || '__' || cv.VALUE_CODE, cv.CHAR_KEY, cv.VALUE_CODE, cd.CHAR_TYPE, COALESCE(cd.DERIVE_LEVEL, 0), cv.VALUE_LABEL
+--     FROM "T_CHAR_VALUES" cv JOIN "T_CHAR_DEFINITIONS" cd ON cd.CHAR_KEY = cv.CHAR_KEY;
+
+--     INSERT INTO "T_GRAPH_EDGES" (EDGE_ID, SOURCE, TARGET, RULE_ID, EDGE_WEIGHT)
+--     SELECT "SQ_EDGE_ID".NEXTVAL, rc.COND_CHAR || '__' || rc.COND_VALUE, r.TARGET_CHAR || '__' || r.DERIVED_VALUE, rc.RULE_ID, rc.COND_WEIGHT
+--     FROM "T_RULE_CONDITIONS" rc JOIN "T_DERIVATION_RULES" r ON r.RULE_ID = rc.RULE_ID
+--     WHERE r.ACTIVE = 1;
+
+--     -- ── STEP 3: Topological Sort ─────────────────────────────────────────
+--     CALL "P_GRAPH_TOPO_SORT"(ot_sorted_vertices => :lt_topo_result);
+--     -- ... (Topo update logic remains the same)
+
+--     -- ── STEP 4: Compute All Derivation Paths (BFS) ───────────────────────
+--     DELETE FROM "T_DERIVATION_PATHS";
+
+--     -- Seed: Level 1
+--     lt_paths = SELECT 
+--         vs.CHAR_KEY AS SOURCE_CHAR, vs.VALUE_CODE AS SOURCE_VALUE,
+--         vt.CHAR_KEY AS TARGET_CHAR, vt.VALUE_CODE AS TARGET_VALUE,
+--         1 AS PATH_LENGTH,
+--         '["' || e.SOURCE || '","' || e.TARGET || '"]' AS PATH_NODES,
+--         '["' || e.RULE_ID || '"]' AS RULE_CHAIN,
+--         e.TARGET AS LAST_VERTEX
+--     FROM "T_GRAPH_EDGES" e
+--     JOIN "T_GRAPH_VERTICES" vs ON vs.VERTEX_ID = e.SOURCE AND vs.CHAR_TYPE = 'INPUT'
+--     JOIN "T_GRAPH_VERTICES" vt ON vt.VERTEX_ID = e.TARGET AND vt.CHAR_TYPE = 'DERIVED';
+
+--     SELECT COALESCE(MAX(DERIVE_LEVEL), 6) INTO v_max_level FROM "T_CHAR_DEFINITIONS" WHERE CHAR_TYPE = 'DERIVED';
+
+--     WHILE :i_level <= :v_max_level DO
+--         lt_extensions = SELECT 
+--             p.SOURCE_CHAR, p.SOURCE_VALUE,
+--             vt.CHAR_KEY AS TARGET_CHAR, vt.VALUE_CODE AS TARGET_VALUE,
+--             p.PATH_LENGTH + 1 AS PATH_LENGTH,
+--             SUBSTRING(p.PATH_NODES, 1, LENGTH(p.PATH_NODES) - 1) || ',"' || e.TARGET || '"]' AS PATH_NODES,
+--             SUBSTRING(p.RULE_CHAIN, 1, LENGTH(p.RULE_CHAIN) - 1) || ',"' || e.RULE_ID || '"]' AS RULE_CHAIN,
+--             e.TARGET AS LAST_VERTEX
+--         FROM :lt_paths p
+--         JOIN "T_GRAPH_EDGES" e ON e.SOURCE = p.LAST_VERTEX
+--         JOIN "T_GRAPH_VERTICES" vt ON vt.VERTEX_ID = e.TARGET AND vt.DERIVE_LEVEL = :i_level;
+
+--         lt_paths = SELECT * FROM :lt_paths UNION ALL SELECT * FROM :lt_extensions;
+--         i_level := :i_level + 1;
+--     END WHILE;
+
+--     -- ── STEP 5: Persist with DEDUPLICATION ────────────────────────────────
+--     -- Use GROUP BY to ensure only one unique logical path is stored
+--     INSERT INTO "T_DERIVATION_PATHS" (
+--         PATH_ID, SOURCE_CHAR, SOURCE_VALUE, TARGET_CHAR, TARGET_VALUE, 
+--         PATH_LENGTH, PATH_NODES, RULE_CHAIN, COMPUTED_AT
+--     )
+--     SELECT 
+--         "SQ_PATH_ID".NEXTVAL,
+--         SOURCE_CHAR, SOURCE_VALUE, TARGET_CHAR, TARGET_VALUE, 
+--         PATH_LENGTH, PATH_NODES, RULE_CHAIN, CURRENT_TIMESTAMP
+--     FROM (
+--         SELECT 
+--             SOURCE_CHAR, SOURCE_VALUE, TARGET_CHAR, TARGET_VALUE, 
+--             PATH_LENGTH, PATH_NODES, RULE_CHAIN
+--         FROM :lt_paths
+--         GROUP BY SOURCE_CHAR, SOURCE_VALUE, TARGET_CHAR, TARGET_VALUE, PATH_LENGTH, PATH_NODES, RULE_CHAIN
+--     );
+
+-- END;
+
+
+-- PROCEDURE "P_REBUILD_GRAPH"()
+-- LANGUAGE SQLSCRIPT
+-- SQL SECURITY INVOKER
+-- AS
+-- BEGIN
+--     -- ── All declarations at top of BEGIN block ────────────────────────────
+--     DECLARE v_max_level  INTEGER := 6;
+--     DECLARE i_level      INTEGER := 2;
+
+--     DECLARE lt_topo_result TABLE (
+--         "VERTEX_ID"    NVARCHAR(50),
+--         "CHAR_KEY"     NVARCHAR(50),
+--         "VALUE_CODE"   NVARCHAR(50),
+--         "DERIVE_LEVEL" INTEGER,
+--         "TOPO_ORDER"   INTEGER
+--     );
+--     DECLARE lt_topo_numbered TABLE (
+--         "VERTEX_ID"  NVARCHAR(50),
+--         "REAL_ORDER" INTEGER
+--     );
+--     DECLARE lt_paths TABLE (
+--         "PATH_ID"      BIGINT,
+--         "SOURCE_CHAR"  NVARCHAR(50),
+--         "SOURCE_VALUE" NVARCHAR(50),
+--         "TARGET_CHAR"  NVARCHAR(50),
+--         "TARGET_VALUE" NVARCHAR(50),
+--         "PATH_LENGTH"  INTEGER,
+--         "PATH_NODES"   NVARCHAR(2000),
+--         "RULE_CHAIN"   NVARCHAR(2000),
+--         "LAST_VERTEX"  NVARCHAR(50)
+--     );
+--     DECLARE lt_extensions TABLE (
+--         "PATH_ID"      BIGINT,
+--         "SOURCE_CHAR"  NVARCHAR(50),
+--         "SOURCE_VALUE" NVARCHAR(50),
+--         "TARGET_CHAR"  NVARCHAR(50),
+--         "TARGET_VALUE" NVARCHAR(50),
+--         "PATH_LENGTH"  INTEGER,
+--         "PATH_NODES"   NVARCHAR(2000),
+--         "RULE_CHAIN"   NVARCHAR(2000),
+--         "LAST_VERTEX"  NVARCHAR(50)
+--     );
+
+--     -- ── STEP 1: Rebuild Vertices ──────────────────────────────────────────
+--     DELETE FROM "T_GRAPH_EDGES";
+--     DELETE FROM "T_GRAPH_VERTICES";
+
+--     INSERT INTO "T_GRAPH_VERTICES" (
+--         VERTEX_ID, CHAR_KEY, VALUE_CODE, CHAR_TYPE, DERIVE_LEVEL, LABEL, TOPO_ORDER
+--     )
+--     SELECT
+--         cv.CHAR_KEY || '__' || cv.VALUE_CODE AS VERTEX_ID,
+--         cv.CHAR_KEY,
+--         cv.VALUE_CODE,
+--         cd.CHAR_TYPE,
+--         COALESCE(cd.DERIVE_LEVEL, 0)         AS DERIVE_LEVEL,
+--         cv.VALUE_LABEL                        AS LABEL,
+--         NULL                                  AS TOPO_ORDER
+--     FROM "T_CHAR_VALUES" cv
+--     JOIN "T_CHAR_DEFINITIONS" cd ON cd.CHAR_KEY = cv.CHAR_KEY;
+
+--     -- ── STEP 2: Rebuild Edges ─────────────────────────────────────────────
+--     INSERT INTO "T_GRAPH_EDGES" (EDGE_ID, SOURCE, TARGET, RULE_ID, EDGE_WEIGHT)
+--     SELECT
+--         "SQ_EDGE_ID".NEXTVAL                     AS EDGE_ID,
+--         rc.COND_CHAR || '__' || rc.COND_VALUE    AS SOURCE,
+--         r.TARGET_CHAR || '__' || r.DERIVED_VALUE AS TARGET,
+--         rc.RULE_ID,
+--         rc.COND_WEIGHT
+--     FROM "T_RULE_CONDITIONS" rc
+--     JOIN "T_DERIVATION_RULES" r ON r.RULE_ID = rc.RULE_ID
+--     WHERE r.ACTIVE = 1
+--       AND EXISTS (
+--           SELECT 1 FROM "T_GRAPH_VERTICES" v
+--           WHERE v.VERTEX_ID = rc.COND_CHAR || '__' || rc.COND_VALUE
+--       )
+--       AND EXISTS (
+--           SELECT 1 FROM "T_GRAPH_VERTICES" v
+--           WHERE v.VERTEX_ID = r.TARGET_CHAR || '__' || r.DERIVED_VALUE
+--       );
+
+--     -- ── STEP 3: Compute Topological Order via HANA Graph ─────────────────
+--     CALL "P_GRAPH_TOPO_SORT"(ot_sorted_vertices => :lt_topo_result);
+
+--     -- Assign real sequential order using ROW_NUMBER
+--     -- Rows returned by P_GRAPH_TOPO_SORT are in correct topo sequence
+--     lt_topo_numbered = SELECT
+--         VERTEX_ID,
+--         ROW_NUMBER() OVER (ORDER BY DERIVE_LEVEL, VERTEX_ID) AS REAL_ORDER
+--     FROM :lt_topo_result;
+
+--     -- Update TOPO_ORDER in T_GRAPH_VERTICES
+--     UPDATE "T_GRAPH_VERTICES"
+--     SET "TOPO_ORDER" = (
+--         SELECT t."REAL_ORDER"
+--         FROM :lt_topo_numbered AS t
+--         WHERE t."VERTEX_ID" = "T_GRAPH_VERTICES"."VERTEX_ID"
+--     )
+--     WHERE "VERTEX_ID" IN (SELECT "VERTEX_ID" FROM :lt_topo_numbered);
+
+--     -- ── STEP 4: Compute All Derivation Paths (BFS level by level) ─────────
+--     DELETE FROM "T_DERIVATION_PATHS";
+
+--     -- Seed: direct 1-hop paths from INPUT vertices to L1 DERIVED vertices
+--     lt_paths = SELECT
+--         ROW_NUMBER() OVER (ORDER BY e.SOURCE, e.TARGET) AS PATH_ID,
+--         vs.CHAR_KEY    AS SOURCE_CHAR,
+--         vs.VALUE_CODE  AS SOURCE_VALUE,
+--         vt.CHAR_KEY    AS TARGET_CHAR,
+--         vt.VALUE_CODE  AS TARGET_VALUE,
+--         1              AS PATH_LENGTH,
+--         '[' || '"' || e.SOURCE || '","' || e.TARGET || '"' || ']' AS PATH_NODES,
+--         '[' || '"' || e.RULE_ID || '"' || ']'                     AS RULE_CHAIN,
+--         e.TARGET       AS LAST_VERTEX
+--     FROM "T_GRAPH_EDGES" e
+--     JOIN "T_GRAPH_VERTICES" vs ON vs.VERTEX_ID = e.SOURCE AND vs.CHAR_TYPE = 'INPUT'
+--     JOIN "T_GRAPH_VERTICES" vt ON vt.VERTEX_ID = e.TARGET AND vt.CHAR_TYPE = 'DERIVED';
+
+--     -- Get max derivation level
+--     SELECT COALESCE(MAX(DERIVE_LEVEL), 6) INTO v_max_level
+--     FROM "T_CHAR_DEFINITIONS" WHERE CHAR_TYPE = 'DERIVED';
+
+--     -- BFS: extend paths level by level
+--     WHILE :i_level <= :v_max_level DO
+
+--         lt_extensions = SELECT
+--             ROW_NUMBER() OVER (ORDER BY p.SOURCE_CHAR, p.SOURCE_VALUE, e.TARGET) AS PATH_ID,
+--             p.SOURCE_CHAR,
+--             p.SOURCE_VALUE,
+--             vt.CHAR_KEY       AS TARGET_CHAR,
+--             vt.VALUE_CODE     AS TARGET_VALUE,
+--             p.PATH_LENGTH + 1 AS PATH_LENGTH,
+--             SUBSTRING(p.PATH_NODES, 1, LENGTH(p.PATH_NODES) - 1)
+--                 || ',"' || e.TARGET || '"' || ']' AS PATH_NODES,
+--             SUBSTRING(p.RULE_CHAIN, 1, LENGTH(p.RULE_CHAIN) - 1)
+--                 || ',"' || e.RULE_ID || '"' || ']' AS RULE_CHAIN,
+--             e.TARGET AS LAST_VERTEX
+--         FROM :lt_paths p
+--         JOIN "T_GRAPH_EDGES" e ON e.SOURCE = p.LAST_VERTEX
+--         JOIN "T_GRAPH_VERTICES" vt
+--           ON vt.VERTEX_ID  = e.TARGET
+--          AND vt.CHAR_TYPE  = 'DERIVED'
+--          AND vt.DERIVE_LEVEL = :i_level;
+
+--         lt_paths = SELECT * FROM :lt_paths
+--                    UNION ALL
+--                    SELECT * FROM :lt_extensions;
+
+--         i_level := :i_level + 1;
+
+--     END WHILE;
+
+--     -- ── STEP 5: Persist All Paths ─────────────────────────────────────────
+--     INSERT INTO "T_DERIVATION_PATHS" (
+--         PATH_ID, SOURCE_CHAR, SOURCE_VALUE,
+--         TARGET_CHAR, TARGET_VALUE, PATH_LENGTH,
+--         PATH_NODES, RULE_CHAIN, COMPUTED_AT
+--     )
+--     SELECT
+--         ROW_NUMBER() OVER (ORDER BY SOURCE_CHAR, SOURCE_VALUE, PATH_LENGTH, TARGET_CHAR),
+--         SOURCE_CHAR, SOURCE_VALUE,
+--         TARGET_CHAR, TARGET_VALUE, PATH_LENGTH,
+--         PATH_NODES, RULE_CHAIN,
+--         CURRENT_TIMESTAMP
+--     FROM :lt_paths;
+
+-- END;

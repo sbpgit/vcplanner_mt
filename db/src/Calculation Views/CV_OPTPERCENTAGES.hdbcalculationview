@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_OPTPERCENTAGES" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_OPTPERCENTAGES"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="V_EFFECTIVE_OPTION_PLAN">
+    <resourceUri>V_EFFECTIVE_OPTION_PLAN</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews/>
+<logicalModel id="V_EFFECTIVE_OPTION_PLAN">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="CUSTOMER_GROUP" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_GROUP"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="CUSTOMER_GROUP"/>
+    </attribute>
+    <attribute id="MODEL_VERSION" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MODEL_VERSION"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="MODEL_VERSION"/>
+    </attribute>
+    <attribute id="CHAR_NUM" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NUM"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="CHAR_NUM"/>
+    </attribute>
+    <attribute id="CHARVAL_NUM" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_NUM"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="CHARVAL_NUM"/>
+    </attribute>
+    <attribute id="VERSION" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VERSION"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="VERSION"/>
+    </attribute>
+    <attribute id="SCENARIO" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCENARIO"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="SCENARIO"/>
+    </attribute>
+    <attribute id="WEEK_DATE" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_DATE"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="WEEK_DATE"/>
+    </attribute>
+    <attribute id="CHAR_DESC" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_DESC"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="CHAR_DESC"/>
+    </attribute>
+    <attribute id="CHAR_NAME" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NAME"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="CHAR_NAME"/>
+    </attribute>
+    <attribute id="CHARVAL_DESC" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_DESC"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="CHARVAL_DESC"/>
+    </attribute>
+    <attribute id="VERSION_NAME" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VERSION_NAME"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="VERSION_NAME"/>
+    </attribute>
+    <attribute id="SCENARIO_NAME" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCENARIO_NAME"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="SCENARIO_NAME"/>
+    </attribute>
+    <attribute id="LOCATION_DESC" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_DESC"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="LOCATION_DESC"/>
+    </attribute>
+    <attribute id="PROD_DESC" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROD_DESC"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="PROD_DESC"/>
+    </attribute>
+    <attribute id="OPTION_PERCENT" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="OPTION_PERCENT"/>
+      <keyMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="OPTION_PERCENT"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="OPT_PERCENT" order="17" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="OPT_PERCENT"/>
+      <measureMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="OPT_PERCENT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="OPT_QTY" order="18" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="OPT_QTY"/>
+      <measureMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="OPT_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="PROD_DEMAND" order="19" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PROD_DEMAND"/>
+      <measureMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="PROD_DEMAND"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="ACT_DEM_VC" order="20" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ACT_DEM_VC"/>
+      <measureMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="ACT_DEM_VC"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="ACT_DEM" order="21" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ACT_DEM"/>
+      <measureMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="ACT_DEM"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="EFFECTIVE_QTY" order="23" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="EFFECTIVE_QTY"/>
+      <measureMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="EFFECTIVE_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="EFFECTIVE_PER" order="24" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="EFFECTIVE_PER"/>
+      <measureMapping columnObjectName="V_EFFECTIVE_OPTION_PLAN" columnName="EFFECTIVE_PER"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

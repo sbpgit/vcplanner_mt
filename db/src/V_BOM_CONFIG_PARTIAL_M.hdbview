@@ -1,0 +1,39 @@
+------------------------------------------------------------------------------------
+-- Name : V_BOM_CONFIG_PARTIAL_M
+-- Description  : Get Demand Location, Factory Location, Partial Products, BOM, Object Dependencies
+-- JOIN Details : CP_BOM_MAT - Master Data for BOM
+--                CP_BOM_OD - Master Data for BOM Object Dependencies
+--                CP_FACTORY_SALESLOC - Planning Network Details
+--                CP_PARTIALPROD_INTRO - Partial Products Data
+
+
+VIEW V_BOM_CONFIG_PARTIAL_M AS
+SELECT DISTINCT 
+  A.CHILD_LOC AS FACTORY_LOC,
+  C.REF_PRODID,
+  D.LOCATION_ID,
+  D.PRODUCT_ID,
+  A.COUNTER AS ITEM_NUM,
+  A.MAT_PARENT,
+  A.MAT_CHILD AS COMPONENT,
+  A.PROD_DESC AS COMP_DESC,
+  A.COMPONENT_QTY AS COMP_QTY,
+  A.CONFIGURABLE,
+  A.PHANTOM_IND,
+  A.CLASS_FLG,
+  A.VALID_FROM,
+  A.VALID_TO,
+  B.OBJ_DEP,
+  B.OBJDEP_DESC
+FROM "CP_BOM_MAT" AS A
+  LEFT OUTER JOIN "CP_BOM_OD" AS B
+ ON  A.MAT_PARENT = B.MAT_PARENT
+  AND A.MAT_CHILD = B.MAT_CHILD
+  AND A.LOCATION_ID = B.LOCATION_ID
+INNER JOIN "CP_PARTIALPROD_INTRO" AS C
+   ON C.LOCATION_ID = A.LOCATION_ID
+  AND C.REF_PRODID = A.MAT_PARENT
+  INNER JOIN "CP_FACTORY_SALESLOC" AS D
+ ON D.FACTORY_LOC = A.CHILD_LOC 
+ AND D.PRODUCT_ID = C.PRODUCT_ID  
+ORDER BY D.PRODUCT_ID ASC

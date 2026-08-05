@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_ASSEMBLY_COMPONENT" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_ASSEMBLY_COMPONENT"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_ASSEMBLY_REQ">
+    <resourceUri>CP_ASSEMBLY_REQ</resourceUri>
+  </DataSource>
+  <DataSource id="CP_LOCATION">
+    <resourceUri>CP_LOCATION</resourceUri>
+  </DataSource>
+  <DataSource id="Join_2$$$$CP_LOCATION$$">
+    <resourceUri>CP_LOCATION</resourceUri>
+  </DataSource>
+  <DataSource id="CP_PRODUCT">
+    <resourceUri>CP_PRODUCT</resourceUri>
+  </DataSource>
+  <DataSource id="CP_BOM_MAT">
+    <resourceUri>CP_BOM_MAT</resourceUri>
+  </DataSource>
+  <DataSource id="V_WEEK_DESCRIPTOR">
+    <resourceUri>V_WEEK_DESCRIPTOR</resourceUri>
+  </DataSource>
+  <DataSource id="CP_IBP_FUTUREDEMAND">
+    <resourceUri>CP_IBP_FUTUREDEMAND</resourceUri>
+  </DataSource>
+  <DataSource id="CP_ASSEMBLY_COMP">
+    <resourceUri>CP_ASSEMBLY_COMP</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ITEM_NUM"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="RULE_TYPE"/>
+      <viewAttribute id="TYPE"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="UNIQUE_ID" aggregationType="sum"/>
+      <viewAttribute id="FACTORY_LOCATION_DESC"/>
+      <viewAttribute id="ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute hidden="true" id="JOIN$FACTORY_LOC$LOCATION_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="TOTAL_QTY" datatype="DECIMAL" length="13" scale="0" expressionLanguage="SQL">
+        <formula>COALESCE(&quot;CIR_ASMB_QTY&quot;,0) + COALESCE(&quot;ACTUAL_QTY&quot;,0)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="REQ_TYPE" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>'OD'</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="CP_ASSEMBLY_REQ">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_NUM" source="ITEM_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="COMPONENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RULE_TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASMB_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_ASMB_QTY" source="COMPCIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FACTORY_LOC$LOCATION_ID" source="FACTORY_LOC"/>
+    </input>
+    <input node="CP_LOCATION">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOCATION_DESC" source="LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FACTORY_LOC$LOCATION_ID" source="LOCATION_ID"/>
+    </input>
+    <joinAttribute name="JOIN$FACTORY_LOC$LOCATION_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ITEM_NUM"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="RULE_TYPE"/>
+      <viewAttribute id="TYPE"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="UNIQUE_ID" aggregationType="sum"/>
+      <viewAttribute id="FACTORY_LOCATION_DESC"/>
+      <viewAttribute id="LOCATION_DESC"/>
+      <viewAttribute id="ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="TOTAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="REQ_TYPE"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_NUM" source="ITEM_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RULE_TYPE" source="RULE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOCATION_DESC" source="FACTORY_LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASMB_QTY" source="ASMB_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_ASMB_QTY" source="CIR_ASMB_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_QTY" source="TOTAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQ_TYPE" source="REQ_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+    </input>
+    <input node="Join_2$$$$CP_LOCATION$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_DESC" source="LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ITEM_NUM"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="RULE_TYPE"/>
+      <viewAttribute id="TYPE"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="UNIQUE_ID" aggregationType="sum"/>
+      <viewAttribute id="FACTORY_LOCATION_DESC"/>
+      <viewAttribute id="LOCATION_DESC"/>
+      <viewAttribute id="PROD_DESC"/>
+      <viewAttribute id="ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="TOTAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="REQ_TYPE"/>
+      <viewAttribute hidden="true" id="JOIN$REF_PRODID$PRODUCT_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_NUM" source="ITEM_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RULE_TYPE" source="RULE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOCATION_DESC" source="FACTORY_LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_DESC" source="LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASMB_QTY" source="ASMB_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_ASMB_QTY" source="CIR_ASMB_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_QTY" source="TOTAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQ_TYPE" source="REQ_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$REF_PRODID$PRODUCT_ID" source="REF_PRODID"/>
+    </input>
+    <input node="CP_PRODUCT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DESC" source="PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$REF_PRODID$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <joinAttribute name="JOIN$REF_PRODID$PRODUCT_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ITEM_NUM"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="RULE_TYPE"/>
+      <viewAttribute id="TYPE"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="UNIQUE_ID" aggregationType="sum"/>
+      <viewAttribute id="FACTORY_LOCATION_DESC"/>
+      <viewAttribute id="LOCATION_DESC"/>
+      <viewAttribute id="PROD_DESC"/>
+      <viewAttribute id="PHANTOM_IND"/>
+      <viewAttribute id="CONFIGURABLE"/>
+      <viewAttribute id="ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="TOTAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="REQ_TYPE"/>
+      <viewAttribute id="VALID_FROM"/>
+      <viewAttribute id="VALID_TO"/>
+      <viewAttribute hidden="true" id="JOIN$ITEM_NUM$COUNTER"/>
+      <viewAttribute hidden="true" id="JOIN$ASSEMBLY$MAT_CHILD"/>
+      <viewAttribute hidden="true" id="JOIN$REF_PRODID$MAT_PARENT"/>
+      <viewAttribute hidden="true" id="JOIN$FACTORY_LOC$CHILD_LOC"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_NUM" source="ITEM_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RULE_TYPE" source="RULE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOCATION_DESC" source="FACTORY_LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_DESC" source="LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DESC" source="PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASMB_QTY" source="ASMB_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_ASMB_QTY" source="CIR_ASMB_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_QTY" source="TOTAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQ_TYPE" source="REQ_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ITEM_NUM$COUNTER" source="ITEM_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ASSEMBLY$MAT_CHILD" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$REF_PRODID$MAT_PARENT" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FACTORY_LOC$CHILD_LOC" source="FACTORY_LOC"/>
+    </input>
+    <input node="CP_BOM_MAT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PHANTOM_IND" source="PHANTOM_IND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONFIGURABLE" source="CONFIGURABLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_FROM" source="VALID_FROM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VALID_TO" source="VALID_TO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ITEM_NUM$COUNTER" source="COUNTER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ASSEMBLY$MAT_CHILD" source="MAT_CHILD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$REF_PRODID$MAT_PARENT" source="MAT_PARENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FACTORY_LOC$CHILD_LOC" source="CHILD_LOC"/>
+    </input>
+    <joinAttribute name="JOIN$ITEM_NUM$COUNTER"/>
+    <joinAttribute name="JOIN$ASSEMBLY$MAT_CHILD"/>
+    <joinAttribute name="JOIN$REF_PRODID$MAT_PARENT"/>
+    <joinAttribute name="JOIN$FACTORY_LOC$CHILD_LOC"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ITEM_NUM"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="RULE_TYPE"/>
+      <viewAttribute id="TYPE"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="UNIQUE_ID" aggregationType="sum"/>
+      <viewAttribute id="FACTORY_LOCATION_DESC"/>
+      <viewAttribute id="LOCATION_DESC"/>
+      <viewAttribute id="PROD_DESC"/>
+      <viewAttribute id="PHANTOM_IND"/>
+      <viewAttribute id="CONFIGURABLE"/>
+      <viewAttribute id="CALENDAR_WEEK"/>
+      <viewAttribute id="TELESCOPIC_WEEK"/>
+      <viewAttribute id="WEEK_STARTDATE"/>
+      <viewAttribute id="WEEK_ENDDATE"/>
+      <viewAttribute id="ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="TOTAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="REQ_TYPE"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute hidden="true" id="JOIN$WEEK_DATE$WEEK_STARTDATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_NUM" source="ITEM_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RULE_TYPE" source="RULE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOCATION_DESC" source="FACTORY_LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_DESC" source="LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DESC" source="PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PHANTOM_IND" source="PHANTOM_IND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONFIGURABLE" source="CONFIGURABLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASMB_QTY" source="ASMB_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_ASMB_QTY" source="CIR_ASMB_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_QTY" source="TOTAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQ_TYPE" source="REQ_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_STARTDATE" source="WEEK_DATE"/>
+    </input>
+    <input node="V_WEEK_DESCRIPTOR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CALENDAR_WEEK" source="CALENDAR_WEEK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TELESCOPIC_WEEK" source="TELESCOPIC_WEEK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_STARTDATE" source="WEEK_STARTDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_ENDDATE" source="WEEK_ENDDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_STARTDATE" source="WEEK_STARTDATE"/>
+    </input>
+    <joinAttribute name="JOIN$WEEK_DATE$WEEK_STARTDATE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_6" cardinality="CN_N" joinType="rightOuter">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ITEM_NUM"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="RULE_TYPE"/>
+      <viewAttribute id="TYPE"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="UNIQUE_ID" aggregationType="sum"/>
+      <viewAttribute id="FACTORY_LOCATION_DESC"/>
+      <viewAttribute id="LOCATION_DESC"/>
+      <viewAttribute id="PROD_DESC"/>
+      <viewAttribute id="PHANTOM_IND"/>
+      <viewAttribute id="CONFIGURABLE"/>
+      <viewAttribute id="CALENDAR_WEEK"/>
+      <viewAttribute id="TELESCOPIC_WEEK"/>
+      <viewAttribute id="WEEK_STARTDATE"/>
+      <viewAttribute id="WEEK_ENDDATE"/>
+      <viewAttribute id="ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="PROD_DEM" aggregationType="sum"/>
+      <viewAttribute id="TOTAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="REQ_TYPE"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$VERSION$VERSION"/>
+      <viewAttribute hidden="true" id="JOIN$SCENARIO$SCENARIO"/>
+      <viewAttribute hidden="true" id="JOIN$WEEK_DATE$WEEK_DATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="COEFFICIENTS" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>CASE 
+	 WHEN (&quot;TOTAL_QTY&quot; = 0 or &quot;PROD_DEM&quot; = 0)
+	 then 0
+	 ELSE  ROUND((&quot;TOTAL_QTY&quot; / &quot;PROD_DEM&quot;),3)
+ END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_NUM" source="ITEM_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RULE_TYPE" source="RULE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOCATION_DESC" source="FACTORY_LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_DESC" source="LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DESC" source="PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PHANTOM_IND" source="PHANTOM_IND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONFIGURABLE" source="CONFIGURABLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CALENDAR_WEEK" source="CALENDAR_WEEK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TELESCOPIC_WEEK" source="TELESCOPIC_WEEK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_STARTDATE" source="WEEK_STARTDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_ENDDATE" source="WEEK_ENDDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASMB_QTY" source="ASMB_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_ASMB_QTY" source="CIR_ASMB_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_QTY" source="TOTAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQ_TYPE" source="REQ_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VERSION$VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCENARIO$SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+    </input>
+    <input node="CP_IBP_FUTUREDEMAND">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DEM" source="QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VERSION$VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCENARIO$SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$VERSION$VERSION"/>
+    <joinAttribute name="JOIN$SCENARIO$SCENARIO"/>
+    <joinAttribute name="JOIN$WEEK_DATE$WEEK_DATE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ITEM_NUM"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="RULE_TYPE"/>
+      <viewAttribute id="TYPE"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="UNIQUE_ID"/>
+      <viewAttribute id="FACTORY_LOCATION_DESC"/>
+      <viewAttribute id="LOCATION_DESC"/>
+      <viewAttribute id="PROD_DESC"/>
+      <viewAttribute id="PHANTOM_IND"/>
+      <viewAttribute id="CONFIGURABLE"/>
+      <viewAttribute id="CALENDAR_WEEK"/>
+      <viewAttribute id="TELESCOPIC_WEEK"/>
+      <viewAttribute id="WEEK_STARTDATE"/>
+      <viewAttribute id="WEEK_ENDDATE"/>
+      <viewAttribute id="REQ_TYPE"/>
+      <viewAttribute id="ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="PROD_DEM" aggregationType="sum"/>
+      <viewAttribute id="TOTAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="COEFFICIENTS" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_6"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_7" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ITEM_NUM"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="RULE_TYPE"/>
+      <viewAttribute id="TYPE"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="UNIQUE_ID" aggregationType="sum"/>
+      <viewAttribute id="FACTORY_LOCATION_DESC"/>
+      <viewAttribute id="LOCATION_DESC"/>
+      <viewAttribute id="PROD_DESC"/>
+      <viewAttribute id="PHANTOM_IND"/>
+      <viewAttribute id="CONFIGURABLE"/>
+      <viewAttribute id="CALENDAR_WEEK"/>
+      <viewAttribute id="TELESCOPIC_WEEK"/>
+      <viewAttribute id="WEEK_STARTDATE"/>
+      <viewAttribute id="WEEK_ENDDATE"/>
+      <viewAttribute id="REQ_TYPE"/>
+      <viewAttribute id="COMP_DESC"/>
+      <viewAttribute id="ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_ASMB_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="PROD_DEM" aggregationType="sum"/>
+      <viewAttribute id="TOTAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="COEFFICIENTS" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$ASSEMBLY$COMPONENT"/>
+      <viewAttribute hidden="true" id="JOIN$FACTORY_LOC$LOCATION_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="ASM_DESC" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE  
+	 WHEN &quot;PROD_DESC&quot; is null
+	 then &quot;COMP_DESC&quot;
+	 ELSE &quot;PROD_DESC&quot; 
+ END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ITEM_NUM" source="ITEM_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RULE_TYPE" source="RULE_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOCATION_DESC" source="FACTORY_LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_DESC" source="LOCATION_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DESC" source="PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PHANTOM_IND" source="PHANTOM_IND"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONFIGURABLE" source="CONFIGURABLE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CALENDAR_WEEK" source="CALENDAR_WEEK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TELESCOPIC_WEEK" source="TELESCOPIC_WEEK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_STARTDATE" source="WEEK_STARTDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_ENDDATE" source="WEEK_ENDDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REQ_TYPE" source="REQ_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASMB_QTY" source="ASMB_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_ASMB_QTY" source="CIR_ASMB_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DEM" source="PROD_DEM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_QTY" source="TOTAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COEFFICIENTS" source="COEFFICIENTS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ASSEMBLY$COMPONENT" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FACTORY_LOC$LOCATION_ID" source="FACTORY_LOC"/>
+    </input>
+    <input node="CP_ASSEMBLY_COMP">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COMP_DESC" source="COMP_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ASSEMBLY$COMPONENT" source="COMPONENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FACTORY_LOC$LOCATION_ID" source="LOCATION_ID"/>
+    </input>
+    <joinAttribute name="JOIN$ASSEMBLY$COMPONENT"/>
+    <joinAttribute name="JOIN$FACTORY_LOC$LOCATION_ID"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_7">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Join_7" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="LOCATION_DESC" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_DESC"/>
+      <keyMapping columnObjectName="Join_7" columnName="LOCATION_DESC"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Join_7" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="PROD_DESC" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROD_DESC"/>
+      <keyMapping columnObjectName="Join_7" columnName="PROD_DESC"/>
+    </attribute>
+    <attribute id="ITEM_NUM" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ITEM_NUM"/>
+      <keyMapping columnObjectName="Join_7" columnName="ITEM_NUM"/>
+    </attribute>
+    <attribute id="ASSEMBLY" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMPONENT"/>
+      <keyMapping columnObjectName="Join_7" columnName="ASSEMBLY"/>
+    </attribute>
+    <attribute id="MODEL_VERSION" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MODEL_VERSION"/>
+      <keyMapping columnObjectName="Join_7" columnName="MODEL_VERSION"/>
+    </attribute>
+    <attribute id="VERSION" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VERSION"/>
+      <keyMapping columnObjectName="Join_7" columnName="VERSION"/>
+    </attribute>
+    <attribute id="SCENARIO" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCENARIO"/>
+      <keyMapping columnObjectName="Join_7" columnName="SCENARIO"/>
+    </attribute>
+    <attribute id="RULE_TYPE" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TYPE_RULE_TYPE"/>
+      <keyMapping columnObjectName="Join_7" columnName="RULE_TYPE"/>
+    </attribute>
+    <attribute id="TYPE" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TYPE"/>
+      <keyMapping columnObjectName="Join_7" columnName="TYPE"/>
+    </attribute>
+    <attribute id="REF_PRODID" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REF_PRODID"/>
+      <keyMapping columnObjectName="Join_7" columnName="REF_PRODID"/>
+    </attribute>
+    <attribute id="FACTORY_LOC" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FACTORY_LOC"/>
+      <keyMapping columnObjectName="Join_7" columnName="FACTORY_LOC"/>
+    </attribute>
+    <attribute id="FACTORY_LOCATION_DESC" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_DESC"/>
+      <keyMapping columnObjectName="Join_7" columnName="FACTORY_LOCATION_DESC"/>
+    </attribute>
+    <attribute id="PHANTOM_IND" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PHANTOM_IND"/>
+      <keyMapping columnObjectName="Join_7" columnName="PHANTOM_IND"/>
+    </attribute>
+    <attribute id="CONFIGURABLE" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CONFIGURABLE"/>
+      <keyMapping columnObjectName="Join_7" columnName="CONFIGURABLE"/>
+    </attribute>
+    <attribute id="UNIQUE_ID" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="UNIQUE_ID"/>
+      <keyMapping columnObjectName="Join_7" columnName="UNIQUE_ID"/>
+    </attribute>
+    <attribute id="CALENDAR_WEEK" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CALENDAR_WEEK"/>
+      <keyMapping columnObjectName="Join_7" columnName="CALENDAR_WEEK"/>
+    </attribute>
+    <attribute id="TELESCOPIC_WEEK" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TELESCOPIC_WEEK"/>
+      <keyMapping columnObjectName="Join_7" columnName="TELESCOPIC_WEEK"/>
+    </attribute>
+    <attribute id="WEEK_STARTDATE" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_STARTDATE"/>
+      <keyMapping columnObjectName="Join_7" columnName="WEEK_STARTDATE"/>
+    </attribute>
+    <attribute id="WEEK_ENDDATE" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_ENDDATE"/>
+      <keyMapping columnObjectName="Join_7" columnName="WEEK_ENDDATE"/>
+    </attribute>
+    <attribute id="REQ_TYPE" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REQ_TYPE"/>
+      <keyMapping columnObjectName="Join_7" columnName="REQ_TYPE"/>
+    </attribute>
+    <attribute id="ASM_DESC" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ASM_DESC"/>
+      <keyMapping columnObjectName="Join_7" columnName="ASM_DESC"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="ASMB_QTY" order="24" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CIR_QTY_ASMB_QTY"/>
+      <measureMapping columnObjectName="Join_7" columnName="ASMB_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="CIR_QTY" order="25" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CIR_QTY"/>
+      <measureMapping columnObjectName="Join_7" columnName="CIR_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="CIR_ASMB_QTY" order="26" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="COMPCIR_QTY"/>
+      <measureMapping columnObjectName="Join_7" columnName="CIR_ASMB_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="ACTUAL_QTY" order="27" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ACTUAL_QTY"/>
+      <measureMapping columnObjectName="Join_7" columnName="ACTUAL_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="PROD_DEM" order="28" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUANTITY"/>
+      <measureMapping columnObjectName="Join_7" columnName="PROD_DEM"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="TOTAL_QTY" order="29" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="TOTAL_QTY"/>
+      <measureMapping columnObjectName="Join_7" columnName="TOTAL_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="COEFFICIENTS" order="30" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="COEFFICIENTS"/>
+      <measureMapping columnObjectName="Join_7" columnName="COEFFICIENTS"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="92" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="1162"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="CP_ASSEMBLY_REQ" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="185"/>
+    </shape>
+    <shape modelObjectName="CP_LOCATION" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="181"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="1022"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="235"/>
+    </shape>
+    <shape modelObjectName="CP_LOCATION" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="181"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="882"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="235"/>
+    </shape>
+    <shape modelObjectName="CP_PRODUCT" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="203"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="742"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="235"/>
+    </shape>
+    <shape modelObjectName="CP_BOM_MAT" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="186"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="602"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_4" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="235"/>
+    </shape>
+    <shape modelObjectName="V_WEEK_DESCRIPTOR" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="199"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="462"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_5" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="CP_IBP_FUTUREDEMAND" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="215"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="357"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="235"/>
+    </shape>
+    <shape modelObjectName="CP_ASSEMBLY_COMP" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="195"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

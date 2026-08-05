@@ -1,0 +1,37 @@
+-----------------------------------------------------------------------------------------
+-- Name:            V_SALESORDER_FUTURE
+-- Description:     View to get Future Sales Orders / To be used on Forecast Order Consumption
+-- Join Details:    V_SALES_H - Table for sales history
+-----------------------------------------------------------------------------------------  
+
+VIEW "V_SALESORDER_FUTURE" AS
+SELECT "LOCATION_ID",
+       "PRODUCT_ID",
+  -- CASE
+  --   WHEN WEEKDAY("MAT_AVAILDATE") = 0 THEN ADD_DAYS("MAT_AVAILDATE", 0)
+  --   WHEN WEEKDAY("MAT_AVAILDATE") = 1 THEN ADD_DAYS("MAT_AVAILDATE", -1)
+  --   WHEN WEEKDAY("MAT_AVAILDATE") = 2 THEN ADD_DAYS("MAT_AVAILDATE", -2)
+  --   WHEN WEEKDAY("MAT_AVAILDATE") = 3 THEN ADD_DAYS("MAT_AVAILDATE", -3)
+  --   WHEN WEEKDAY("MAT_AVAILDATE") = 4 THEN ADD_DAYS("MAT_AVAILDATE", -4)
+  --   WHEN WEEKDAY("MAT_AVAILDATE") = 5 THEN ADD_DAYS("MAT_AVAILDATE", -5)
+  --   WHEN WEEKDAY("MAT_AVAILDATE") = 6 THEN ADD_DAYS("MAT_AVAILDATE", -6)
+  -- END AS "WEEK_DATE",
+  ADD_DAYS("MAT_AVAILDATE",WEEKDAY("MAT_AVAILDATE") * -1 ) AS "WEEK_DATE",	
+         "UNIQUE_ID",
+          "PRIMARY_ID",
+  SUM("ORD_QTY") AS "ORD_QTY"
+FROM V_SALES_H
+GROUP BY "LOCATION_ID",
+         "PRODUCT_ID",
+    -- CASE
+    --     WHEN WEEKDAY("MAT_AVAILDATE") = 0 THEN ADD_DAYS("MAT_AVAILDATE", 0)
+    --     WHEN WEEKDAY("MAT_AVAILDATE") = 1 THEN ADD_DAYS("MAT_AVAILDATE", -1)
+    --     WHEN WEEKDAY("MAT_AVAILDATE") = 2 THEN ADD_DAYS("MAT_AVAILDATE", -2)
+    --     WHEN WEEKDAY("MAT_AVAILDATE") = 3 THEN ADD_DAYS("MAT_AVAILDATE", -3)
+    --     WHEN WEEKDAY("MAT_AVAILDATE") = 4 THEN ADD_DAYS("MAT_AVAILDATE", -4)
+    --     WHEN WEEKDAY("MAT_AVAILDATE") = 5 THEN ADD_DAYS("MAT_AVAILDATE", -5)
+    --     WHEN WEEKDAY("MAT_AVAILDATE") = 6 THEN ADD_DAYS("MAT_AVAILDATE", -6)
+    -- END,
+    ADD_DAYS("MAT_AVAILDATE",WEEKDAY("MAT_AVAILDATE") * -1 ),
+  "UNIQUE_ID",
+  "PRIMARY_ID";

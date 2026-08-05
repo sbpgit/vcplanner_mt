@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_UID_PID_ORDERS" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="CV_UID_PID_ORDERS"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_SALES_HM">
+    <resourceUri>CP_SALES_HM</resourceUri>
+  </DataSource>
+  <DataSource id="CP_CLUSTER_PRPIDS_MAPPED_PIDS">
+    <resourceUri>CP_CLUSTER_PRPIDS_MAPPED_PIDS</resourceUri>
+  </DataSource>
+  <DataSource id="Join_3$$$$CP_CLUSTER_PRPIDS_MAPPED_PIDS$$">
+    <resourceUri>CP_CLUSTER_PRPIDS_MAPPED_PIDS</resourceUri>
+  </DataSource>
+  <DataSource id="Join_2_1$$$$CP_SALES_HM$$">
+    <resourceUri>CP_SALES_HM</resourceUri>
+  </DataSource>
+  <DataSource id="CP_SALESH">
+    <resourceUri>CP_SALESH</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:AggregationView" id="Projection_1" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRIMARY_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="A_COUNT" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="CP_SALES_HM"/>
+    <filter>&quot;PRIMARY_ID&quot; != '0' OR &quot;PRIMARY_ID&quot; != NULL</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRPID" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRPID$PRIMARY_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_CLUSTER_PRPIDS_MAPPED_PIDS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRPID" source="PRPID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRPID$PRIMARY_ID" source="PRPID"/>
+    </input>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRPID$PRIMARY_ID" source="PRIMARY_ID"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$PRPID$PRIMARY_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_3">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRIMARY_ID"/>
+      <viewAttribute id="A_COUNT" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" cardinality="CN_N" joinType="leftOuter" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="PID" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$PRIMARY_ID$PID"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FLAG" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE
+WHEN &quot;PRIMARY_ID&quot; =&quot;PID&quot;
+THEN 'Y'
+ELSE 'X'
+END</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Aggregation_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRIMARY_ID$PID" source="PRIMARY_ID"/>
+    </input>
+    <input node="Join_3$$$$CP_CLUSTER_PRPIDS_MAPPED_PIDS$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PID" source="PID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRIMARY_ID$PID" source="PID"/>
+    </input>
+    <filter>&quot;FLAG&quot; = 'X'</filter>
+    <joinAttribute name="JOIN$PRIMARY_ID$PID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="Union_1" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRPID" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="Count" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_1" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRPID" source="PRPID"/>
+    </input>
+  
+    <input node="Join_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRPID" source="PID"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Projection_2" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRPID"/>
+      <viewAttribute id="Count" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Union_1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2_1" cardinality="CN_N" joinType="inner" multiJoinNode="Join_2" multiJoinCentralTable="CP_SALESH" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="UNIQUE_ID" aggregationType="sum"/>
+      <viewAttribute id="SALES_DOC"/>
+      <viewAttribute id="SALESDOC_ITEM"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRIMARY_ID$PRPID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_2_1$$$$CP_SALES_HM$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALES_DOC" source="SALES_DOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALESDOC_ITEM" source="SALESDOC_ITEM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRIMARY_ID$PRPID" source="PRIMARY_ID"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRIMARY_ID$PRPID" source="PRPID"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$PRIMARY_ID$PRPID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2_2" cardinality="CN_N" joinType="inner" filterExpressionLanguage="SQL" multiJoinNode="Join_2" multiJoinCentralTable="CP_SALESH" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="UNIQUE_ID" aggregationType="sum"/>
+      <viewAttribute id="ORD_QTY" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$SALES_DOC$SALES_DOC"/>
+      <viewAttribute hidden="true" id="JOIN$SALESDOC_ITEM$SALESDOC_ITEM"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_SALESH">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORD_QTY" source="ORD_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SALES_DOC$SALES_DOC" source="SALES_DOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SALESDOC_ITEM$SALESDOC_ITEM" source="SALESDOC_ITEM"/>
+    </input>
+    <input node="Join_2_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SALES_DOC$SALES_DOC" source="SALES_DOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SALESDOC_ITEM$SALESDOC_ITEM" source="SALESDOC_ITEM"/>
+    </input>
+    <joinAttribute name="JOIN$SALES_DOC$SALES_DOC"/>
+    <joinAttribute name="JOIN$SALESDOC_ITEM$SALESDOC_ITEM"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_2_2">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Join_2_2" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Join_2_2" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="PRIMARY_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRIMARY_ID"/>
+      <keyMapping columnObjectName="Join_2_2" columnName="PRIMARY_ID"/>
+    </attribute>
+  
+    <attribute id="UNIQUE_ID" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="UNIQUE_ID"/>
+      <keyMapping columnObjectName="Join_2_2" columnName="UNIQUE_ID"/>
+    </attribute></attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="ORD_QTY" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ORD_QTY"/>
+      <measureMapping columnObjectName="Join_2_2" columnName="ORD_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure></baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="229.69718402335417" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="125.66666666666671" y="874.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="301.99999999999994" y="616.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape modelObjectName="Aggregation_3" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="CP_CLUSTER_PRPIDS_MAPPED_PIDS" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="288.056640625"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92.00000000000001" y="616.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="CP_CLUSTER_PRPIDS_MAPPED_PIDS" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="16" y="16"/>
+      <rectangleSize width="288"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="368" y="32"/>
+      <rectangleSize width="158"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="217.53115481740315" y="476.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="229.69718402335417" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="CP_SALESH" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_2">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="208"/>
+    </shape>
+    <shape modelObjectName="CP_SALES_HM" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_2">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="178"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_2">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="217.53115481740315" y="371.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="126" y="804"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

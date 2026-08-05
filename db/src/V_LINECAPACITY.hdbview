@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------------
+-- Name:            V_LINECAPACITY
+-- Description:     Fetch Line Capacity for Location-Product
+-- Join Details:    A: CP_LINECAPACITY -  Line Capacity
+--                  B: CP_LINEMASTER - Line Master
+--                  C: V_LOCPROD - Location Product - Location Description
+--                  D: CP_PARTIALPROD_INTRO - Config and Partial Products Description
+-------------------------------------------------------------------------------------
+VIEW "V_LINECAPACITY" 
+AS SELECT DISTINCT
+A.LOCATION_ID,
+C.LOCATION_DESC,
+A.LINE_ID,
+A.PRODID,
+D.PROD_DESC,
+A.CAPACITY,
+B.LINE_DESC,
+A.VALID_FROM,
+A.VALID_TO
+FROM "CP_LINECAPACITY" AS A
+LEFT OUTER JOIN "CP_LINEMASTER" AS B
+ON A.LOCATION_ID = B.LOCATION_ID
+AND A.LINE_ID = B.LINE_ID
+LEFT OUTER JOIN "V_LOCPROD" AS C
+ON A.LOCATION_ID = C.LOCATION_ID
+INNER JOIN "CP_PARTIALPROD_INTRO" AS D
+ON A.PRODID = D.PRODUCT_ID

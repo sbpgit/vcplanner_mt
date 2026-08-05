@@ -1,0 +1,16 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_CIRVERSCEN
+-- Description:     Fetch IBP version and scenario for a location-product
+-- Join Details:    A: 
+--                  B: 
+-----------------------------------------------------------------------------------------
+VIEW "V_CIRVERSCEN"
+AS SELECT DISTINCT A.LOCATION_ID,
+A.PRODUCT_ID,
+B.REF_PRODID,
+A.VERSION,
+A.SCENARIO
+from "CP_CIR_GENERATED" AS A
+INNER JOIN "CP_PARTIALPROD_INTRO" AS B
+ON A.PRODUCT_ID = B.PRODUCT_ID
+AND A.LOCATION_ID = B.LOCATION_ID;

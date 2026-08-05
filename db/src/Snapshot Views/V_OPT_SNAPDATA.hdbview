@@ -1,0 +1,31 @@
+VIEW "V_OPT_SNAPDATA" AS
+SELECT
+    "SNAP_TIMESTAMP",
+    "LOCATION_ID",
+    "PRODUCT_ID",
+    "CUSTOMER_GROUP",
+    "CLASS_NUM",
+    "CHAR_NUM",
+    "CHARVAL_NUM",
+    "WEEK_DATE",
+    "TYPE" AS "KEY_TYPE",
+    "OPT_PERCENT",
+    "OPT_QTY"
+FROM
+    "CP_OPT_SNAPSHOT_DATA"
+union all
+   Select
+    CURRENT_TIMESTAMP AS "SNAP_TIMESTAMP",
+        "LOCATION_ID",
+        "PRODUCT_ID",
+        "CUSTOMER_GROUP",
+        "CLASS_NUM",
+        "CHAR_NUM",
+        "CHARVAL_NUM",
+        "WEEK_DATE",
+        "TYPE",
+        "OPT_PERCENT",
+        "OPT_QTY"
+FROM "CP_PAL_FCHARPLAN"
+WHERE   "VERSION"  = '__BASELINE' AND
+        "SCENARIO"  = '_PLAN'

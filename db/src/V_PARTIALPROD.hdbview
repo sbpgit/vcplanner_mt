@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------------------
+-- Name:            V_PARTIALPROD
+-- Description:     View to get partial products
+-- Join Details:    A: V_SALES_H-  View to get Partial products
+-----------------------------------------------------------------------------------------
+VIEW "V_PARTIALPROD" AS
+SELECT DISTINCT
+    LOCATION_ID,
+    PRODUCT_ID,
+    PROD_DESC,
+    REF_PRODID
+FROM V_SALES_H ; 
+-- WHERE "PRODUCT_ID" <> "REF_PRODID"

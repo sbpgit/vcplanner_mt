@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_CHAR_VALUES_MASTER" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_CHAR_VALUES_MASTER"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_CHAR_VALUES_MASTER">
+    <resourceUri>CP_CHAR_VALUES_MASTER</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews/>
+<logicalModel id="CP_CHAR_VALUES_MASTER">
+  <attributes>
+    <attribute id="CHAR_NUM" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NUM"/>
+      <keyMapping columnObjectName="CP_CHAR_VALUES_MASTER" columnName="CHAR_NUM"/>
+    </attribute>
+    <attribute id="CHARVAL_NUM" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_NUM"/>
+      <keyMapping columnObjectName="CP_CHAR_VALUES_MASTER" columnName="CHARVAL_NUM"/>
+    </attribute>
+    <attribute id="CHAR_VALUE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_VALUE"/>
+      <keyMapping columnObjectName="CP_CHAR_VALUES_MASTER" columnName="CHAR_VALUE"/>
+    </attribute>
+    <attribute id="CHARVAL_DESC" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_DESC"/>
+      <keyMapping columnObjectName="CP_CHAR_VALUES_MASTER" columnName="CHARVAL_DESC"/>
+    </attribute>
+    <attribute id="CATCH_ALL" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CATCH_ALL"/>
+      <keyMapping columnObjectName="CP_CHAR_VALUES_MASTER" columnName="CATCH_ALL"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures>
+    <measure id="COUNT" order="6" aggregationType="sum" measureType="simple" datatype="DECIMAL" length="13" scale="1" expressionLanguage="SQL">
+      <descriptions defaultDescription="Count"/>
+      <formula>1</formula>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="100" y="105"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

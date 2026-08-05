@@ -1,0 +1,3 @@
+-- IDX_ROLE_PARAM -  for data using  Parameter  and Value 
+INDEX "IDX_PARAM_VALUE"
+    ON "CP_ROLE_DETAILS" ("PARAMETER", "VALUE");

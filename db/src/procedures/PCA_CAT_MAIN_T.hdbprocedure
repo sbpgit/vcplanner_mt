@@ -1,0 +1,40 @@
+PROCEDURE PCA_CAT_MAIN_T(
+IN it_group_data PAL_PCA_CAT_DATA_GRP_T,
+OUT ot_group_cat_pca_loadings PAL_PCA_CAT_LOADINGS_GRP_T,
+OUT ot_group_cat_pca_loadings_info PAL_PCA_CAT_LOADINGS_INFORMATION_GRP_T,
+OUT ot_group_cat_pca_scores PAL_PCA_CAT_SCORES_GRP_T,
+OUT ot_group_cat_pca_scaling_info PAL_PCA_CAT_SCALING_INFORMATION_GRP_T,
+OUT ot_group_cat_pca_quantification PAL_PCA_CAT_QUANTIFICATION_GRP_T,
+OUT ot_group_cat_pca_stat PAL_PCA_CAT_STAT_GRP_T
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER
+AS
+BEGIN
+DECLARE lt_group_cat_pca_loadings PAL_PCA_CAT_LOADINGS_GRP_T;
+DECLARE lt_group_cat_pca_loadings_info PAL_PCA_CAT_LOADINGS_INFORMATION_GRP_T;
+DECLARE lt_group_cat_pca_scores PAL_PCA_CAT_SCORES_GRP_T;
+DECLARE lt_group_cat_pca_scaling_info PAL_PCA_CAT_SCALING_INFORMATION_GRP_T;
+DECLARE lt_group_cat_pca_quantification PAL_PCA_CAT_QUANTIFICATION_GRP_T;
+DECLARE lt_group_cat_pca_stat PAL_PCA_CAT_STAT_GRP_T;
+
+lt_dummy = SELECT 1 a FROM dummy;
+MAP_REDUCE(:lt_dummy, PCA_CAT_MAPPER_T(:lt_dummy.a, :it_group_data) GROUP BY "GROUP_ID" AS "GROUP_DATA",
+PCA_CAT_REDUCER_T("GROUP_DATA"."GROUP_ID", "GROUP_DATA", 
+lt_group_cat_pca_loadings, lt_group_cat_pca_loadings_info,
+lt_group_cat_pca_scores,lt_group_cat_pca_scaling_info,
+lt_group_cat_pca_quantification,lt_group_cat_pca_stat) );
+ot_group_cat_pca_loadings = SELECT * FROM :lt_group_cat_pca_loadings;
+ot_group_cat_pca_loadings_info = SELECT * FROM :lt_group_cat_pca_loadings_info;
+ot_group_cat_pca_scores = SELECT * FROM :lt_group_cat_pca_scores;
+ot_group_cat_pca_scaling_info = SELECT * FROM :lt_group_cat_pca_scaling_info;
+ot_group_cat_pca_quantification = SELECT * FROM :lt_group_cat_pca_quantification;
+ot_group_cat_pca_stat = SELECT * FROM :lt_group_cat_pca_stat;
+
+-- insert into PAL_PCA_CAT_LOADINGS_GRP_TAB select * from :lt_group_cat_pca_loadings;
+-- insert into PAL_PCA_CAT_LOADINGS_INFORMATION_GRP_TAB select * from :lt_group_cat_pca_loadings_info;
+-- insert into PAL_PCA_CAT_SCORES_GRP_TAB select * from :ot_group_cat_pca_scores;
+-- insert into PAL_PCA_CAT_SCALING_INFORMATION_GRP_TAB select * from :ot_group_cat_pca_scaling_info;
+-- insert into PAL_PCA_CAT_QUANTIFICATION_GRP_TAB select * from :ot_group_cat_pca_quantification;
+-- insert into PAL_PCA_CAT_STAT_GRP_TAB select * from :ot_group_cat_pca_stat;
+END;

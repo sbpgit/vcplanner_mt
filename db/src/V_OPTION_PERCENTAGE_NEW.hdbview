@@ -1,0 +1,533 @@
+ VIEW V_OPTION_PERCENTAGE_NEW AS
+-- ###########################################################
+-- CTE: Forecast aggregated at UNIQUE_ID level
+-- ###########################################################
+WITH FORECAST AS (
+  SELECT
+        "LOCATION_ID",
+        "PRODUCT_ID",
+        "WEEK_DATE",
+        "MODEL_VERSION",
+        "VERSION",
+        "SCENARIO",
+        SUM("CIR_QTY") AS CIR_QTY_UID_LEVEL
+    FROM "CP_CIR_GENERATED"
+    GROUP BY
+        "LOCATION_ID",
+        "PRODUCT_ID",
+        "WEEK_DATE",
+        "MODEL_VERSION",
+        "VERSION",
+        "SCENARIO"
+)
+ 
+-- ###########################################################
+-- 1. Statistical Forecast Key Figure Data
+-- ###########################################################
+(
+    SELECT
+        A.LOCATION_ID,
+        A.PRODUCT_ID,
+        A.CUSTOMER_GROUP,
+        A.MODEL_VERSION,
+        A.CHAR_NUM,
+        A.CHARVAL_NUM,
+        A.VERSION,
+        A.SCENARIO,
+        A.WEEK_DATE,
+        AVG(A.OPT_PERCENT) AS OPT_PERCENT,
+        AVG(A.OPT_QTY) AS OPT_QTY,
+        A.TYPE,
+        (SELECT MAX(CHAR_DESC)
+           FROM CP_CHARACTERISTICS
+          WHERE CHAR_NUM = A.CHAR_NUM) AS CHAR_DESC,
+        (SELECT DISTINCT CHAR_NAME
+           FROM CP_CHARACTERISTICS
+          WHERE CHAR_NUM = A.CHAR_NUM) AS CHAR_NAME,
+        (SELECT CHARVAL_DESC
+           FROM CP_CHAR_VALUES
+          WHERE CHAR_NUM = A.CHAR_NUM
+            AND CHAR_VALUE = A.CHARVAL_NUM) AS CHARVAL_DESC,
+        C.VERSION_NAME,
+        C.SCENARIO_NAME,
+        D.LOCATION_DESC,
+        D.PROD_DESC,
+        E.KEY_FIG_ID,
+        E.KEY_FIG_DESC,
+        E.DISPLAY_ORDER,
+        E.PRIORITY_ORDER,
+        NULL AS LOCK,
+        NULL AS COMMENTS,
+        NULL AS USER,
+        NULL AS OLD_VALUE,
+        NULL AS DATE_TIME
+    FROM CP_PAL_FCHARPLAN A
+    INNER JOIN CP_IBPVERSIONSCENARIO C
+            ON A.VERSION = C.VERSION
+           AND A.SCENARIO = C.SCENARIO
+    INNER JOIN V_PARTIALPRODDESC D
+            ON A.LOCATION_ID = D.LOCATION_ID
+           AND D.PRODUCT_ID = A.PRODUCT_ID
+    INNER JOIN CP_KEY_FIGURE_MASTER E
+            ON A.TYPE = E.KEY_FIG_ID
+    -- REMOVE UNWANTED KEY FIGS
+    WHERE A.TYPE NOT IN (101,102,103,994,995,998)
+    GROUP BY
+        A.LOCATION_ID,
+        A.PRODUCT_ID,
+        A.CUSTOMER_GROUP,
+        A.MODEL_VERSION,
+        A.CHAR_NUM,
+        A.CHARVAL_NUM,
+        A.VERSION,
+        A.SCENARIO,
+        A.WEEK_DATE,
+        A.TYPE,
+        C.VERSION_NAME,
+        C.SCENARIO_NAME,
+        D.LOCATION_DESC,
+        D.PROD_DESC,
+        E.KEY_FIG_ID,
+        E.KEY_FIG_DESC,
+        E.DISPLAY_ORDER,
+        E.PRIORITY_ORDER
+)
+ 
+UNION ALL
+ 
+-- ###########################################################
+-- 2. Manual Override Key Figure Data
+-- ###########################################################
+(
+    SELECT
+        A.LOCATION_ID,
+        A.PRODUCT_ID,
+        A.CUSTOMER_GROUP,
+        A.MODEL_VERSION,
+        A.CHAR_NUM,
+        A.CHARVAL_NUM,
+        A.VERSION,
+        A.SCENARIO,
+        A.WEEK_DATE,
+        A.OPT_PERCENT,
+        A.OPT_QTY,
+        A.TYPE,
+        (SELECT MAX(CHAR_DESC)
+           FROM CP_CHARACTERISTICS
+          WHERE CHAR_NUM = A.CHAR_NUM) AS CHAR_DESC,
+        (SELECT MAX(CHAR_NAME)
+           FROM CP_CHARACTERISTICS
+          WHERE CHAR_NUM = A.CHAR_NUM) AS CHAR_NAME,
+        (SELECT MAX(CHARVAL_DESC)
+           FROM CP_CHAR_VALUES
+          WHERE CHAR_NUM = A.CHAR_NUM
+            AND CHAR_VALUE = A.CHARVAL_NUM) AS CHARVAL_DESC,
+        C.VERSION_NAME,
+        C.SCENARIO_NAME,
+        D.LOCATION_DESC,
+        D.PROD_DESC,
+        E.KEY_FIG_ID,
+        E.KEY_FIG_DESC,
+        E.DISPLAY_ORDER,
+        E.PRIORITY_ORDER,
+        A.LOCK,
+        A.COMMENTS,
+        A.USER,
+        A.OLD_VALUE,
+        A.DATE_TIME
+    FROM CP_OPTION_PERCENTAGE A
+    INNER JOIN CP_IBPVERSIONSCENARIO C
+            ON A.VERSION = C.VERSION
+           AND A.SCENARIO = C.SCENARIO
+    INNER JOIN V_PARTIALPRODDESC D
+            ON D.LOCATION_ID = A.LOCATION_ID
+           AND D.PRODUCT_ID = A.PRODUCT_ID
+    INNER JOIN CP_KEY_FIGURE_MASTER E
+            ON A.TYPE = E.KEY_FIG_ID
+    -- REMOVE UNWANTED KEY FIGS
+    WHERE A.TYPE NOT IN (101,102,103,994,995,998)
+)
+ 
+UNION ALL
+ 
+-- ###########################################################
+-- 5. Product Demand - TYPE 997 (KEPT)
+-- ###########################################################
+(
+    SELECT
+        A.LOCATION_ID,
+        A.PRODUCT_ID,
+        A.CUSTOMER_GROUP,
+        'EMPTY_MV' AS MODEL_VERSION,
+        NULL AS CHAR_NUM,
+        NULL AS CHARVAL_NUM,
+        A.VERSION,
+        A.SCENARIO,
+        A.WEEK_DATE,
+        NULL AS OPT_PERCENT,
+        SUM(A.QUANTITY) AS OPT_QTY,
+        997 AS TYPE,
+        NULL AS CHAR_DESC,
+        NULL AS CHAR_NAME,
+        NULL AS CHARVAL_DESC,
+        C.VERSION_NAME,
+        C.SCENARIO_NAME,
+        D.LOCATION_DESC,
+        D.PROD_DESC,
+        997 AS KEY_FIG_ID,
+        'Product Demand' AS KEY_FIG_DESC,
+        997 AS DISPLAY_ORDER,
+        997 AS PRIORITY_ORDER,
+        NULL AS LOCK,
+        NULL AS COMMENTS,
+        NULL AS USER,
+        NULL AS OLD_VALUE,
+        NULL AS DATE_TIME
+    FROM CP_IBP_FUTUREDEMAND_LOCPRODCUST A
+    INNER JOIN CP_IBPVERSIONSCENARIO C
+            ON A.VERSION = C.VERSION
+           AND A.SCENARIO = C.SCENARIO
+    INNER JOIN V_PARTIALPRODDESC D
+            ON A.LOCATION_ID = D.LOCATION_ID
+           AND A.PRODUCT_ID = D.PRODUCT_ID
+    GROUP BY
+        A.LOCATION_ID,
+        A.PRODUCT_ID,
+        A.CUSTOMER_GROUP,
+        A.VERSION,
+        A.SCENARIO,
+        C.VERSION_NAME,
+        C.SCENARIO_NAME,
+        A.WEEK_DATE,
+        D.LOCATION_DESC,
+        D.PROD_DESC
+)
+ 
+UNION ALL
+ 
+-- ###########################################################
+-- 6. Total Offset - TYPE 996 (KEPT)
+-- ###########################################################
+(
+    SELECT
+        A.LOCATION_ID,
+        A.PRODUCT_ID,
+        A.CUSTOMER_GROUP,
+        'EMPTY_MV' AS MODEL_VERSION,
+        NULL AS CHAR_NUM,
+        NULL AS CHARVAL_NUM,
+        'EMPTY_VER' AS VERSION,
+        'EMPTY_SCEN' AS SCENARIO,
+        A.WEEK_DATE,
+        NULL AS OPT_PERCENT,
+        SUM(A.OFFSET_TOTAL_ORD_QTY) AS OPT_QTY,
+        996 AS TYPE,
+        NULL AS CHAR_DESC,
+        NULL AS CHAR_NAME,
+        NULL AS CHARVAL_DESC,
+        '' AS VERSION_NAME,
+        '' AS SCENARIO_NAME,
+        D.LOCATION_DESC,
+        D.PROD_DESC,
+        996 AS KEY_FIG_ID,
+        'Total Offset' AS KEY_FIG_DESC,
+        996 AS DISPLAY_ORDER,
+        996 AS PRIORITY_ORDER,
+        NULL AS LOCK,
+        NULL AS COMMENTS,
+        NULL AS USER,
+        NULL AS OLD_VALUE,
+        NULL AS DATE_TIME
+    FROM V_SALESALL_WEEK_OFFSET A
+    INNER JOIN V_PARTIALPRODDESC D
+            ON A.LOCATION_ID = D.LOCATION_ID
+           AND A.PRODUCT_ID = D.PRODUCT_ID
+    GROUP BY
+        A.LOCATION_ID,
+        A.PRODUCT_ID,
+        A.CUSTOMER_GROUP,
+        A.WEEK_DATE,
+        D.LOCATION_DESC,
+        D.PROD_DESC
+);
+
+-- VIEW V_OPTION_PERCENTAGE_NEW AS
+
+-- -- ###########################################################
+-- -- GLOBAL FILTER For CHARACTERISTICS P
+-- -- ###########################################################
+-- WITH P_FILTER AS (
+--     SELECT DISTINCT CHAR_NUM
+--     FROM CP_VARCHAR_PS
+--     WHERE CHAR_TYPE = 'P'
+-- ),
+
+-- -- ###########################################################
+-- -- CHARACTER MASTERS
+-- -- ###########################################################
+-- CHAR_MASTER AS (
+--     SELECT 
+--         CHAR_NUM,
+--         MAX(CHAR_DESC) AS CHAR_DESC,
+--         MAX(CHAR_NAME) AS CHAR_NAME
+--     FROM CP_CHARACTERISTICS
+--     GROUP BY CHAR_NUM
+-- ),
+
+-- -- ###########################################################
+-- -- CHAR VALUE MASTER
+-- -- ###########################################################
+-- CHARVAL_MASTER AS (
+--     SELECT 
+--         CHAR_NUM,
+--         CHAR_VALUE,
+--         MAX(CHARVAL_DESC) AS CHARVAL_DESC
+--     FROM CP_CHAR_VALUES
+--     GROUP BY CHAR_NUM, CHAR_VALUE
+-- )
+
+-- -- ###########################################################
+-- -- 1. Statistical Forecast Key Figure Data
+-- -- ###########################################################
+-- (
+--     SELECT
+--         A.LOCATION_ID,
+--         A.PRODUCT_ID,
+--         A.CUSTOMER_GROUP,
+--         A.MODEL_VERSION,
+--         A.CHAR_NUM,
+--         A.CHARVAL_NUM,
+--         A.VERSION,
+--         A.SCENARIO,
+--         A.WEEK_DATE,
+--         AVG(A.OPT_PERCENT) AS OPT_PERCENT,
+--         AVG(A.OPT_QTY) AS OPT_QTY,
+--         A.TYPE,
+--         CM.CHAR_DESC AS CHAR_DESC,
+--         CM.CHAR_NAME AS CHAR_NAME,
+--         CV.CHARVAL_DESC AS CHARVAL_DESC,
+--         C.VERSION_NAME,
+--         C.SCENARIO_NAME,
+--         D.LOCATION_DESC,
+--         D.PROD_DESC,
+--         E.KEY_FIG_ID,
+--         E.KEY_FIG_DESC,
+--         E.DISPLAY_ORDER,
+--         E.PRIORITY_ORDER,
+--         NULL AS LOCK,
+--         NULL AS COMMENTS,
+--         NULL AS USER,
+--         NULL AS OLD_VALUE,
+--         NULL AS DATE_TIME
+--     FROM CP_PAL_FCHARPLAN A
+
+--     INNER JOIN P_FILTER P
+--         ON P.CHAR_NUM = A.CHAR_NUM
+
+--     INNER JOIN CP_IBPVERSIONSCENARIO C
+--         ON A.VERSION = C.VERSION
+--        AND A.SCENARIO = C.SCENARIO
+
+--     INNER JOIN V_PARTIALPRODDESC D
+--         ON A.LOCATION_ID = D.LOCATION_ID
+--        AND D.PRODUCT_ID = A.PRODUCT_ID
+
+--     INNER JOIN CP_KEY_FIGURE_MASTER E
+--         ON A.TYPE = E.KEY_FIG_ID
+
+--     LEFT JOIN CHAR_MASTER CM
+--         ON CM.CHAR_NUM = A.CHAR_NUM
+
+--     LEFT JOIN CHARVAL_MASTER CV
+--         ON CV.CHAR_NUM = A.CHAR_NUM
+--        AND CV.CHAR_VALUE = A.CHARVAL_NUM
+
+--     -- WHERE A.TYPE NOT IN (101,102,103,994,995,998)
+
+--     GROUP BY
+--         A.LOCATION_ID,
+--         A.PRODUCT_ID,
+--         A.CUSTOMER_GROUP,
+--         A.MODEL_VERSION,
+--         A.CHAR_NUM,
+--         A.CHARVAL_NUM,
+--         A.VERSION,
+--         A.SCENARIO,
+--         A.WEEK_DATE,
+--         A.TYPE,
+--         CM.CHAR_DESC,
+--         CM.CHAR_NAME,
+--         CV.CHARVAL_DESC,
+--         C.VERSION_NAME,
+--         C.SCENARIO_NAME,
+--         D.LOCATION_DESC,
+--         D.PROD_DESC,
+--         E.KEY_FIG_ID,
+--         E.KEY_FIG_DESC,
+--         E.DISPLAY_ORDER,
+--         E.PRIORITY_ORDER
+-- )
+
+-- UNION ALL
+
+-- -- ###########################################################
+-- -- 2. Manual Override Key Figure Data
+-- -- ###########################################################
+-- (
+--     SELECT
+--         A.LOCATION_ID,
+--         A.PRODUCT_ID,
+--         A.CUSTOMER_GROUP,
+--         A.MODEL_VERSION,
+--         A.CHAR_NUM,
+--         A.CHARVAL_NUM,
+--         A.VERSION,
+--         A.SCENARIO,
+--         A.WEEK_DATE,
+--         A.OPT_PERCENT,
+--         A.OPT_QTY,
+--         A.TYPE,
+--         CM.CHAR_DESC AS CHAR_DESC,
+--         CM.CHAR_NAME AS CHAR_NAME,
+--         CV.CHARVAL_DESC AS CHARVAL_DESC,
+--         C.VERSION_NAME,
+--         C.SCENARIO_NAME,
+--         D.LOCATION_DESC,
+--         D.PROD_DESC,
+--         E.KEY_FIG_ID,
+--         E.KEY_FIG_DESC,
+--         E.DISPLAY_ORDER,
+--         E.PRIORITY_ORDER,
+--         A.LOCK,
+--         A.COMMENTS,
+--         A.USER,
+--         A.OLD_VALUE,
+--         A.DATE_TIME
+--     FROM CP_OPTION_PERCENTAGE A
+
+--     INNER JOIN P_FILTER P
+--         ON P.CHAR_NUM = A.CHAR_NUM
+
+--     INNER JOIN CP_IBPVERSIONSCENARIO C
+--         ON A.VERSION = C.VERSION
+--        AND A.SCENARIO = C.SCENARIO
+
+--     INNER JOIN V_PARTIALPRODDESC D
+--         ON D.LOCATION_ID = A.LOCATION_ID
+--        AND D.PRODUCT_ID = A.PRODUCT_ID
+
+--     INNER JOIN CP_KEY_FIGURE_MASTER E
+--         ON A.TYPE = E.KEY_FIG_ID
+
+--     LEFT JOIN CHAR_MASTER CM
+--         ON CM.CHAR_NUM = A.CHAR_NUM
+
+--     LEFT JOIN CHARVAL_MASTER CV
+--         ON CV.CHAR_NUM = A.CHAR_NUM
+--        AND CV.CHAR_VALUE = A.CHARVAL_NUM
+
+--     -- WHERE A.TYPE NOT IN (101,102,103,994,995,998)
+-- )
+
+-- UNION ALL
+
+-- -- ###########################################################
+-- -- 3. Product Demand - TYPE 997
+-- -- ###########################################################
+-- (
+--     SELECT
+--         A.LOCATION_ID,
+--         A.PRODUCT_ID,
+--         A.CUSTOMER_GROUP,
+--         'EMPTY_MV' AS MODEL_VERSION,
+--         NULL AS CHAR_NUM,
+--         NULL AS CHARVAL_NUM,
+--         A.VERSION,
+--         A.SCENARIO,
+--         A.WEEK_DATE,
+--         NULL AS OPT_PERCENT,
+--         SUM(A.QUANTITY) AS OPT_QTY,
+--         997 AS TYPE,
+--         NULL AS CHAR_DESC,
+--         NULL AS CHAR_NAME,
+--         NULL AS CHARVAL_DESC,
+--         C.VERSION_NAME,
+--         C.SCENARIO_NAME,
+--         D.LOCATION_DESC,
+--         D.PROD_DESC,
+--         997 AS KEY_FIG_ID,
+--         'Product Demand' AS KEY_FIG_DESC,
+--         997 AS DISPLAY_ORDER,
+--         997 AS PRIORITY_ORDER,
+--         NULL AS LOCK,
+--         NULL AS COMMENTS,
+--         NULL AS USER,
+--         NULL AS OLD_VALUE,
+--         NULL AS DATE_TIME
+--     FROM CP_IBP_FUTUREDEMAND_LOCPRODCUST A
+--     INNER JOIN CP_IBPVERSIONSCENARIO C
+--         ON A.VERSION = C.VERSION
+--        AND A.SCENARIO = C.SCENARIO
+--     INNER JOIN V_PARTIALPRODDESC D
+--         ON A.LOCATION_ID = D.LOCATION_ID
+--        AND A.PRODUCT_ID = D.PRODUCT_ID
+--     GROUP BY
+--         A.LOCATION_ID,
+--         A.PRODUCT_ID,
+--         A.CUSTOMER_GROUP,
+--         A.VERSION,
+--         A.SCENARIO,
+--         C.VERSION_NAME,
+--         C.SCENARIO_NAME,
+--         A.WEEK_DATE,
+--         D.LOCATION_DESC,
+--         D.PROD_DESC
+-- )
+
+-- UNION ALL
+
+-- -- ###########################################################
+-- -- 4. Total Offset - TYPE 996
+-- -- ###########################################################
+-- (
+--     SELECT
+--         A.LOCATION_ID,
+--         A.PRODUCT_ID,
+--         A.CUSTOMER_GROUP,
+--         'EMPTY_MV' AS MODEL_VERSION,
+--         NULL AS CHAR_NUM,
+--         NULL AS CHARVAL_NUM,
+--         'EMPTY_VER' AS VERSION,
+--         'EMPTY_SCEN' AS SCENARIO,
+--         A.WEEK_DATE,
+--         NULL AS OPT_PERCENT,
+--         SUM(A.OFFSET_TOTAL_ORD_QTY) AS OPT_QTY,
+--         996 AS TYPE,
+--         NULL AS CHAR_DESC,
+--         NULL AS CHAR_NAME,
+--         NULL AS CHARVAL_DESC,
+--         '' AS VERSION_NAME,
+--         '' AS SCENARIO_NAME,
+--         D.LOCATION_DESC,
+--         D.PROD_DESC,
+--         996 AS KEY_FIG_ID,
+--         'Total Offset' AS KEY_FIG_DESC,
+--         996 AS DISPLAY_ORDER,
+--         996 AS PRIORITY_ORDER,
+--         NULL AS LOCK,
+--         NULL AS COMMENTS,
+--         NULL AS USER,
+--         NULL AS OLD_VALUE,
+--         NULL AS DATE_TIME
+--     FROM V_SALESALL_WEEK_OFFSET A
+--     INNER JOIN V_PARTIALPRODDESC D
+--         ON A.LOCATION_ID = D.LOCATION_ID
+--        AND A.PRODUCT_ID = D.PRODUCT_ID
+--     GROUP BY
+--         A.LOCATION_ID,
+--         A.PRODUCT_ID,
+--         A.CUSTOMER_GROUP,
+--         A.WEEK_DATE,
+--         D.LOCATION_DESC,
+--         D.PROD_DESC
+-- );

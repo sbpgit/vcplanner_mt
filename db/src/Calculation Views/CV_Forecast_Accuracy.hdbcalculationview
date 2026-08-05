@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_Forecast_Accuracy" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="CV_Forecast_Accuracy"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="V_FCHARPLAN_FOR_CV">
+    <resourceUri>V_FCHARPLAN_FOR_CV</resourceUri>
+  </DataSource>
+  <DataSource id="V_CIRUNIQUECHAR">
+    <resourceUri>V_CIRUNIQUECHAR</resourceUri>
+  </DataSource>
+  <DataSource id="CP_CIR_GENERATED">
+    <resourceUri>CP_CIR_GENERATED</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+    
+      <viewAttribute id="PRODUCT_ID"/>
+    
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHAR_NAME"/>
+      <viewAttribute id="CHAR_DESC"/>
+      <viewAttribute id="CHAR_VALUE"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="CHARVAL_DESC"/>
+      <viewAttribute id="OPT_PERCENT"/>
+      <viewAttribute id="OPT_QTY"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="V_FCHARPLAN_FOR_CV"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHAR_VALUE"/>
+      <viewAttribute id="CIR_QTY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="V_CIRUNIQUECHAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Agg_Total_Cir">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="TOTAL_CIR_QTY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="CP_CIR_GENERATED">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CIR_QTY" source="CIR_QTY"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="AGG_CHAR_CIR">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHAR_VALUE"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_2"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHAR_VALUE"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="TOTAL_CIR_QTY" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$VERSION$VERSION"/>
+      <viewAttribute hidden="true" id="JOIN$SCENARIO$SCENARIO"/>
+      <viewAttribute hidden="true" id="JOIN$WEEK_DATE$WEEK_DATE"/>
+      <viewAttribute hidden="true" id="JOIN$MODEL_VERSION$MODEL_VERSION"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CIR_Percent" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+        <formula>CASE WHEN &quot;TOTAL_CIR_QTY&quot; = 0 THEN 0 ELSE (&quot;CIR_QTY&quot; / &quot;TOTAL_CIR_QTY&quot;) * 100 END
+</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="AGG_CHAR_CIR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_VALUE" source="CHAR_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VERSION$VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCENARIO$SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MODEL_VERSION$MODEL_VERSION" source="MODEL_VERSION"/>
+    </input>
+    <input node="Agg_Total_Cir">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOTAL_CIR_QTY" source="TOTAL_CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VERSION$VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCENARIO$SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MODEL_VERSION$MODEL_VERSION" source="MODEL_VERSION"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$VERSION$VERSION"/>
+    <joinAttribute name="JOIN$SCENARIO$SCENARIO"/>
+    <joinAttribute name="JOIN$WEEK_DATE$WEEK_DATE"/>
+    <joinAttribute name="JOIN$MODEL_VERSION$MODEL_VERSION"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHAR_NAME"/>
+      <viewAttribute id="CHAR_DESC"/>
+      <viewAttribute id="CHAR_VALUE"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="CHARVAL_DESC"/>
+      <viewAttribute id="OPT_PERCENT" aggregationType="sum"/>
+      <viewAttribute id="OPT_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_Percent" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$VERSION$VERSION"/>
+      <viewAttribute hidden="true" id="JOIN$SCENARIO$SCENARIO"/>
+      <viewAttribute hidden="true" id="JOIN$MODEL_VERSION$MODEL_VERSION"/>
+      <viewAttribute hidden="true" id="JOIN$WEEK_DATE$WEEK_DATE"/>
+      <viewAttribute hidden="true" id="JOIN$CHAR_VALUE$CHAR_VALUE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NAME" source="CHAR_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_DESC" source="CHAR_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_VALUE" source="CHAR_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_DESC" source="CHARVAL_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPT_PERCENT" source="OPT_PERCENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="OPT_QTY" source="OPT_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VERSION$VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCENARIO$SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MODEL_VERSION$MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHAR_VALUE$CHAR_VALUE" source="CHAR_VALUE"/>
+    </input>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_Percent" source="CIR_Percent"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VERSION$VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCENARIO$SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MODEL_VERSION$MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHAR_VALUE$CHAR_VALUE" source="CHAR_VALUE"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$VERSION$VERSION"/>
+    <joinAttribute name="JOIN$SCENARIO$SCENARIO"/>
+    <joinAttribute name="JOIN$MODEL_VERSION$MODEL_VERSION"/>
+    <joinAttribute name="JOIN$WEEK_DATE$WEEK_DATE"/>
+    <joinAttribute name="JOIN$CHAR_VALUE$CHAR_VALUE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_2">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Join_2" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Join_2" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="VERSION" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VERSION"/>
+      <keyMapping columnObjectName="Join_2" columnName="VERSION"/>
+    </attribute>
+    <attribute id="SCENARIO" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCENARIO"/>
+      <keyMapping columnObjectName="Join_2" columnName="SCENARIO"/>
+    </attribute>
+    <attribute id="MODEL_VERSION" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MODEL_VERSION"/>
+      <keyMapping columnObjectName="Join_2" columnName="MODEL_VERSION"/>
+    </attribute>
+    <attribute id="WEEK_DATE" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_DATE"/>
+      <keyMapping columnObjectName="Join_2" columnName="WEEK_DATE"/>
+    </attribute>
+    <attribute id="CHAR_NUM" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NUM"/>
+      <keyMapping columnObjectName="Join_2" columnName="CHAR_NUM"/>
+    </attribute>
+    <attribute id="CHAR_NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NAME"/>
+      <keyMapping columnObjectName="Join_2" columnName="CHAR_NAME"/>
+    </attribute>
+    <attribute id="CHAR_DESC" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_DESC"/>
+      <keyMapping columnObjectName="Join_2" columnName="CHAR_DESC"/>
+    </attribute>
+    <attribute id="CHAR_VALUE" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_VALUE"/>
+      <keyMapping columnObjectName="Join_2" columnName="CHAR_VALUE"/>
+    </attribute>
+    <attribute id="CHARVAL_NUM" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_NUM"/>
+      <keyMapping columnObjectName="Join_2" columnName="CHARVAL_NUM"/>
+    </attribute>
+    <attribute id="CHARVAL_DESC" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_DESC"/>
+      <keyMapping columnObjectName="Join_2" columnName="CHARVAL_DESC"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="OPT_PERCENT" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="OPT_PERCENT"/>
+      <measureMapping columnObjectName="Join_2" columnName="OPT_PERCENT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="OPT_QTY" order="14" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="OPT_QTY"/>
+      <measureMapping columnObjectName="Join_2" columnName="OPT_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="CIR_QTY" order="18" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CIR_QTY"/>
+      <measureMapping columnObjectName="Join_2" columnName="CIR_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="CIR_Percent" order="19" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CIR_Percent"/>
+      <measureMapping columnObjectName="Join_2" columnName="CIR_Percent"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures>
+    <measure id="Deviation_Percentage" order="15" aggregationType="sum" measureType="simple" aggregatable="true" datatype="DECIMAL" length="13" scale="2" expressionLanguage="SQL">
+      <formula>ABS(&quot;OPT_PERCENT&quot; - &quot;CIR_Percent&quot;)</formula>
+      
+      
+      
+      
+      
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="Deviation_Count" order="16" aggregationType="sum" measureType="simple" aggregatable="true" datatype="INTEGER" expressionLanguage="SQL">
+      <formula>case
+when (&quot;OPT_PERCENT&quot; - &quot;CIR_Percent&quot;) != 0
+then 1
+else 0
+end</formula>
+      
+      
+      
+      
+      
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="COUNT" order="17" aggregationType="sum" measureType="simple" aggregatable="true" datatype="INTEGER" expressionLanguage="SQL">
+      <descriptions defaultDescription="COUNT"/>
+      <formula>1</formula>
+      
+      
+      
+      
+      <exceptionAggregationMetadata/>
+    </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="337" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="405" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="641"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Agg_Total_Cir" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="301" y="536"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="AGG_CHAR_CIR" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="537"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="AGG_CHAR_CIR" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="38" y="30"/>
+      <rectangleSize width="160"/>
+    </shape>
+    <shape modelObjectName="Agg_Total_Cir" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="158"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="337" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="136"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

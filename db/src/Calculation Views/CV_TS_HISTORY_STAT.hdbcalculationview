@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_TS_HISTORY_STAT" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="CV_TS_HISTORY_STAT"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="V_WEEK_DESCRIPTOR">
+    <resourceUri>V_WEEK_DESCRIPTOR</resourceUri>
+  </DataSource>
+  <DataSource id="CV_TS_HISTORY_CUST">
+    <resourceUri>CV_TS_HISTORY_CUST</resourceUri>
+  </DataSource>
+  <DataSource id="Aggregation_3$$$$CV_TS_HISTORY_CUST$$">
+    <resourceUri>CV_TS_HISTORY_CUST</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="WEEK_STARTDATE"/>
+      <viewAttribute id="WEEK_ENDDATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CROSS_JOIN" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="V_WEEK_DESCRIPTOR"/>
+    <filter>&quot;WEEK_STARTDATE&quot;&lt;=CURRENT_DATE</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="GROUP_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CROSS_JOIN" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="CV_TS_HISTORY_CUST"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_3">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="GROUP_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="GROUP_COUNT" aggregationType="sum"/>
+      <viewAttribute id="GROUP_COUNT_RATE" aggregationType="sum"/>
+      <viewAttribute id="CONFIRMED_QTY_TOT_CONFIRMED" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Aggregation_3$$$$CV_TS_HISTORY_CUST$$"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="GROUP_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="WEEK_STARTDATE"/>
+      <viewAttribute id="WEEK_ENDDATE"/>
+      <viewAttribute hidden="true" id="JOIN$CROSS_JOIN$CROSS_JOIN"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_STARTDATE" source="WEEK_STARTDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_ENDDATE" source="WEEK_ENDDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CROSS_JOIN$CROSS_JOIN" source="CROSS_JOIN"/>
+    </input>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_ID" source="GROUP_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CROSS_JOIN$CROSS_JOIN" source="CROSS_JOIN"/>
+    </input>
+    <joinAttribute name="JOIN$CROSS_JOIN$CROSS_JOIN"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="GROUP_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="WEEK_STARTDATE"/>
+      <viewAttribute id="WEEK_ENDDATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="Rank_1">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="GROUP_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="WEEK_STARTDATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_2"/>
+    <rankingFilter type="ROW_NUMBER" offset="0" offsetReference="FRONT" dynamicPartitionAttributes="false">
+      <partitionViewAttributeName id="LOCATION_ID"/>
+      <partitionViewAttributeName id="PRODUCT_ID"/>
+      <partitionViewAttributeName id="GROUP_ID"/>
+      <partitionViewAttributeName id="CUSTOMER_GROUP"/>
+      <order byViewAttributeName="WEEK_STARTDATE" direction="ASC"/>
+      <rankThreshold>
+        <value>1000</value>
+      </rankThreshold>
+      <rankViewAttributeName>ROW_COUNT</rankViewAttributeName>
+    </rankingFilter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="GROUP_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="WEEK_STARTDATE"/>
+      <viewAttribute id="ROW_COUNT" aggregationType="sum"/>
+      <viewAttribute id="GROUP_COUNT" aggregationType="sum"/>
+      <viewAttribute id="GROUP_COUNT_RATE" aggregationType="sum"/>
+      <viewAttribute id="CONFIRMED_QTY_TOT_CONFIRMED" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$GROUP_ID$GROUP_ID"/>
+      <viewAttribute hidden="true" id="JOIN$CUSTOMER_GROUP$CUSTOMER_GROUP"/>
+      <viewAttribute hidden="true" id="JOIN$WEEK_STARTDATE$WEEK_DATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Rank_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_ID" source="GROUP_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_STARTDATE" source="WEEK_STARTDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ROW_COUNT" source="ROW_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$GROUP_ID$GROUP_ID" source="GROUP_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUSTOMER_GROUP$CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_STARTDATE$WEEK_DATE" source="WEEK_STARTDATE"/>
+    </input>
+    <input node="Aggregation_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_COUNT" source="GROUP_COUNT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_COUNT_RATE" source="GROUP_COUNT_RATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONFIRMED_QTY_TOT_CONFIRMED" source="CONFIRMED_QTY_TOT_CONFIRMED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$GROUP_ID$GROUP_ID" source="GROUP_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUSTOMER_GROUP$CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_STARTDATE$WEEK_DATE" source="WEEK_DATE"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$GROUP_ID$GROUP_ID"/>
+    <joinAttribute name="JOIN$CUSTOMER_GROUP$CUSTOMER_GROUP"/>
+    <joinAttribute name="JOIN$WEEK_STARTDATE$WEEK_DATE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_2">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Join_2" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Join_2" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="GROUP_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GROUP_ID"/>
+      <keyMapping columnObjectName="Join_2" columnName="GROUP_ID"/>
+    </attribute>
+    <attribute id="CUSTOMER_GROUP" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_GROUP"/>
+      <keyMapping columnObjectName="Join_2" columnName="CUSTOMER_GROUP"/>
+    </attribute>
+    <attribute id="WEEK_STARTDATE" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_STARTDATE"/>
+      <keyMapping columnObjectName="Join_2" columnName="WEEK_STARTDATE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="ROW_COUNT" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ROW_COUNT"/>
+      <measureMapping columnObjectName="Join_2" columnName="ROW_COUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="GROUP_COUNT" order="7" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CONFIRMED_QTY"/>
+      <measureMapping columnObjectName="Join_2" columnName="GROUP_COUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="GROUP_COUNT_RATE" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="GROUP_COUNT_RATE"/>
+      <measureMapping columnObjectName="Join_2" columnName="GROUP_COUNT_RATE"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="CONFIRMED_QTY_TOT_CONFIRMED" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CONFIRMED_QTY_TOT_CONFIRMED"/>
+      <measureMapping columnObjectName="Join_2" columnName="CONFIRMED_QTY_TOT_CONFIRMED"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <sortAttributes>
+    <sortAttribute id="LOCATION_ID" direction="ASC"/>
+    <sortAttribute id="PRODUCT_ID" direction="ASC"/>
+    <sortAttribute id="GROUP_ID" direction="ASC"/>
+    <sortAttribute id="CUSTOMER_GROUP" direction="ASC"/>
+    <sortAttribute id="WEEK_STARTDATE" direction="ASC"/>
+  </sortAttributes>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="221.7914732189743" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="95.73991606883456" y="766.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="305.7399160688346" y="766.9999964237213"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="246.91177484398779" y="606.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="188.072265625"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="195.19970703125"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="246.91177484398779" y="501.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="221.79147321897426" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Rank_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="195.19970703125"/>
+    </shape>
+    <shape modelObjectName="Aggregation_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="281.97509765625"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

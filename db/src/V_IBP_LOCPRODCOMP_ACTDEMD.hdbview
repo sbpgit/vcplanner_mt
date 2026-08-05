@@ -1,0 +1,21 @@
+    ----------------------------------------------------------------------------------------
+-- Name:            V_IBP_LOCPRODCOMP_ACTDEMD
+-- Description:     Get SUM OF order quantity for location product on a weekly basis
+-- Join Details:    V_IBP_SALESH_ACTDEMD -  weekly sales history with sum of ORD_QTY 
+--                  V_BOM_DEMDFACLOC   - BOM header
+-----------------------------------------------------------------------------------------
+
+VIEW "V_IBP_LOCPRODCOMP_ACTDEMD" AS
+SELECT DISTINCT V_IBP_SALESH_ACTDEMD."LOCATION_ID" ,
+-- V_IBP_SALESH_ACTDEMD."PLAN_LOC",
+V_IBP_SALESH_ACTDEMD."FACTORY_LOC",
+V_IBP_SALESH_ACTDEMD."PRODUCT_ID",
+V_IBP_SALESH_ACTDEMD."REF_PRODID",
+V_IBP_SALESH_ACTDEMD.WEEK_DATE,
+( V_IBP_SALESH_ACTDEMD."ORD_QTY" * V_BOM_DEMDFACLOC."COMP_QTY" ) AS ACTUALCOMPONENTDEMAND,
+V_BOM_DEMDFACLOC."ITEM_NUM",
+V_BOM_DEMDFACLOC."COMPONENT"
+FROM "V_IBP_SALESH_ACTDEMD"
+INNER JOIN "V_BOM_DEMDFACLOC"
+ON V_IBP_SALESH_ACTDEMD.LOCATION_ID = V_BOM_DEMDFACLOC.LOCATION_ID
+AND V_IBP_SALESH_ACTDEMD.REF_PRODID = V_BOM_DEMDFACLOC.PRODUCT_ID

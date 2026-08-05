@@ -1,0 +1,16 @@
+VIEW "V_SNAPHEAD" AS
+SELECT 
+	"SNAP_TIMESTAMP",
+	"SNAPSHOT_DESC",
+	"FROM_DATE",
+	"TO_DATE",
+	"TYPE"
+FROM "CP_SNAPSHOT_HEAD"
+union all
+Select top 1 
+    current_timestamp  as "SNAP_TIMESTAMP",
+	'Current Forecast' as "SNAPSHOT_DESC",
+	 add_days(current_date, -365) "FROM_DATE",
+	 current_date "TO_DATE",
+	 "TYPE"
+From "CP_SNAPSHOT_HEAD"

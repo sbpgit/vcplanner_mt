@@ -1,0 +1,22 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_BOMODCOND
+-- Description:     View to fetch BOM object dependecy with counter
+-- Join Details:    A: V_OBJDEP -  View to fetch object dependecies with concatination
+--                      of Obj. Dep and counter
+--                  B: V_BOMOD_DEMDFACLOC - Table for BOM object Dep.
+-----------------------------------------------------------------------------------------
+VIEW "V_BOMODCOND"
+AS SELECT distinct B.LOCATION_ID,
+        B.FACTORY_LOC,
+        B.PRODUCT_ID,
+        B.ITEM_NUM,
+        B.COMPONENT,
+        A.OBJ_DEP_CN  AS "OBJ_DEP",
+        B.OBJDEP_DESC,
+        B.COMP_QTY,
+        B.VALID_FROM,
+        B.VALID_TO,
+        B.COMP_DESC AS "ASMB_DESC"
+ FROM V_OBJDEP  AS A
+ INNER JOIN V_BOMOD_DEMDFACLOC AS B ON ( 
+     A.OBJ_DEP = B.OBJ_DEP )

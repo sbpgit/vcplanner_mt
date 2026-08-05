@@ -1,0 +1,131 @@
+PROCEDURE "P_DERIVE_DETERMINISTIC"( 
+    IN iv_session_id NVARCHAR(36), 
+    OUT ov_status NVARCHAR(20), 
+    OUT ov_message NVARCHAR(500) 
+) LANGUAGE SQLSCRIPT SQL SECURITY INVOKER AS 
+BEGIN 
+    DECLARE v_resolved      INTEGER     := 0; 
+    DECLARE v_result_id     BIGINT;
+    DECLARE v_max_level     INTEGER     := 0; 
+    DECLARE i_level         INTEGER     := 1; 
+    DECLARE v_target_char   NVARCHAR(50);
+    DECLARE v_best_value    NVARCHAR(50);
+    DECLARE v_best_rule     NVARCHAR(10);
+    DECLARE v_best_score    INTEGER;
+    DECLARE v_has_conflict  TINYINT;
+    DECLARE v_rule_id       NVARCHAR(50);
+    DECLARE v_derived_value NVARCHAR(50);
+    DECLARE v_match_score   INTEGER;
+    DECLARE v_target_found  INTEGER := 1;
+    DECLARE v_rule_found    INTEGER := 1;
+
+    DECLARE CURSOR c_targets (p_level INTEGER) FOR
+        SELECT DISTINCT r.TARGET_CHAR 
+        FROM "T_DERIVATION_RULES" r 
+        JOIN "T_CHAR_DEFINITIONS" cd ON cd.CHAR_KEY = r.TARGET_CHAR 
+        WHERE cd.DERIVE_LEVEL = :p_level
+          AND r.ACTIVE = 1;
+
+    DECLARE CURSOR c_rules (p_target NVARCHAR(50), p_sess NVARCHAR(36)) FOR 
+        SELECT r.RULE_ID, r.DERIVED_VALUE, COUNT(*) AS MATCH_SCORE
+        FROM "T_DERIVATION_RULES" r 
+        JOIN "T_RULE_CONDITIONS" rc ON rc.RULE_ID = r.RULE_ID 
+        WHERE r.TARGET_CHAR = :p_target 
+          AND r.ACTIVE = 1 
+          AND EXISTS (
+              SELECT 1 FROM "T_DERIVE_BUFFER" b 
+              WHERE b.SESSION_ID = :p_sess 
+                AND b.CHAR_KEY = rc.COND_CHAR 
+                AND b.VALUE_CODE = rc.COND_VALUE
+          )
+        GROUP BY r.RULE_ID, r.DERIVED_VALUE
+        HAVING COUNT(*) = (
+            SELECT COUNT(*) FROM "T_RULE_CONDITIONS" rc2 
+            WHERE rc2.RULE_ID = r.RULE_ID
+        )
+        ORDER BY MATCH_SCORE DESC;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN
+        DELETE FROM "T_DERIVE_BUFFER" WHERE SESSION_ID = :iv_session_id;
+        ov_status  := 'ERROR';
+        ov_message := 'Derivation failed: ' || ::SQL_ERROR_MESSAGE;
+    END;
+
+    DELETE FROM "T_DERIVE_BUFFER" WHERE SESSION_ID = :iv_session_id;
+    INSERT INTO "T_DERIVE_BUFFER" (SESSION_ID, CHAR_KEY, VALUE_CODE, PROBABILITY)
+        SELECT SESSION_ID, CHAR_KEY, VALUE_CODE, 1.0 
+        FROM "T_SESSION_INPUTS" 
+        WHERE SESSION_ID = :iv_session_id AND PROBABILITY = 1.0;
+
+    SELECT COALESCE(MAX(DERIVE_LEVEL), 6) INTO v_max_level 
+    FROM "T_CHAR_DEFINITIONS" WHERE CHAR_TYPE = 'DERIVED';
+
+    WHILE :i_level <= :v_max_level DO
+
+        v_target_found := 1;
+        OPEN c_targets(:i_level);
+
+        WHILE :v_target_found = 1 DO
+            FETCH c_targets INTO v_target_char;
+            IF ::ROWCOUNT = 0 THEN
+                v_target_found := 0;
+            ELSE
+                v_best_value   := NULL;
+                v_best_rule    := NULL;
+                v_best_score   := 0;
+                v_has_conflict := 0;
+
+                v_rule_found := 1;
+                OPEN c_rules(:v_target_char, :iv_session_id);
+
+                WHILE :v_rule_found = 1 DO
+                    FETCH c_rules INTO v_rule_id, v_derived_value, v_match_score;
+                    IF ::ROWCOUNT = 0 THEN
+                        v_rule_found := 0;
+                    ELSE
+                        IF :v_best_value IS NULL OR :v_match_score > :v_best_score THEN
+                            v_best_score   := :v_match_score;
+                            v_best_value   := :v_derived_value;
+                            v_best_rule    := :v_rule_id;
+                            v_has_conflict := 0;
+                        ELSEIF :v_match_score = :v_best_score AND :v_derived_value <> :v_best_value THEN
+                            v_has_conflict := 1;
+                        END IF;
+                    END IF;
+                END WHILE;
+                CLOSE c_rules;
+
+                IF :v_best_value IS NOT NULL THEN
+                    SELECT "SQ_RESULT_ID".NEXTVAL INTO v_result_id FROM "T_CHAR_DEFINITIONS" LIMIT 1;
+                    INSERT INTO "T_DERIVATION_RESULTS" 
+                        (RESULT_ID, SESSION_ID, CHAR_KEY, VALUE_CODE, PROBABILITY, RULECHAIN, DERIVE_LEVEL, STATUS, COMPUTED_AT) 
+                    VALUES (
+                        :v_result_id, :iv_session_id, :v_target_char, 
+                        :v_best_value, 1.0, :v_best_rule, :i_level, 
+                        CASE :v_has_conflict WHEN 1 THEN 'CONFLICT' ELSE 'RESOLVED' END, 
+                        CURRENT_TIMESTAMP
+                    );
+                    INSERT INTO "T_DERIVE_BUFFER" 
+                    VALUES (:iv_session_id, :v_target_char, :v_best_value, 1.0);
+                    v_resolved := :v_resolved + 1;
+                ELSE
+                    SELECT "SQ_RESULT_ID".NEXTVAL INTO v_result_id FROM "T_CHAR_DEFINITIONS" LIMIT 1;
+                    INSERT INTO "T_DERIVATION_RESULTS" 
+                        (RESULT_ID, SESSION_ID, CHAR_KEY, VALUE_CODE, PROBABILITY, DERIVE_LEVEL, STATUS, COMPUTED_AT) 
+                    VALUES (
+                        :v_result_id, :iv_session_id, :v_target_char, 
+                        NULL, 0.0, :i_level, 'UNRESOLVED', CURRENT_TIMESTAMP
+                    );
+                END IF;
+
+            END IF;
+        END WHILE;
+        CLOSE c_targets;
+
+        i_level := :i_level + 1; 
+    END WHILE;
+
+    DELETE FROM "T_DERIVE_BUFFER" WHERE SESSION_ID = :iv_session_id;
+    ov_status  := 'SUCCESS';
+    ov_message := :v_resolved || ' resolved';
+END;

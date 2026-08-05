@@ -1,0 +1,2841 @@
+{
+  "meta": {
+    "creator": "cds-dk 6.2.1"
+  },
+  "$version": "2.0",
+  "definitions": {
+    "IBPChangeHistory": {
+      "kind": "service",
+      "@cds.external": true,
+      "@m.IsDefaultEntityContainer": "true",
+      "@sap.supported.formats": "atom json xlsx"
+    },
+    "IBPChangeHistory.RelativePeriodFilterSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Jobid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "PeriodType": {
+          "key": true,
+          "type": "cds.String",
+          "length": 10,
+          "@sap.unicode": "false",
+          "@sap.label": "Period Type (PERIODIDX)",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "FromPeriodOffset": {
+          "type": "cds.Integer",
+          "@sap.unicode": "false",
+          "@sap.label": "From Period Offset",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "ToPeriodOffset": {
+          "type": "cds.Integer",
+          "@sap.unicode": "false",
+          "@sap.label": "To Period Offset",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPChangeHistory.ChangeHistoryJobSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Jobid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Status": {
+          "type": "cds.String",
+          "length": 11,
+          "@sap.unicode": "false",
+          "@sap.label": "Run Status",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "ViewType": {
+          "type": "cds.String",
+          "length": 13,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History View Type",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Plarea": {
+          "type": "cds.String",
+          "length": 10,
+          "@sap.unicode": "false",
+          "@sap.label": "Planning Area",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "StartedAt": {
+          "type": "cds.DateTime",
+          "@odata.Type": "Edm.DateTime",
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job Started At",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "StartedBy": {
+          "type": "cds.String",
+          "length": 80,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job Started By",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPChangeHistory.CalculateAnalyticViewSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Jobid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Plarea": {
+          "type": "cds.String",
+          "length": 10,
+          "@sap.unicode": "false",
+          "@sap.label": "Planning Area",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Version": {
+          "type": "cds.String",
+          "length": 10,
+          "@sap.unicode": "false",
+          "@sap.label": "Version",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Keyfigure": {
+          "type": "cds.String",
+          "length": 32,
+          "@sap.unicode": "false",
+          "@sap.label": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "RequestLevels": {
+          "type": "cds.LargeString",
+          "@sap.unicode": "false",
+          "@sap.label": "Request Levels",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "TimeRangeOfChangesFrom": {
+          "type": "cds.Decimal",
+          "precision": 15,
+          "scale": 0,
+          "@sap.unicode": "false",
+          "@sap.label": "Time Range Of Changes: From",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "TimeRangeOfChangesTo": {
+          "type": "cds.Decimal",
+          "precision": 15,
+          "scale": 0,
+          "@sap.unicode": "false",
+          "@sap.label": "Time Range Of Changes: To",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "AbsolutePeriodFilter": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.AbsolutePeriodFilterSet",
+          "on": [
+            {
+              "ref": [
+                "AbsolutePeriodFilter",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "PeriodFilter": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.PeriodFilterSet",
+          "on": [
+            {
+              "ref": [
+                "PeriodFilter",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "AttributeFilters": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.AttributeFiltersSet",
+          "cardinality": {
+            "max": "*"
+          },
+          "on": [
+            {
+              "ref": [
+                "AttributeFilters",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "RelativePeriodFilter": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.RelativePeriodFilterSet",
+          "on": [
+            {
+              "ref": [
+                "RelativePeriodFilter",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "IBPChangeHistory.PlanningAreaDetailsSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Plarea": {
+          "key": true,
+          "type": "cds.String",
+          "length": 10,
+          "@sap.unicode": "false",
+          "@sap.label": "Planning Area",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "KeyFigure": {
+          "key": true,
+          "type": "cds.String",
+          "length": 32,
+          "@sap.unicode": "false",
+          "@sap.label": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "RequestLevel": {
+          "key": true,
+          "type": "cds.String",
+          "length": 32,
+          "@sap.unicode": "false",
+          "@sap.label": "Request Level ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "RequestLevelDescription": {
+          "type": "cds.String",
+          "length": 250,
+          "@sap.unicode": "false",
+          "@sap.label": "Request Level Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPChangeHistory.PeriodSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Periodid": {
+          "key": true,
+          "type": "cds.Integer",
+          "@sap.unicode": "false",
+          "@sap.label": "Period ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Plarea": {
+          "type": "cds.String",
+          "length": 10,
+          "@sap.unicode": "false",
+          "@sap.label": "Planning Area",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "PeriodDescription": {
+          "type": "cds.String",
+          "length": 100,
+          "@sap.unicode": "false",
+          "@sap.label": "Period Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "PeriodLevelId": {
+          "type": "cds.String",
+          "length": 19,
+          "@sap.unicode": "false",
+          "@sap.label": "Period Level ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "TimeLevelDescription": {
+          "type": "cds.String",
+          "length": 250,
+          "@sap.unicode": "false",
+          "@sap.label": "Time Level Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPChangeHistory.AbsolutePeriodFilterSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Jobid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "FromTimeStamp": {
+          "type": "cds.Decimal",
+          "precision": 15,
+          "scale": 0,
+          "@sap.unicode": "false",
+          "@sap.label": "From Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "ToTimeStamp": {
+          "type": "cds.Decimal",
+          "precision": 15,
+          "scale": 0,
+          "@sap.unicode": "false",
+          "@sap.label": "To Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPChangeHistory.PeriodFilterSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Jobid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "PeriodType": {
+          "type": "cds.String",
+          "length": 10,
+          "@sap.unicode": "false",
+          "@sap.label": "Period Type (PERIODIDX)",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "FromPeriod": {
+          "type": "cds.Integer",
+          "@sap.unicode": "false",
+          "@sap.label": "From Period ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "ToPeriod": {
+          "type": "cds.Integer",
+          "@sap.unicode": "false",
+          "@sap.label": "To Period ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPChangeHistory.AttributeFiltersSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Jobid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Attribute": {
+          "key": true,
+          "type": "cds.String",
+          "length": 32,
+          "@sap.unicode": "false",
+          "@sap.label": "Attribute ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Low": {
+          "type": "cds.String",
+          "length": 100,
+          "@sap.unicode": "false",
+          "@sap.label": "Low Attribute Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPChangeHistory.CalculateEffectViewSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Jobid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Plarea": {
+          "type": "cds.String",
+          "length": 10,
+          "@sap.unicode": "false",
+          "@sap.label": "Planning Area",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Version": {
+          "type": "cds.String",
+          "length": 10,
+          "@sap.unicode": "false",
+          "@sap.label": "Version",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Keyfigure": {
+          "type": "cds.String",
+          "length": 32,
+          "@sap.unicode": "false",
+          "@sap.label": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "RequestLevels": {
+          "type": "cds.LargeString",
+          "@sap.unicode": "false",
+          "@sap.label": "Request Levels",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "TimeRangeOfChangesFrom": {
+          "type": "cds.Decimal",
+          "precision": 15,
+          "scale": 0,
+          "@sap.unicode": "false",
+          "@sap.label": "Time Range Of Changes: From",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "TimeRangeOfChangesTo": {
+          "type": "cds.Decimal",
+          "precision": 15,
+          "scale": 0,
+          "@sap.unicode": "false",
+          "@sap.label": "Time Range Of Changes: To",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "SourceOfChangeFilters": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.SourceOfChangeFiltersSet",
+          "cardinality": {
+            "max": "*"
+          },
+          "on": [
+            {
+              "ref": [
+                "SourceOfChangeFilters",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "ChangeIDFilters": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.ChangeIDFiltersSet",
+          "cardinality": {
+            "max": "*"
+          },
+          "on": [
+            {
+              "ref": [
+                "ChangeIDFilters",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "UserFilters": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.UserFiltersSet",
+          "cardinality": {
+            "max": "*"
+          },
+          "on": [
+            {
+              "ref": [
+                "UserFilters",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "ReasonCodeFilters": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.ReasonCodeFiltersSet",
+          "cardinality": {
+            "max": "*"
+          },
+          "on": [
+            {
+              "ref": [
+                "ReasonCodeFilters",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "PeriodFilter": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.PeriodFilterSet",
+          "on": [
+            {
+              "ref": [
+                "PeriodFilter",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "AttributeFilters": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.AttributeFiltersSet",
+          "cardinality": {
+            "max": "*"
+          },
+          "on": [
+            {
+              "ref": [
+                "AttributeFilters",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "AbsolutePeriodFilter": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.AbsolutePeriodFilterSet",
+          "on": [
+            {
+              "ref": [
+                "AbsolutePeriodFilter",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "RelativePeriodFilter": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.RelativePeriodFilterSet",
+          "on": [
+            {
+              "ref": [
+                "RelativePeriodFilter",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "IBPChangeHistory.ReasonCodeFiltersSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Jobid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "ReasonCode": {
+          "key": true,
+          "type": "cds.String",
+          "length": 40,
+          "@sap.unicode": "false",
+          "@sap.label": "Reason Code ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPChangeHistory.UserFiltersSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Jobid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Userid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 12,
+          "@sap.unicode": "false",
+          "@sap.label": "User ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPChangeHistory.SourceOfChangeFiltersSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Jobid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "SourceOfChange": {
+          "key": true,
+          "type": "cds.String",
+          "length": 32,
+          "@sap.unicode": "false",
+          "@sap.label": "Source Type ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPChangeHistory.ChangeIDFiltersSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "ChangeId": {
+          "key": true,
+          "type": "cds.Integer",
+          "@sap.unicode": "false",
+          "@sap.label": "Change ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Jobid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPChangeHistory.CalculateOriginalViewSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Jobid": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.unicode": "false",
+          "@sap.label": "Change History Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Plarea": {
+          "type": "cds.String",
+          "length": 10,
+          "@sap.unicode": "false",
+          "@sap.label": "Planning Area",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Version": {
+          "type": "cds.String",
+          "length": 10,
+          "@sap.unicode": "false",
+          "@sap.label": "Version",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Keyfigure": {
+          "type": "cds.String",
+          "length": 32,
+          "@sap.unicode": "false",
+          "@sap.label": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "TimeRangeOfChangesFrom": {
+          "type": "cds.Decimal",
+          "precision": 15,
+          "scale": 0,
+          "@sap.unicode": "false",
+          "@sap.label": "Time Range Of Changes: From",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "TimeRangeOfChangesTo": {
+          "type": "cds.Decimal",
+          "precision": 15,
+          "scale": 0,
+          "@sap.unicode": "false",
+          "@sap.label": "Time Range Of Changes: To",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "SourceOfChangeFilters": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.SourceOfChangeFiltersSet",
+          "cardinality": {
+            "max": "*"
+          },
+          "on": [
+            {
+              "ref": [
+                "SourceOfChangeFilters",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "ChangeIDFilters": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.ChangeIDFiltersSet",
+          "cardinality": {
+            "max": "*"
+          },
+          "on": [
+            {
+              "ref": [
+                "ChangeIDFilters",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "UserFilters": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.UserFiltersSet",
+          "cardinality": {
+            "max": "*"
+          },
+          "on": [
+            {
+              "ref": [
+                "UserFilters",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "ReasonCodeFilters": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.ReasonCodeFiltersSet",
+          "cardinality": {
+            "max": "*"
+          },
+          "on": [
+            {
+              "ref": [
+                "ReasonCodeFilters",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        },
+        "AttributeFilters": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPChangeHistory.AttributeFiltersSet",
+          "cardinality": {
+            "max": "*"
+          },
+          "on": [
+            {
+              "ref": [
+                "AttributeFilters",
+                "Jobid"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "Jobid"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "IBPChangeHistory.AnalyticViewResultVCPQSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.label": "Retrieving start and end state of Key figure values for Planning Area: VCPQ",
+      "elements": {
+        "JOBID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Job ID",
+          "@sap.label": "Job ID",
+          "@sap.quickinfo": "Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "ID": {
+          "key": true,
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "ID",
+          "@sap.label": "ID",
+          "@sap.quickinfo": "ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURE": {
+          "type": "cds.String",
+          "length": 32,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure ID",
+          "@sap.label": "Key Figure ID",
+          "@sap.quickinfo": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURENAME": {
+          "type": "cds.String",
+          "length": 60,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure Name",
+          "@sap.label": "Key Figure Name",
+          "@sap.quickinfo": "Key Figure Name",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODID": {
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period ID",
+          "@sap.label": "Period ID",
+          "@sap.quickinfo": "Period ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODDESCR": {
+          "type": "cds.String",
+          "length": 100,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period Description",
+          "@sap.label": "Period Description",
+          "@sap.quickinfo": "Period Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODFROMTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period From Timestamp",
+          "@sap.quickinfo": "Period From Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "PERIODTOTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period To Timestamp",
+          "@sap.quickinfo": "Period To Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "Old Value",
+          "@sap.label": "Old Value",
+          "@sap.quickinfo": "Old Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The Old Value is Null",
+          "@sap.label": "Indicates if The Old Value is Null",
+          "@sap.quickinfo": "Indicates if The Old Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "NEWVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "New Value",
+          "@sap.label": "New Value",
+          "@sap.quickinfo": "New Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "NEWVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The New Value is Null",
+          "@sap.label": "Indicates if The New Value is Null",
+          "@sap.quickinfo": "Indicates if The New Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        }
+      }
+    },
+    "IBPChangeHistory.EffectViewResultVCPQSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.label": "Retrieving effects of changes of Key figure values for Planning Area: VCPQ",
+      "elements": {
+        "JOBID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Job ID",
+          "@sap.label": "Job ID",
+          "@sap.quickinfo": "Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "ID": {
+          "key": true,
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "ID",
+          "@sap.label": "ID",
+          "@sap.quickinfo": "ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURE": {
+          "type": "cds.String",
+          "length": 32,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure ID",
+          "@sap.label": "Key Figure ID",
+          "@sap.quickinfo": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURENAME": {
+          "type": "cds.String",
+          "length": 60,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure Name",
+          "@sap.label": "Key Figure Name",
+          "@sap.quickinfo": "Key Figure Name",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODID": {
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period ID",
+          "@sap.label": "Period ID",
+          "@sap.quickinfo": "Period ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODDESCR": {
+          "type": "cds.String",
+          "length": 100,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period Description",
+          "@sap.label": "Period Description",
+          "@sap.quickinfo": "Period Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODFROMTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period From Timestamp",
+          "@sap.quickinfo": "Period From Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "PERIODTOTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period To Timestamp",
+          "@sap.quickinfo": "Period To Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "Old Value",
+          "@sap.label": "Old Value",
+          "@sap.quickinfo": "Old Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The Old Value is Null",
+          "@sap.label": "Indicates if The Old Value is Null",
+          "@sap.quickinfo": "Indicates if The Old Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "NEWVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "New Value",
+          "@sap.label": "New Value",
+          "@sap.quickinfo": "New Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "NEWVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The New Value is Null",
+          "@sap.label": "Indicates if The New Value is Null",
+          "@sap.quickinfo": "Indicates if The New Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "CHANGEID": {
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Change ID",
+          "@sap.label": "Change ID",
+          "@sap.quickinfo": "Change ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "MODIFIEDDATE": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Modified Date",
+          "@sap.quickinfo": "Modified Date",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "REASONCODE": {
+          "type": "cds.LargeString",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Reason Code Description",
+          "@sap.label": "Reason Code Description",
+          "@sap.quickinfo": "Reason Code Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "MODIFIEDBY": {
+          "type": "cds.String",
+          "length": 80,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Full Name of Modified By",
+          "@sap.label": "Full Name of Modified By",
+          "@sap.quickinfo": "Full Name of Modified By",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "SOURCEOFCHANGE": {
+          "type": "cds.String",
+          "length": 255,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Source of Change Description",
+          "@sap.label": "Source of Change Description",
+          "@sap.quickinfo": "Source of Change Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "COMMENT": {
+          "type": "cds.LargeString",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Comment",
+          "@sap.label": "Comment",
+          "@sap.quickinfo": "Comment",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        }
+      }
+    },
+    "IBPChangeHistory.OriginalViewResultVCPQSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.label": "Retrieving origin of changes of Key figure values for Planning Area: VCPQ",
+      "elements": {
+        "JOBID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Job ID",
+          "@sap.label": "Job ID",
+          "@sap.quickinfo": "Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "ID": {
+          "key": true,
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "ID",
+          "@sap.label": "ID",
+          "@sap.quickinfo": "ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURE": {
+          "type": "cds.String",
+          "length": 32,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure ID",
+          "@sap.label": "Key Figure ID",
+          "@sap.quickinfo": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURENAME": {
+          "type": "cds.String",
+          "length": 60,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure Name",
+          "@sap.label": "Key Figure Name",
+          "@sap.quickinfo": "Key Figure Name",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODID": {
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period ID",
+          "@sap.label": "Period ID",
+          "@sap.quickinfo": "Period ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODDESCR": {
+          "type": "cds.String",
+          "length": 100,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period Description",
+          "@sap.label": "Period Description",
+          "@sap.quickinfo": "Period Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODFROMTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period From Timestamp",
+          "@sap.quickinfo": "Period From Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "PERIODTOTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period To Timestamp",
+          "@sap.quickinfo": "Period To Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "Old Value",
+          "@sap.label": "Old Value",
+          "@sap.quickinfo": "Old Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The Old Value is Null",
+          "@sap.label": "Indicates if The Old Value is Null",
+          "@sap.quickinfo": "Indicates if The Old Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "NEWVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "New Value",
+          "@sap.label": "New Value",
+          "@sap.quickinfo": "New Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "NEWVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The New Value is Null",
+          "@sap.label": "Indicates if The New Value is Null",
+          "@sap.quickinfo": "Indicates if The New Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "CHANGEID": {
+          "type": "cds.String",
+          "length": 15,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Change ID",
+          "@sap.label": "Change ID",
+          "@sap.quickinfo": "Change ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "MODIFIEDDATE": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Modified Date",
+          "@sap.quickinfo": "Modified Date",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "REASONCODE": {
+          "type": "cds.LargeString",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Reason Code Description",
+          "@sap.label": "Reason Code Description",
+          "@sap.quickinfo": "Reason Code Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "MODIFIEDBY": {
+          "type": "cds.String",
+          "length": 80,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Full Name of Modified By",
+          "@sap.label": "Full Name of Modified By",
+          "@sap.quickinfo": "Full Name of Modified By",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "SOURCEOFCHANGE": {
+          "type": "cds.String",
+          "length": 255,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Source of Change Description",
+          "@sap.label": "Source of Change Description",
+          "@sap.quickinfo": "Source of Change Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "COMMENT": {
+          "type": "cds.LargeString",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Comment",
+          "@sap.label": "Comment",
+          "@sap.quickinfo": "Comment",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        }
+      }
+    },
+    "IBPChangeHistory.AnalyticViewResultVCPPSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.label": "Retrieving start and end state of Key figure values for Planning Area: VCPP",
+      "elements": {
+        "JOBID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Job ID",
+          "@sap.label": "Job ID",
+          "@sap.quickinfo": "Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "ID": {
+          "key": true,
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "ID",
+          "@sap.label": "ID",
+          "@sap.quickinfo": "ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURE": {
+          "type": "cds.String",
+          "length": 32,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure ID",
+          "@sap.label": "Key Figure ID",
+          "@sap.quickinfo": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURENAME": {
+          "type": "cds.String",
+          "length": 60,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure Name",
+          "@sap.label": "Key Figure Name",
+          "@sap.quickinfo": "Key Figure Name",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODID": {
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period ID",
+          "@sap.label": "Period ID",
+          "@sap.quickinfo": "Period ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODDESCR": {
+          "type": "cds.String",
+          "length": 100,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period Description",
+          "@sap.label": "Period Description",
+          "@sap.quickinfo": "Period Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODFROMTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period From Timestamp",
+          "@sap.quickinfo": "Period From Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "PERIODTOTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period To Timestamp",
+          "@sap.quickinfo": "Period To Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "Old Value",
+          "@sap.label": "Old Value",
+          "@sap.quickinfo": "Old Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The Old Value is Null",
+          "@sap.label": "Indicates if The Old Value is Null",
+          "@sap.quickinfo": "Indicates if The Old Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "NEWVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "New Value",
+          "@sap.label": "New Value",
+          "@sap.quickinfo": "New Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "NEWVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The New Value is Null",
+          "@sap.label": "Indicates if The New Value is Null",
+          "@sap.quickinfo": "Indicates if The New Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        }
+      }
+    },
+    "IBPChangeHistory.EffectViewResultVCPPSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.label": "Retrieving effects of changes of Key figure values for Planning Area: VCPP",
+      "elements": {
+        "JOBID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Job ID",
+          "@sap.label": "Job ID",
+          "@sap.quickinfo": "Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "ID": {
+          "key": true,
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "ID",
+          "@sap.label": "ID",
+          "@sap.quickinfo": "ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURE": {
+          "type": "cds.String",
+          "length": 32,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure ID",
+          "@sap.label": "Key Figure ID",
+          "@sap.quickinfo": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURENAME": {
+          "type": "cds.String",
+          "length": 60,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure Name",
+          "@sap.label": "Key Figure Name",
+          "@sap.quickinfo": "Key Figure Name",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODID": {
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period ID",
+          "@sap.label": "Period ID",
+          "@sap.quickinfo": "Period ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODDESCR": {
+          "type": "cds.String",
+          "length": 100,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period Description",
+          "@sap.label": "Period Description",
+          "@sap.quickinfo": "Period Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODFROMTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period From Timestamp",
+          "@sap.quickinfo": "Period From Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "PERIODTOTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period To Timestamp",
+          "@sap.quickinfo": "Period To Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "Old Value",
+          "@sap.label": "Old Value",
+          "@sap.quickinfo": "Old Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The Old Value is Null",
+          "@sap.label": "Indicates if The Old Value is Null",
+          "@sap.quickinfo": "Indicates if The Old Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "NEWVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "New Value",
+          "@sap.label": "New Value",
+          "@sap.quickinfo": "New Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "NEWVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The New Value is Null",
+          "@sap.label": "Indicates if The New Value is Null",
+          "@sap.quickinfo": "Indicates if The New Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "CHANGEID": {
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Change ID",
+          "@sap.label": "Change ID",
+          "@sap.quickinfo": "Change ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "MODIFIEDDATE": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Modified Date",
+          "@sap.quickinfo": "Modified Date",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "REASONCODE": {
+          "type": "cds.LargeString",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Reason Code Description",
+          "@sap.label": "Reason Code Description",
+          "@sap.quickinfo": "Reason Code Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "MODIFIEDBY": {
+          "type": "cds.String",
+          "length": 80,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Full Name of Modified By",
+          "@sap.label": "Full Name of Modified By",
+          "@sap.quickinfo": "Full Name of Modified By",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "SOURCEOFCHANGE": {
+          "type": "cds.String",
+          "length": 255,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Source of Change Description",
+          "@sap.label": "Source of Change Description",
+          "@sap.quickinfo": "Source of Change Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "COMMENT": {
+          "type": "cds.LargeString",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Comment",
+          "@sap.label": "Comment",
+          "@sap.quickinfo": "Comment",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        }
+      }
+    },
+    "IBPChangeHistory.OriginalViewResultVCPPSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.label": "Retrieving origin of changes of Key figure values for Planning Area: VCPP",
+      "elements": {
+        "JOBID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Job ID",
+          "@sap.label": "Job ID",
+          "@sap.quickinfo": "Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "ID": {
+          "key": true,
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "ID",
+          "@sap.label": "ID",
+          "@sap.quickinfo": "ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURE": {
+          "type": "cds.String",
+          "length": 32,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure ID",
+          "@sap.label": "Key Figure ID",
+          "@sap.quickinfo": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURENAME": {
+          "type": "cds.String",
+          "length": 60,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure Name",
+          "@sap.label": "Key Figure Name",
+          "@sap.quickinfo": "Key Figure Name",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODID": {
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period ID",
+          "@sap.label": "Period ID",
+          "@sap.quickinfo": "Period ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODDESCR": {
+          "type": "cds.String",
+          "length": 100,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period Description",
+          "@sap.label": "Period Description",
+          "@sap.quickinfo": "Period Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODFROMTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period From Timestamp",
+          "@sap.quickinfo": "Period From Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "PERIODTOTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period To Timestamp",
+          "@sap.quickinfo": "Period To Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "Old Value",
+          "@sap.label": "Old Value",
+          "@sap.quickinfo": "Old Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The Old Value is Null",
+          "@sap.label": "Indicates if The Old Value is Null",
+          "@sap.quickinfo": "Indicates if The Old Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "NEWVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "New Value",
+          "@sap.label": "New Value",
+          "@sap.quickinfo": "New Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "NEWVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The New Value is Null",
+          "@sap.label": "Indicates if The New Value is Null",
+          "@sap.quickinfo": "Indicates if The New Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "CHANGEID": {
+          "type": "cds.String",
+          "length": 15,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Change ID",
+          "@sap.label": "Change ID",
+          "@sap.quickinfo": "Change ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "MODIFIEDDATE": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Modified Date",
+          "@sap.quickinfo": "Modified Date",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "REASONCODE": {
+          "type": "cds.LargeString",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Reason Code Description",
+          "@sap.label": "Reason Code Description",
+          "@sap.quickinfo": "Reason Code Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "MODIFIEDBY": {
+          "type": "cds.String",
+          "length": 80,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Full Name of Modified By",
+          "@sap.label": "Full Name of Modified By",
+          "@sap.quickinfo": "Full Name of Modified By",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "SOURCEOFCHANGE": {
+          "type": "cds.String",
+          "length": 255,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Source of Change Description",
+          "@sap.label": "Source of Change Description",
+          "@sap.quickinfo": "Source of Change Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "COMMENT": {
+          "type": "cds.LargeString",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Comment",
+          "@sap.label": "Comment",
+          "@sap.quickinfo": "Comment",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        }
+      }
+    },
+    "IBPChangeHistory.AnalyticViewResultVCPDSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.label": "Retrieving start and end state of Key figure values for Planning Area: VCPD",
+      "elements": {
+        "JOBID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Job ID",
+          "@sap.label": "Job ID",
+          "@sap.quickinfo": "Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "ID": {
+          "key": true,
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "ID",
+          "@sap.label": "ID",
+          "@sap.quickinfo": "ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURE": {
+          "type": "cds.String",
+          "length": 32,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure ID",
+          "@sap.label": "Key Figure ID",
+          "@sap.quickinfo": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURENAME": {
+          "type": "cds.String",
+          "length": 60,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure Name",
+          "@sap.label": "Key Figure Name",
+          "@sap.quickinfo": "Key Figure Name",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODID": {
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period ID",
+          "@sap.label": "Period ID",
+          "@sap.quickinfo": "Period ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODDESCR": {
+          "type": "cds.String",
+          "length": 100,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period Description",
+          "@sap.label": "Period Description",
+          "@sap.quickinfo": "Period Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODFROMTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period From Timestamp",
+          "@sap.quickinfo": "Period From Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "PERIODTOTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period To Timestamp",
+          "@sap.quickinfo": "Period To Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "Old Value",
+          "@sap.label": "Old Value",
+          "@sap.quickinfo": "Old Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The Old Value is Null",
+          "@sap.label": "Indicates if The Old Value is Null",
+          "@sap.quickinfo": "Indicates if The Old Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "NEWVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "New Value",
+          "@sap.label": "New Value",
+          "@sap.quickinfo": "New Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "NEWVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The New Value is Null",
+          "@sap.label": "Indicates if The New Value is Null",
+          "@sap.quickinfo": "Indicates if The New Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        }
+      }
+    },
+    "IBPChangeHistory.EffectViewResultVCPDSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.label": "Retrieving effects of changes of Key figure values for Planning Area: VCPD",
+      "elements": {
+        "JOBID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Job ID",
+          "@sap.label": "Job ID",
+          "@sap.quickinfo": "Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "ID": {
+          "key": true,
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "ID",
+          "@sap.label": "ID",
+          "@sap.quickinfo": "ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURE": {
+          "type": "cds.String",
+          "length": 32,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure ID",
+          "@sap.label": "Key Figure ID",
+          "@sap.quickinfo": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURENAME": {
+          "type": "cds.String",
+          "length": 60,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure Name",
+          "@sap.label": "Key Figure Name",
+          "@sap.quickinfo": "Key Figure Name",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODID": {
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period ID",
+          "@sap.label": "Period ID",
+          "@sap.quickinfo": "Period ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODDESCR": {
+          "type": "cds.String",
+          "length": 100,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period Description",
+          "@sap.label": "Period Description",
+          "@sap.quickinfo": "Period Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODFROMTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period From Timestamp",
+          "@sap.quickinfo": "Period From Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "PERIODTOTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period To Timestamp",
+          "@sap.quickinfo": "Period To Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "Old Value",
+          "@sap.label": "Old Value",
+          "@sap.quickinfo": "Old Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The Old Value is Null",
+          "@sap.label": "Indicates if The Old Value is Null",
+          "@sap.quickinfo": "Indicates if The Old Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "NEWVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "New Value",
+          "@sap.label": "New Value",
+          "@sap.quickinfo": "New Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "NEWVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The New Value is Null",
+          "@sap.label": "Indicates if The New Value is Null",
+          "@sap.quickinfo": "Indicates if The New Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "CHANGEID": {
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Change ID",
+          "@sap.label": "Change ID",
+          "@sap.quickinfo": "Change ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "MODIFIEDDATE": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Modified Date",
+          "@sap.quickinfo": "Modified Date",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "REASONCODE": {
+          "type": "cds.LargeString",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Reason Code Description",
+          "@sap.label": "Reason Code Description",
+          "@sap.quickinfo": "Reason Code Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "MODIFIEDBY": {
+          "type": "cds.String",
+          "length": 80,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Full Name of Modified By",
+          "@sap.label": "Full Name of Modified By",
+          "@sap.quickinfo": "Full Name of Modified By",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "SOURCEOFCHANGE": {
+          "type": "cds.String",
+          "length": 255,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Source of Change Description",
+          "@sap.label": "Source of Change Description",
+          "@sap.quickinfo": "Source of Change Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "COMMENT": {
+          "type": "cds.LargeString",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Comment",
+          "@sap.label": "Comment",
+          "@sap.quickinfo": "Comment",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        }
+      }
+    },
+    "IBPChangeHistory.OriginalViewResultVCPDSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.label": "Retrieving origin of changes of Key figure values for Planning Area: VCPD",
+      "elements": {
+        "JOBID": {
+          "key": true,
+          "type": "cds.String",
+          "length": 22,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Job ID",
+          "@sap.label": "Job ID",
+          "@sap.quickinfo": "Job ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "ID": {
+          "key": true,
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "ID",
+          "@sap.label": "ID",
+          "@sap.quickinfo": "ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURE": {
+          "type": "cds.String",
+          "length": 32,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure ID",
+          "@sap.label": "Key Figure ID",
+          "@sap.quickinfo": "Key Figure ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "KEYFIGURENAME": {
+          "type": "cds.String",
+          "length": 60,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Key Figure Name",
+          "@sap.label": "Key Figure Name",
+          "@sap.quickinfo": "Key Figure Name",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODID": {
+          "type": "cds.Integer64",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period ID",
+          "@sap.label": "Period ID",
+          "@sap.quickinfo": "Period ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODDESCR": {
+          "type": "cds.String",
+          "length": 100,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Period Description",
+          "@sap.label": "Period Description",
+          "@sap.quickinfo": "Period Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "PERIODFROMTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period From Timestamp",
+          "@sap.quickinfo": "Period From Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "PERIODTOTIMESTAMP": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Period To Timestamp",
+          "@sap.quickinfo": "Period To Timestamp",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "Old Value",
+          "@sap.label": "Old Value",
+          "@sap.quickinfo": "Old Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "OLDVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The Old Value is Null",
+          "@sap.label": "Indicates if The Old Value is Null",
+          "@sap.quickinfo": "Indicates if The Old Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "NEWVALUE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.aggregation.role": "measure",
+          "@sap.heading": "New Value",
+          "@sap.label": "New Value",
+          "@sap.quickinfo": "New Value",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "NEWVALUE_NULL": {
+          "type": "cds.Boolean",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Indicates if The New Value is Null",
+          "@sap.label": "Indicates if The New Value is Null",
+          "@sap.quickinfo": "Indicates if The New Value is Null",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "CHANGEID": {
+          "type": "cds.String",
+          "length": 15,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Change ID",
+          "@sap.label": "Change ID",
+          "@sap.quickinfo": "Change ID",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "MODIFIEDDATE": {
+          "type": "cds.Date",
+          "@sap.aggregation.role": "dimension",
+          "@sap.display.format": "Date",
+          "@sap.filter.restriction": "interval",
+          "@sap.heading": "Modified Date",
+          "@sap.quickinfo": "Modified Date",
+          "@sap.label": "Time Stamp",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false"
+        },
+        "REASONCODE": {
+          "type": "cds.LargeString",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Reason Code Description",
+          "@sap.label": "Reason Code Description",
+          "@sap.quickinfo": "Reason Code Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "MODIFIEDBY": {
+          "type": "cds.String",
+          "length": 80,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Full Name of Modified By",
+          "@sap.label": "Full Name of Modified By",
+          "@sap.quickinfo": "Full Name of Modified By",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "SOURCEOFCHANGE": {
+          "type": "cds.String",
+          "length": 255,
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Source of Change Description",
+          "@sap.label": "Source of Change Description",
+          "@sap.quickinfo": "Source of Change Description",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        },
+        "COMMENT": {
+          "type": "cds.LargeString",
+          "@sap.aggregation.role": "dimension",
+          "@sap.filter.restriction": "multi-value",
+          "@sap.heading": "Comment",
+          "@sap.label": "Comment",
+          "@sap.quickinfo": "Comment",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.value.list": "standard"
+        }
+      }
+    }
+  }
+}

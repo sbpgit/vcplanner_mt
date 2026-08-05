@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_CHAR_COLOR_CODE" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="CV_CHAR_COLOR_CODE"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_COLOR_CODE_MASTER">
+    <resourceUri>CP_COLOR_CODE_MASTER</resourceUri>
+  </DataSource>
+  <DataSource id="CV_CLUSTER_HEATMAP01">
+    <resourceUri>CV_CLUSTER_HEATMAP01</resourceUri>
+  </DataSource>
+  <DataSource id="Projection_1$$$$CP_COLOR_CODE_MASTER$$">
+    <resourceUri>CP_COLOR_CODE_MASTER</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="ORDER" aggregationType="max"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="JOIN_FIELD" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="CP_COLOR_CODE_MASTER"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+    <viewAttributes>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="Rank_Column" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="JOIN_FIELD" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="CV_CLUSTER_HEATMAP01"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="ORDER"/>
+      <viewAttribute id="COLOR_CODE"/>
+      <viewAttribute id="COLOR_NAME"/>
+      <viewAttribute id="COLOR_FAMILY"/>
+      <viewAttribute id="COLORBLIND_RATIONALE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1$$$$CP_COLOR_CODE_MASTER$$"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="Rank_Column" aggregationType="sum"/>
+      <viewAttribute id="ORDER" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$JOIN_FIELD$JOIN_FIELD"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CALCULATED_COLOR_RANNK" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1 + ((&quot;Rank_Column&quot; - 1) * ROUND(( (&quot;ORDER&quot; + 1 ) / 31 )))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Aggregation_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_FIELD$JOIN_FIELD" source="JOIN_FIELD"/>
+    </input>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORDER" source="ORDER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_FIELD$JOIN_FIELD" source="JOIN_FIELD"/>
+    </input>
+    <joinAttribute name="JOIN$JOIN_FIELD$JOIN_FIELD"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="COLOR_CODE"/>
+      <viewAttribute id="COLOR_NAME"/>
+      <viewAttribute id="COLOR_FAMILY"/>
+      <viewAttribute id="COLORBLIND_RATIONALE"/>
+      <viewAttribute id="Rank_Column" aggregationType="sum"/>
+      <viewAttribute id="ORDER" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$ORDER$CALCULATED_COLOR_RANNK"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_CODE" source="COLOR_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_NAME" source="COLOR_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_FAMILY" source="COLOR_FAMILY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLORBLIND_RATIONALE" source="COLORBLIND_RATIONALE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ORDER$CALCULATED_COLOR_RANNK" source="ORDER"/>
+    </input>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORDER" source="ORDER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Rank_Column" source="Rank_Column"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ORDER$CALCULATED_COLOR_RANNK" source="CALCULATED_COLOR_RANNK"/>
+    </input>
+    <joinAttribute name="JOIN$ORDER$CALCULATED_COLOR_RANNK"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_2">
+  <attributes>
+    <attribute id="CHAR_NUM" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NUM"/>
+      <keyMapping columnObjectName="Join_2" columnName="CHAR_NUM"/>
+    </attribute>
+    <attribute id="CHARVAL_NUM" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_NUM"/>
+      <keyMapping columnObjectName="Join_2" columnName="CHARVAL_NUM"/>
+    </attribute>
+    <attribute id="COLOR_CODE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COLOR_CODE"/>
+      <keyMapping columnObjectName="Join_2" columnName="COLOR_CODE"/>
+    </attribute>
+    <attribute id="COLOR_NAME" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COLOR_NAME"/>
+      <keyMapping columnObjectName="Join_2" columnName="COLOR_NAME"/>
+    </attribute>
+    <attribute id="COLOR_FAMILY" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COLOR_FAMILY"/>
+      <keyMapping columnObjectName="Join_2" columnName="COLOR_FAMILY"/>
+    </attribute>
+    <attribute id="COLORBLIND_RATIONALE" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COLORBLIND_RATIONALE"/>
+      <keyMapping columnObjectName="Join_2" columnName="COLORBLIND_RATIONALE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="Rank_Column" order="7" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Rank_Column"/>
+      <measureMapping columnObjectName="Join_2" columnName="Rank_Column"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="ORDER" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ORDER"/>
+      <measureMapping columnObjectName="Join_2" columnName="ORDER"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="328.6900820831794" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="536.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="536.9999976158142"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118.66666666666666" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="16" y="16"/>
+      <rectangleSize width="239.8388671875"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="319.8388671875" y="32"/>
+      <rectangleSize width="148.34765625"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="395.83468516943316" y="376.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="328.6900820831794" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="225.1650390625"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

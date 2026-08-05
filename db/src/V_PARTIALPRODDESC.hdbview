@@ -1,0 +1,30 @@
+---------------------------------------------------------------------------------------
+-- Name:            V_PARTIALPRODDESC
+-- Description:     View to get partial products
+-- Join Details:    A: CP_PARTIALPROD_INTRO-  B:V_LOCPROD 
+-----------------------------------------------------------------------------------------
+VIEW "V_PARTIALPRODDESC" AS
+SELECT DISTINCT
+    A.LOCATION_ID,
+    B.LOCATION_DESC,
+    A.PRODUCT_ID,
+    A.PROD_DESC,
+    A.REF_PRODID,
+    B.PROD_DESC AS REFPROD_DESC,
+    A.CONFIGPROD_CHK
+FROM "CP_PARTIALPROD_INTRO" AS A
+INNER JOIN "V_LOCPROD" AS B 
+ON A.LOCATION_ID = B.LOCATION_ID
+AND A.REF_PRODID = B.PRODUCT_ID;
+-- WHERE "PRODUCT_ID" <> "REF_PRODID"
+
+-- SELECT DISTINCT
+--     A.PRODUCT_ID,
+--     A.PROD_DESC,
+--     A.REF_PRODID,
+--     B.PROD_DESC AS REFPROD_DESC,
+--     A.CONFIGPROD_CHK
+-- FROM "CP_PARTIALPROD_INTRO" AS A
+-- INNER JOIN "V_LOCPROD" AS B 
+-- ON A.LOCATION_ID = B.LOCATION_ID
+-- AND A.REF_PRODID = B.PRODUCT_ID; 

@@ -1,0 +1,44 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_FCHARPLAN
+-- Description:     View to fetch int. number and its values for Class, Characteristics and its values in IBP 
+--                  future charateristic plan
+-- Join Details:    A: CP_IBP_FCHARPLAN-  IBP future charateristic plan
+--                  B: V_CLASSCHARVAL- View to fetch int. number and values of class, characteristic , characteristic values
+-----------------------------------------------------------------------------------------
+VIEW "V_FCHARPLAN" AS
+SELECT DISTINCT 
+	A."LOCATION_ID",
+	A."PRODUCT_ID",
+	A."CLASS_NUM",
+	A."WEEK_DATE",
+	A."CHAR_NUM",
+	B."CHAR_NAME",
+	B."CHAR_DESC", 
+	A."CHARVAL_NUM",
+	B."CHAR_VALUE",
+	B."CHARVAL_DESC",
+	A."VERSION",
+	A."SCENARIO",
+	A."MODEL_VERSION",
+	AVG(A.OPT_PERCENT) AS OPT_PERCENT,
+	AVG(A.OPT_QTY) AS OPT_QTY
+FROM 
+	"CP_IBP_FCHARPLAN" AS A
+	INNER JOIN
+	"V_CLASSCHARVAL" AS B
+	ON A.CHAR_NUM = B.CHAR_NUM
+		AND A.CHARVAL_NUM = B.CHARVAL_NUM
+GROUP BY 
+	A."LOCATION_ID",
+	A."PRODUCT_ID",
+	A."CLASS_NUM",
+	A."WEEK_DATE",
+	A."CHAR_NUM",
+	B."CHAR_NAME",
+	B."CHAR_DESC",
+	A."CHARVAL_NUM",
+	B."CHAR_VALUE",
+	B."CHARVAL_DESC",
+	A."VERSION",
+	A."SCENARIO",
+	A."MODEL_VERSION";

@@ -1,0 +1,32 @@
+--------------------------------------------------------------------------------------------
+-- Name:            V_BOM_TSPREDICTION
+-- Description:     View to fetch predictions for BOM components
+-- Join Details:    A: V_BOMOD_DEMDFACLOC-  Table for BOM object dependency
+--                  B: CP_TS_PREDICTIONS  - Table for object dependency timeseries
+--------------------------------------------------------------------------------------------
+
+VIEW "V_BOM_TSPREDICTION" AS
+SELECT DISTINCT A.LOCATION_ID,
+  A.PRODUCT_ID,
+  A.FACTORY_LOC,
+  A.REF_PRODID,
+  A.ITEM_NUM,
+  A.COMPONENT,
+  C.OBJ_DEP_CN AS OBJ_DEP,
+--   CONCAT(A.OBJ_DEP, CONCAT('_', B.OBJ_COUNTER)) AS OBJ_DEP,
+  --  B.OBJ_COUNTER,
+  B.MODEL_VERSION,
+  B.VERSION,
+  B.SCENARIO,
+  B.CAL_DATE,
+  B.PREDICTED
+FROM "V_BOM_CONFIG_PARTIAL" AS A 
+--"V_BOMOD_DEMDFACLOC" AS A
+ INNER JOIN CP_TS_PREDICTIONS AS B
+ ON A.LOCATION_ID = B.LOCATION_ID
+  AND A.PRODUCT_ID = B.PRODUCT_ID
+  AND A.OBJ_DEP = B.OBJ_DEP 
+INNER JOIN V_OBJDEP AS C
+ON A.OBJ_DEP = C.OBJ_DEP 
+--  and (B.CAL_DATE >= A.VALID_FROM AND B.CAL_DATE <= A.VALID_TO)
+WHERE B.OBJ_TYPE = 'OD';

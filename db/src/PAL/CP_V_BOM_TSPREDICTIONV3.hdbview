@@ -1,0 +1,35 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_BOM_TSPREDICTIONV3
+-- Description:     View to fetch predictions for BOM components  
+-- Join Details:    A: V_BOMOD_DEMDFACLOC-  Table for BOM object dependency
+--                  B: CP_TS_PREDICTIONS  - Table for object dependency timeseries 
+-----------------------------------------------------------------------------------------
+VIEW "CP_V_BOM_TSPREDICTIONV3"
+ AS SELECT 
+ A.LOCATION_ID,
+ A.PRODUCT_ID,
+ A.ITEM_NUM,
+ A.COMPONENT,
+ B.OBJ_TYPE,
+ B.MODEL_VERSION,
+ B.VERSION,
+ B.SCENARIO,
+ B.CAL_DATE,
+ MAX(B.PREDICTED) as PREDICTED
+FROM 
+ "V_BOM_CONFIG_PARTIAL" AS A
+ INNER JOIN
+ CP_TS_PREDICTIONS AS B
+ ON A.LOCATION_ID = B.LOCATION_ID
+     AND A.PRODUCT_ID = B.PRODUCT_ID
+     AND A.OBJ_DEP = B.OBJ_DEP
+GROUP BY 
+ A.LOCATION_ID,
+ A.PRODUCT_ID,
+ A.ITEM_NUM,
+ A.COMPONENT,
+ B.OBJ_TYPE,
+ B.MODEL_VERSION,
+ B.VERSION,
+ B.SCENARIO,
+ B.CAL_DATE;

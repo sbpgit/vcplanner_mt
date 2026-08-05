@@ -1,0 +1,30 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_CLASSCHARVAL
+-- Description:     View to fetch int. number and its values for Class, Characteristics and its values
+-- Join Details:    A: CP_CLASS -  Table for int. number of class and values
+--                  B: V_CHARVAL - View to fetch int. number and values of characteristic , characteristic values
+-----------------------------------------------------------------------------------------
+VIEW "V_CLASSCHARVAL" AS
+SELECT  A.CLASS_NUM,
+        A.CLASS_NAME,
+        A.CLASS_DESC,
+        A.IBPCHAR_CHK,
+        B.CHAR_NUM,
+        B.CHAR_NAME,
+        B.CHAR_DESC,
+        B.CHAR_GROUP,
+        B.CHAR_VALUE,
+        B.CHARVAL_NUM,
+        B.CHARVAL_DESC,
+        B.MULTI_CHAR,
+        B.CHAR_TYPE,
+        B.REF_CHAR_NUM,
+        B.REF_CHAR_NAME,
+        B.REF_CHAR_DESC,
+        B.REF_CHARVAL_NUM,
+        B.REF_CHAR_VALUE,
+        B.GENFLAG
+        FROM CP_CLASS AS A
+        INNER JOIN "V_CHARVAL" AS B
+        ON A.CLASS_NUM = B.CLASS_NUM
+        WHERE A.CLASS_TYPE != '200';

@@ -1,0 +1,22 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_UID_PRI
+-- Description:     Get Unique characteristics
+-- Join Details:    CP_UID_PRI_HEADER - Unique ID Header
+--                  CP_UID_PRI_ITEM   - Unique ID Item
+-----------------------------------------------------------------------------------------
+VIEW "V_UID_PRI"
+AS SELECT CP_UID_PRI_HEADER.UNIQUE_ID,
+CP_UID_PRI_HEADER.PRODUCT_ID,
+-- CP_UID_PRI_HEADER.LOCATION_ID,
+CP_UID_PRI_HEADER.UNIQUE_DESC,
+CP_UID_PRI_HEADER.UID_TYPE,
+CP_UID_PRI_HEADER.ACTIVE,
+CP_UID_PRI_ITEM.CHAR_NUM,
+CP_UID_PRI_ITEM.CHARVAL_NUM
+FROM 
+	CP_UID_PRI_HEADER
+	INNER JOIN
+	CP_UID_PRI_ITEM
+	ON CP_UID_PRI_HEADER.UNIQUE_ID = CP_UID_PRI_ITEM.UNIQUE_ID
+		-- AND CP_UID_PRI_HEADER.LOCATION_ID = CP_UID_PRI_ITEM.LOCATION_ID
+		AND CP_UID_PRI_HEADER.PRODUCT_ID = CP_UID_PRI_ITEM.PRODUCT_ID;

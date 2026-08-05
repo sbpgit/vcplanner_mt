@@ -1,0 +1,22 @@
+
+TRIGGER "ConfigurationChangeLogs"
+AFTER UPDATE ON "CP_PARAMETER_VALUES"
+REFERENCING NEW ROW AS MYNEWROW, OLD ROW AS MYOLDROW
+FOR EACH ROW
+BEGIN
+        -- DECLARE appUser NVARCHAR(100);
+        --         appUser := SESSION_CONTEXT('APPLICATIONUSER');
+                  IF :MYNEWROW.VALUE != :MYOLDROW.VALUE  THEN
+                -- Insert new record
+                INSERT INTO "CP_CONFIGURATION_CHANGE_LOGS"
+                VALUES (:MYNEWROW.LOCATION_ID,
+                        :MYNEWROW.PARAMETER_ID,
+                        :MYOLDROW.VALUE,
+                        :MYNEWROW.VALUE,
+                        'X',
+                        -- SESSION_USER,
+                        Current_Date,
+                        Current_Time);
+        END IF;
+            
+END

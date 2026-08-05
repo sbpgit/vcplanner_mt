@@ -1,0 +1,140 @@
+View V_DMD_FORECAST_ANALYTICAL AS 
+-- SELECT *
+-- FROM (
+--     SELECT
+--         CASE
+--             WHEN TYPE = 'Actual'   THEN 'Actual WoW'
+--             WHEN TYPE = 'Forecast' THEN 'Forecast WoW'
+--         END AS COMP_TYPE,
+
+--         LOCATION_ID,
+--         PRODUCT_ID,
+--         LOCATION_DESC,
+--         PROD_DESC,
+--         BASE_WEEK_DATE           AS THIS_WEEK_DATE,
+--         COALESCE(VALUE, 0)       AS THIS_WEEK_VALUE,
+
+--         -- Previous week’s value
+--         COALESCE(
+--             LAG(VALUE) OVER (
+--                 PARTITION BY LOCATION_ID, PRODUCT_ID, TYPE
+--                 ORDER BY BASE_WEEK_DATE
+--             ),
+--             0
+--         )                        AS PREV_WEEK_VALUE,
+
+--         -- Absolute difference
+--         COALESCE(VALUE, 0)
+--           - COALESCE(
+--               LAG(VALUE) OVER (
+--                   PARTITION BY LOCATION_ID, PRODUCT_ID, TYPE
+--                   ORDER BY BASE_WEEK_DATE
+--               ), 0
+--           )                     AS ABS_DIFF_WOW,
+
+--         -- Percentage difference
+--         CASE
+--             WHEN NULLIF(
+--                 LAG(VALUE) OVER (
+--                     PARTITION BY LOCATION_ID, PRODUCT_ID, TYPE
+--                     ORDER BY BASE_WEEK_DATE
+--                 ), 0
+--             ) IS NOT NULL
+--             THEN ABS(
+--                 (COALESCE(VALUE, 0)
+--                  - COALESCE(
+--                      LAG(VALUE) OVER (
+--                          PARTITION BY LOCATION_ID, PRODUCT_ID, TYPE
+--                          ORDER BY BASE_WEEK_DATE
+--                      ), 0)
+--                 )
+--                 / LAG(VALUE) OVER (
+--                     PARTITION BY LOCATION_ID, PRODUCT_ID, TYPE
+--                     ORDER BY BASE_WEEK_DATE
+--                 )
+--             )
+--             ELSE NULL
+--         END AS PERCENT_DIFF_WOW
+
+--     FROM (
+--         SELECT
+--             LOCATION_ID,
+--             PRODUCT_ID,
+--             LOCATION_DESC,
+--             PROD_DESC,
+--             WEEK_DATE AS BASE_WEEK_DATE,   -- 👈 Rename early here
+--             TYPE,
+--             CASE
+--                 WHEN TYPE = 'Actual'   THEN ACTUAL_QTY
+--                 WHEN TYPE = 'Forecast' THEN QUANTITY
+--             END AS VALUE
+--         FROM V_DEMAND_AND_FORECAST_HM
+--     ) AS BASE
+-- ) AS WOW
+-- WHERE PERCENT_DIFF_WOW > 0.10
+-- ORDER BY COMP_TYPE, THIS_WEEK_DATE;
+WITH WEEK_BASE AS (
+    SELECT 
+        LOCATION_ID,
+        PRODUCT_ID,
+        LOCATION_DESC,
+        PROD_DESC,
+        TYPE,               -- 👈 lowercase quoted identifier
+        WEEK_DATE,
+        AVG(ACTUAL_QTY) AS ACTUAL_QTY,
+        AVG(QUANTITY)   AS QUANTITY
+    FROM V_DEMAND_AND_FORECAST_HM
+    GROUP BY LOCATION_ID, PRODUCT_ID, LOCATION_DESC, PROD_DESC, TYPE, WEEK_DATE
+),
+WEEK_WOW AS (
+    SELECT 
+        CASE
+            WHEN TYPE = 'Actual'   THEN 'Actual WoW'
+            WHEN TYPE = 'Forecast' THEN 'Forecast WoW'
+        END AS COMP_TYPE,
+
+        LOCATION_ID,
+        PRODUCT_ID,
+        LOCATION_DESC,
+        PROD_DESC,
+        WEEK_DATE AS THIS_WEEK_DATE,
+
+        LAG(WEEK_DATE)
+            OVER (PARTITION BY LOCATION_ID, PRODUCT_ID, TYPE ORDER BY WEEK_DATE)
+            AS PREV_WEEK_DATE,
+
+        CASE WHEN TYPE = 'Actual' THEN ACTUAL_QTY ELSE QUANTITY END AS THIS_WEEK_VALUE,
+
+        LAG(CASE WHEN TYPE = 'Actual' THEN ACTUAL_QTY ELSE QUANTITY END)
+            OVER (PARTITION BY LOCATION_ID, PRODUCT_ID, TYPE ORDER BY WEEK_DATE)
+            AS PREV_WEEK_VALUE,
+
+        COALESCE(CASE WHEN TYPE='Actual' THEN ACTUAL_QTY ELSE QUANTITY END, 0)
+        - COALESCE(
+            LAG(CASE WHEN TYPE='Actual' THEN ACTUAL_QTY ELSE QUANTITY END)
+            OVER (PARTITION BY LOCATION_ID, PRODUCT_ID, TYPE ORDER BY WEEK_DATE),
+          0) AS ABS_DIFF_WOW,
+   ROUND(
+        CASE
+     
+            WHEN LAG(CASE WHEN TYPE='Actual' THEN ACTUAL_QTY ELSE QUANTITY END)
+                 OVER (PARTITION BY LOCATION_ID, PRODUCT_ID, TYPE ORDER BY WEEK_DATE) <> 0
+            THEN 100 * ABS(
+                (
+                    COALESCE(CASE WHEN TYPE='Actual' THEN ACTUAL_QTY ELSE QUANTITY END, 0)
+                    - COALESCE(
+                        LAG(CASE WHEN TYPE='Actual' THEN ACTUAL_QTY ELSE QUANTITY END)
+                        OVER (PARTITION BY LOCATION_ID, PRODUCT_ID, TYPE ORDER BY WEEK_DATE), 0)
+                )
+                /
+                LAG(CASE WHEN TYPE='Actual' THEN ACTUAL_QTY ELSE QUANTITY END)
+                OVER (PARTITION BY LOCATION_ID, PRODUCT_ID, TYPE ORDER BY WEEK_DATE)
+            )
+            ELSE NULL
+        END,2 )AS PERCENT_DIFF_WOW
+    FROM WEEK_BASE
+)
+SELECT *
+FROM WEEK_WOW
+WHERE PERCENT_DIFF_WOW >10
+ORDER BY LOCATION_ID, PRODUCT_ID, THIS_WEEK_DATE;

@@ -1,0 +1,30 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_TS_ODCHARPREDICTIONS
+-- Description:     View to determine predicted values ( impact values)for object Dep. characteristics
+-- Join Details:    A: CP_TS_PREDICTIONS-  Table for future obj. dependency timeseries 
+--                  B: V_ODCHARIMPACT_VALUE  - View to get option percent and impact values for BOM object dep. header
+-----------------------------------------------------------------------------------------
+VIEW "V_TS_ODCHARPREDICTIONS" AS
+SELECT DISTINCT 
+  A.LOCATION_ID,
+  A.PRODUCT_ID,
+  A.OBJ_DEP,
+  A.OBJ_COUNTER,
+  A.MODEL_VERSION,
+  A.VERSION,
+  A.SCENARIO,
+  A.CAL_DATE,
+  A."PREDICTED",
+  B.ROW_ID,
+  B.CHAR_NAME,
+  B.PREDICTED_VAL
+FROM "CP_TS_PREDICTIONS" AS A
+  INNER JOIN "V_ODCHARIMPACT_VALUE" AS B
+ ON A.LOCATION_ID = B.LOCATION_ID
+  AND A.PRODUCT_ID = B.PRODUCT_ID
+  AND A.OBJ_DEP = B.OBJ_DEP
+  AND A.OBJ_COUNTER = B.OBJ_COUNTER
+  AND A.MODEL_VERSION = B.MODEL_VERSION
+  AND A.VERSION = B.VERSION
+  AND A.SCENARIO = B.SCENARIO
+  AND A.CAL_DATE = B.CAL_DATE

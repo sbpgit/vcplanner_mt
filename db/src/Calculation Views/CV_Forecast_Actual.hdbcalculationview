@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_Forecast_Actual" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_Forecast_Actual"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="V_DEMAND_AND_FORECAST">
+    <resourceUri>V_DEMAND_AND_FORECAST</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews/>
+<logicalModel id="V_DEMAND_AND_FORECAST">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="REF_PRODID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REF_PRODID"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="REF_PRODID"/>
+    </attribute>
+    <attribute id="UNIQUE_ID" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="UNIQUE_ID"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="UNIQUE_ID"/>
+    </attribute>
+    <attribute id="CHAR_NUM" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NUM"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="CHAR_NUM"/>
+    </attribute>
+    <attribute id="CHAR_DESC" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_DESC"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="CHAR_DESC"/>
+    </attribute>
+    <attribute id="CHARVAL_NUM" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_NUM"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="CHARVAL_NUM"/>
+    </attribute>
+    <attribute id="CHARVAL_DESC" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_DESC"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="CHARVAL_DESC"/>
+    </attribute>
+    <attribute id="CHAR_VALUE" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_VALUE"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="CHAR_VALUE"/>
+    </attribute>
+    <attribute id="CHAR_NAME" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NAME"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="CHAR_NAME"/>
+    </attribute>
+    <attribute id="PERIODDESC" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PERIODDESC"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="PERIODDESC"/>
+    </attribute>
+    <attribute id="WEEK_DATE" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_DATE"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="WEEK_DATE"/>
+    </attribute>
+    <attribute id="YEAR" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="YEAR"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="YEAR"/>
+    </attribute>
+    <attribute id="QUARTER" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="QUARTER"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="QUARTER"/>
+    </attribute>
+    <attribute id="MONTH" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONTH"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="MONTH"/>
+    </attribute>
+    <attribute id="RESERVE_FIELD1" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RESERVE_FIELD1"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="RESERVE_FIELD1"/>
+    </attribute>
+    <attribute id="RESERVE_FIELD2" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RESERVE_FIELD2"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="RESERVE_FIELD2"/>
+    </attribute>
+    <attribute id="RESERVE_FIELD3" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RESERVE_FIELD3"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="RESERVE_FIELD3"/>
+    </attribute>
+    <attribute id="RESERVE_FIELD4" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RESERVE_FIELD4"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="RESERVE_FIELD4"/>
+    </attribute>
+    <attribute id="RESERVE_FIELD5" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RESERVE_FIELD5"/>
+      <keyMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="RESERVE_FIELD5"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="CIR_QTY" order="21" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CIR_QTY"/>
+      <measureMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="CIR_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="ORD_QTY" order="22" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ORD_QTY"/>
+      <measureMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="ORD_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="QUANTITY" order="23" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUANTITY"/>
+      <measureMapping columnObjectName="V_DEMAND_AND_FORECAST" columnName="QUANTITY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

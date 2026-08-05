@@ -1,0 +1,151 @@
+VIEW "V_ROLES_LOCPROD" AS 
+
+WITH ROLE_INFO AS (
+    SELECT 
+        U."USER",
+        R.ROLE_NAME,
+        R.PARAMETER,
+        R.VALUE
+    FROM "CP_ROLE_DETAILS" R
+    JOIN "CP_ROLES" RH 
+      ON R.ROLE_NAME = RH.ROLE_NAME 
+     AND RH.ACTIVE = TRUE
+    JOIN "CP_USER_ROLES" U 
+      ON R.ROLE_NAME = U.ROLE_NAME 
+     AND R.READ = TRUE
+),
+
+ROLES AS (
+    SELECT DISTINCT "USER", ROLE_NAME
+    FROM ROLE_INFO
+)
+
+SELECT DISTINCT
+    V.*,
+    R."USER"
+FROM "V_FACTORYLOC" V
+CROSS JOIN ROLES R
+WHERE EXISTS (
+    SELECT 1
+    FROM ROLE_INFO RI
+
+    WHERE RI.ROLE_NAME = R.ROLE_NAME
+      AND RI."USER" = R."USER"
+
+      -- LOCATION
+      AND (
+            NOT EXISTS (
+                SELECT 1 FROM ROLE_INFO X
+                WHERE X.ROLE_NAME = R.ROLE_NAME
+                  AND X.PARAMETER='LOCATION_ID'
+            )
+         OR EXISTS (
+                SELECT 1 FROM ROLE_INFO X
+                WHERE X.ROLE_NAME = R.ROLE_NAME
+                  AND X.PARAMETER='LOCATION_ID'
+                  AND (X.VALUE='*'
+                       OR X.VALUE = V.DEMAND_LOC
+                       OR X.VALUE = V.FACTORY_LOC)
+            )
+      )
+
+      -- MATERIAL TYPE
+      AND (
+            NOT EXISTS (
+                SELECT 1 FROM ROLE_INFO X
+                WHERE X.ROLE_NAME = R.ROLE_NAME
+                  AND X.PARAMETER='MATERIAL_TYPE'
+            )
+         OR EXISTS (
+                SELECT 1 FROM ROLE_INFO X
+                WHERE X.ROLE_NAME = R.ROLE_NAME
+                  AND X.PARAMETER='MATERIAL_TYPE'
+                  AND (X.VALUE='*' OR X.VALUE = V.MATERIAL_TYPE)
+            )
+      )
+
+      -- MRP GROUP
+      AND (
+            NOT EXISTS (
+                SELECT 1 FROM ROLE_INFO X
+                WHERE X.ROLE_NAME = R.ROLE_NAME
+                  AND X.PARAMETER='MRP_GROUP'
+            )
+         OR EXISTS (
+                SELECT 1 FROM ROLE_INFO X
+                WHERE X.ROLE_NAME = R.ROLE_NAME
+                  AND X.PARAMETER='MRP_GROUP'
+                  AND (X.VALUE='*' OR X.VALUE = V.MRP_GROUP)
+            )
+      )
+
+      -- Configurable PRODUCT
+      AND (
+            NOT EXISTS (
+                SELECT 1 FROM ROLE_INFO X
+                WHERE X.ROLE_NAME = R.ROLE_NAME
+                  AND X.PARAMETER='REF_PRODID'
+            )
+         OR EXISTS (
+                SELECT 1 FROM ROLE_INFO X
+                WHERE X.ROLE_NAME = R.ROLE_NAME
+                  AND X.PARAMETER='REF_PRODID'
+                  AND (X.VALUE='*' OR X.VALUE = V.REF_PRODID)
+            )
+      )
+);
+
+
+--Old Code
+-- WITH ROLE_INFO AS (
+--     SELECT * 
+--     FROM "CP_ROLE_DETAILS" AS R
+--     INNER JOIN "CP_ROLES" AS RH 
+--         ON R.ROLE_NAME = RH.ROLE_NAME 
+--         AND RH.ACTIVE = true
+--     INNER JOIN "CP_USER_ROLES" AS U 
+--         ON R.ROLE_NAME = U.ROLE_NAME 
+--         AND R.READ = true
+-- )
+-- SELECT DISTINCT 
+--     V.FACTORY_LOC, V.LOCATION_DESC, V.PLAN_LOC, V.PLANLOC_DESC, 
+--     V.DEMAND_LOC, V.DEMAND_DESC, V.PRODUCT_ID, V.PROD_DESC,
+--     V.REF_PRODID, V.REFPROD_DESC, V.MRP_GROUP, V.MATERIAL_TYPE,
+--     R.USER
+-- FROM "V_FACTORYLOC" V
+-- CROSS JOIN (SELECT DISTINCT USER FROM ROLE_INFO) R
+-- WHERE
+--     -- Location filter (if user has LOCATION_ID parameters)
+--     (
+--         NOT EXISTS (SELECT 1 FROM ROLE_INFO RI WHERE RI.USER = R.USER AND RI.PARAMETER = 'LOCATION_ID')
+--         OR EXISTS (SELECT 1 FROM ROLE_INFO RI WHERE RI.USER = R.USER AND RI.PARAMETER = 'LOCATION_ID' AND RI.VALUE = '*')
+--         OR EXISTS (SELECT 1 FROM ROLE_INFO RI WHERE RI.USER = R.USER AND RI.PARAMETER = 'LOCATION_ID'
+--                    AND (V.DEMAND_LOC = RI.VALUE OR V.FACTORY_LOC = RI.VALUE))
+--     )
+--     AND
+--     -- Material Type filter (if user has MATERIAL_TYPE parameters)
+--     (
+--         NOT EXISTS (SELECT 1 FROM ROLE_INFO RI WHERE RI.USER = R.USER AND RI.PARAMETER = 'MATERIAL_TYPE')
+--         OR EXISTS (SELECT 1 FROM ROLE_INFO RI WHERE RI.USER = R.USER AND RI.PARAMETER = 'MATERIAL_TYPE' AND RI.VALUE = '*')
+--         OR EXISTS (SELECT 1 FROM ROLE_INFO RI WHERE RI.USER = R.USER AND RI.PARAMETER = 'MATERIAL_TYPE'
+--                    AND V.MATERIAL_TYPE = RI.VALUE)
+--     )
+--     AND
+--     -- MRP Group filter (if user has MRP_GROUP parameters)
+--     (
+--         NOT EXISTS (SELECT 1 FROM ROLE_INFO RI WHERE RI.USER = R.USER AND RI.PARAMETER = 'MRP_GROUP')
+--         OR EXISTS (SELECT 1 FROM ROLE_INFO RI WHERE RI.USER = R.USER AND RI.PARAMETER = 'MRP_GROUP' AND RI.VALUE = '*')
+--         OR EXISTS (SELECT 1 FROM ROLE_INFO RI WHERE RI.USER = R.USER AND RI.PARAMETER = 'MRP_GROUP'
+--                    AND V.MRP_GROUP = RI.VALUE)
+--     )
+--     AND
+--     -- Configurable Product filter (if user has REF_PRODID parameters)
+--     (
+--         NOT EXISTS (SELECT 1 FROM ROLE_INFO RI WHERE RI.USER = R.USER AND RI.PARAMETER = 'REF_PRODID')
+--         OR EXISTS (SELECT 1 FROM ROLE_INFO RI WHERE RI.USER = R.USER AND RI.PARAMETER = 'REF_PRODID' AND RI.VALUE = '*')
+--         OR EXISTS (SELECT 1 FROM ROLE_INFO RI WHERE RI.USER = R.USER AND RI.PARAMETER = 'REF_PRODID'
+--                    AND V.REF_PRODID = RI.VALUE)
+--     );
+
+
+

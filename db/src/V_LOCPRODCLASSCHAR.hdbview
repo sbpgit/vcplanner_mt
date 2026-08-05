@@ -1,0 +1,30 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_LOCPRODCLASSCHAR
+-- Description:     Get products, location and class  details
+-- Join Details:    A: CP_PRODUCT_CLASS -  Product class master data
+--                  B: V_CLASSCHARVAL - View for class, characteristics and its values
+-----------------------------------------------------------------------------------------
+VIEW "V_LOCPRODCLASSCHAR"
+AS SELECT distinct A.LOCATION_ID,
+          A.PRODUCT_ID,
+          A.PROD_DESC,
+          A.CLASS_NUM,
+          B.CLASS_NAME,
+          B.CLASS_DESC,
+          B.CHAR_NUM,
+          B.CHAR_NAME,
+          B.CHAR_DESC,
+          B.CHARVAL_NUM,
+          B.CHAR_VALUE,
+          B.CHARVAL_DESC,
+          B.CHAR_TYPE,
+          B.IBPCHAR_CHK,
+          B.MULTI_CHAR,
+          B.REF_CHAR_NUM,
+          B.REF_CHAR_NAME,
+          B.REF_CHAR_DESC,
+          B.REF_CHARVAL_NUM,
+          B.REF_CHAR_VALUE
+    FROM  V_PRODCLSCHAR AS A
+    INNER JOIN "V_CLASSCHARVAL" AS B
+    ON A.CLASS_NUM = B.CLASS_NUM;

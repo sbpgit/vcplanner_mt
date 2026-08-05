@@ -1,0 +1,30 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_NPI_CHARVAL
+-- Description:     Get New Characteristic Value Details
+-- Join Details:    CP_NPI_CHARVAL -  New Characteristic Value Assignment
+--                  CP_NPI_CHARVAL_DIMENSION - New Characteristic Value launch dimensions
+--                  CP_PARTIALPROD_INTRO - Product Descriptions
+--                  V_CHARVAL - Characteristics Value Description
+--                  CP_LOCATION - Location Description
+-----------------------------------------------------------------------------------------
+VIEW "V_NPI_CHARVAL"
+AS SELECT DISTINCT
+            A.PROJECT_ID,          
+            A.REF_PRODID,      
+            A.CHAR_NUM,        
+            A.CHAR_VALUE,
+            A.CHARVAL_DESC,
+            A.REF_CHARVALUE_DESC,      
+            A.REF_CHAR_VALUE,  
+            A.WEIGHT,          
+            A.VALID_FROM,      
+            A.VALID_TO,        
+            B.PROD_DESC,
+            C.CHAR_NAME AS REF_CHAR_NAME,
+            C.CHAR_DESC AS REF_CHAR_DESC          
+      FROM CP_NPI_CHARVAL AS A
+INNER JOIN CP_PARTIALPROD_INTRO AS B
+        ON A.REF_PRODID = B.PRODUCT_ID
+INNER JOIN V_CHARVAL AS C
+        ON A.CHAR_NUM = C.CHAR_NUM
+       AND A.REF_CHAR_VALUE = C.CHAR_VALUE;

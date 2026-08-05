@@ -1,0 +1,21 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_GETVARCHARPS
+-- Description:     Get Primary and secondary characteristics
+-- Join Details:    CP_PRODUCT_CLASS -  Master data for Product class
+--                  CP_VARCHAR_PS - Get primary and secondary characteristics
+--                  V_CLASSCHARVAL - View for class and its characteristics 
+-----------------------------------------------------------------------------------------
+VIEW "V_GETVARCHARPS"
+AS SELECT DISTINCT CP_VARCHAR_PS.PRODUCT_ID,       
+          CP_VARCHAR_PS.CHAR_NUM,
+          V_CLASSCHARVAL.CHAR_NAME,
+          V_CLASSCHARVAL.CHAR_DESC,
+          CP_VARCHAR_PS.CHAR_TYPE,
+          CP_VARCHAR_PS.SEQUENCE,
+          CP_VARCHAR_PS.GROUP_NAME
+    FROM  CP_VARCHAR_PS
+    INNER JOIN CP_PRODUCT_CLASS
+    ON CP_VARCHAR_PS.PRODUCT_ID = CP_PRODUCT_CLASS.PRODUCT_ID
+    INNER JOIN V_CLASSCHARVAL
+    ON  CP_PRODUCT_CLASS.CLASS_NUM   = V_CLASSCHARVAL.CLASS_NUM
+    AND CP_VARCHAR_PS.CHAR_NUM    = V_CLASSCHARVAL.CHAR_NUM

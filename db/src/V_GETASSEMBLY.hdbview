@@ -1,0 +1,26 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_GETASSEMBLY
+-- Description:     View to fetch Assembly and component
+-- Join Details:    CP_BOMHEADER -  TABLE for BOM Details
+--                  CP_ASSEMBLY_COMP - Table for Assembly and Components.
+-----------------------------------------------------------------------------------------
+
+VIEW "V_GETASSEMBLY"
+AS SELECT distinct
+	CP_BOMHEADER.LOCATION_ID,
+	CP_BOMHEADER.PRODUCT_ID,
+	CP_BOMHEADER.ITEM_NUM,
+	CP_ASSEMBLY_COMP.ASSEMBLY,
+	CP_BOMHEADER.COMP_DESC  AS ASMB_DESC,
+	CP_ASSEMBLY_COMP.COMPONENT,
+	CP_ASSEMBLY_COMP.COMP_DESC ,
+	CP_ASSEMBLY_COMP.CRITICAL_COMP,
+    CP_ASSEMBLY_COMP.VALID_FROM,
+    CP_ASSEMBLY_COMP.VALID_TO
+FROM 
+	CP_BOMHEADER
+	INNER JOIN
+	CP_ASSEMBLY_COMP
+	ON CP_BOMHEADER.LOCATION_ID = CP_ASSEMBLY_COMP.LOCATION_ID
+		AND CP_BOMHEADER.COMPONENT = CP_ASSEMBLY_COMP.ASSEMBLY
+	;

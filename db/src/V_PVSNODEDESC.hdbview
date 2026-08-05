@@ -1,0 +1,16 @@
+VIEW "V_PVSNODEDESC"
+AS SELECT DISTINCT A.LOCATION_ID,
+                    A.PRODUCT_ID,
+                    B.ACCESS_NODE,
+                    A.COMPONENT,
+                    A.STRUC_NODE,
+                    C.NODE_DESC AS STRUC_DESC
+                    FROM "CP_PVS_BOM" AS A
+                    INNER JOIN "CP_PROD_ACCNODE" AS B
+                    ON A.LOCATION_ID = B.LOCATION_ID
+                    AND A.PRODUCT_ID = B.PRODUCT_ID
+                    INNER JOIN "CP_PVS_NODES" AS C
+                    ON B.ACCESS_NODE = C.PARENT_NODE
+                    AND A.STRUC_NODE = C.CHILD_NODE;
+                    
+          

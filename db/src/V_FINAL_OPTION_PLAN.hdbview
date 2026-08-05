@@ -1,0 +1,345 @@
+VIEW "V_FINAL_OPTION_PLAN" AS 
+
+
+    /* ──────────────────────────────────────────────── */
+    /* ✅ Branch 1: V_OPTION_PERCENTAGE (TYPE < 1000, EXCLUDING 102) */
+    /* ──────────────────────────────────────────────── */
+    SELECT
+        A.LOCATION_ID,
+        A.PRODUCT_ID,
+        A.CUSTOMER_GROUP,
+        A.MODEL_VERSION,
+        A.CHAR_NUM,
+        A.CHARVAL_NUM,
+        A.VERSION,
+        A.SCENARIO,
+        CAST(A.TYPE AS NVARCHAR(10)) AS TYPE,
+        A.OPT_PERCENT,
+        A.OPT_QTY,
+        A.CHAR_DESC,
+        A.CHAR_NAME,
+        B.CHAR_TYPE,
+        A.CHARVAL_DESC,
+        A.VERSION_NAME,
+        A.SCENARIO_NAME,
+        A.LOCATION_DESC,
+        A.PROD_DESC,
+        CAST(A.KEY_FIG_ID AS NVARCHAR(10)) AS KEY_FIG_ID,
+        A.KEY_FIG_DESC,
+        A.DISPLAY_ORDER,
+        A.PRIORITY_ORDER,
+        C."CALENDAR_WEEK",
+        C."TELESCOPIC_WEEK",
+        C."WEEK_STARTDATE",
+        C."WEEK_ENDDATE",
+        C."PERIODSTART",
+        C."PERIODEND",
+        A.LOCK,
+        A.COMMENTS,
+        A.USER,
+        A.OLD_VALUE,
+        A.DATE_TIME,
+        NULL AS "ACT_DEM_VC",
+        NULL AS "ACT_DEM_PERCENT"
+    FROM V_OPTION_PERCENTAGE AS A
+    LEFT JOIN CP_VARCHAR_PS AS B
+        ON A.PRODUCT_ID = B.PRODUCT_ID
+        AND A.CHAR_NUM = B.CHAR_NUM
+    LEFT JOIN V_WEEK_DESCRIPTOR AS C
+        ON A.WEEK_DATE BETWEEN C.WEEK_STARTDATE AND C.WEEK_ENDDATE
+    WHERE A.TYPE <> '102'   -- ✅ Remove TYPE 102 from this source
+
+    UNION ALL
+
+    /* ──────────────────────────────────────────────── */
+    /* ✅ Branch 2: Effective % (1000) */
+    /* ──────────────────────────────────────────────── */
+    SELECT
+        A.LOCATION_ID,
+        A.PRODUCT_ID,
+        A.CUSTOMER_GROUP,
+        A.MODEL_VERSION,
+        A.CHAR_NUM,
+        A.CHARVAL_NUM,
+        A.VERSION,
+        A.SCENARIO,
+        '1000' AS TYPE,
+        A.EFFECTIVE_PER AS OPT_PERCENT,
+        A.EFFECTIVE_QTY AS OPT_QTY,
+        A.CHAR_DESC,
+        A.CHAR_NAME,
+        B.CHAR_TYPE,
+        A.CHARVAL_DESC,
+        A.VERSION_NAME,
+        A.SCENARIO_NAME,
+        A.LOCATION_DESC,
+        A.PROD_DESC,
+        '1000' AS KEY_FIG_ID,
+        D.KEY_FIG_DESC,
+        D.DISPLAY_ORDER,
+        D.PRIORITY_ORDER,
+        C.CALENDAR_WEEK,
+        C.TELESCOPIC_WEEK,
+        C.WEEK_STARTDATE,
+        C.WEEK_ENDDATE,
+        C.PERIODSTART,
+        C.PERIODEND,
+        NULL AS LOCK,
+        NULL AS COMMENTS,
+        NULL AS USER,
+        NULL AS OLD_VALUE,
+        NULL AS DATE_TIME,
+        NULL AS "ACT_DEM_VC",
+        NULL AS "ACT_DEM_PERCENT"
+    FROM V_EFFECTIVE_OPTION_PLAN AS A
+    LEFT JOIN CP_VARCHAR_PS AS B
+        ON A.PRODUCT_ID = B.PRODUCT_ID
+        AND A.CHAR_NUM = B.CHAR_NUM
+    INNER JOIN CP_KEY_FIGURE_MASTER AS D
+        ON D.KEY_FIG_ID = '1000'
+    LEFT JOIN V_WEEK_DESCRIPTOR AS C
+        ON A.WEEK_DATE BETWEEN C.WEEK_STARTDATE AND C.WEEK_ENDDATE
+
+    UNION ALL
+
+    /* ──────────────────────────────────────────────── */
+    /* ✅ Branch 3: Effective Qty (1001) */
+    /* ──────────────────────────────────────────────── */
+    SELECT
+        A.LOCATION_ID,
+        A.PRODUCT_ID,
+        A.CUSTOMER_GROUP,
+        A.MODEL_VERSION,
+        A.CHAR_NUM,
+        A.CHARVAL_NUM,
+        A.VERSION,
+        A.SCENARIO,
+        '1001' AS TYPE,
+       A.EFFECTIVE_PER AS  "OPT_PERCENT",
+       A.EFFECTIVE_QTY AS  "OPT_QTY",
+        A.CHAR_DESC,
+        A.CHAR_NAME,
+        B.CHAR_TYPE,
+        A.CHARVAL_DESC,
+        A.VERSION_NAME,
+        A.SCENARIO_NAME,
+        A.LOCATION_DESC,
+        A.PROD_DESC,
+        '1001' AS KEY_FIG_ID,
+        D.KEY_FIG_DESC,
+        D.DISPLAY_ORDER,
+        D.PRIORITY_ORDER,
+        C.CALENDAR_WEEK,
+        C.TELESCOPIC_WEEK,
+        C.WEEK_STARTDATE,
+        C.WEEK_ENDDATE,
+        C.PERIODSTART,
+        C.PERIODEND,
+        NULL AS LOCK,
+        NULL AS COMMENTS,
+        NULL AS USER,
+        NULL AS OLD_VALUE,
+        NULL AS DATE_TIME,
+        NULL AS "ACT_DEM_VC",
+        NULL AS "ACT_DEM_PERCENT"
+    FROM V_EFFECTIVE_OPTION_PLAN AS A
+    LEFT JOIN CP_VARCHAR_PS AS B
+        ON A.PRODUCT_ID = B.PRODUCT_ID
+        AND A.CHAR_NUM = B.CHAR_NUM
+    INNER JOIN CP_KEY_FIGURE_MASTER AS D
+        ON D.KEY_FIG_ID = '1001'
+    LEFT JOIN V_WEEK_DESCRIPTOR AS C
+        ON A.WEEK_DATE BETWEEN C.WEEK_STARTDATE AND C.WEEK_ENDDATE
+
+    UNION ALL
+
+    /* ──────────────────────────────────────────────── */
+    /* ✅ Branch 4: Final Forecast at VC level (Only valid) (102) */
+    /* ──────────────────────────────────────────────── */
+ /* Branch 6:  (TYPE '102') */
+SELECT
+    A.LOCATION_ID,
+    A.PRODUCT_ID,
+    NULL AS CUSTOMER_GROUP,  -- ✅ Always base group
+    A.MODEL_VERSION,
+    A.CHAR_NUM,
+    A.CHARVAL_NUM,
+    A.VERSION,
+    A.SCENARIO,
+    CAST('102' AS NVARCHAR(10)) AS TYPE,
+    SUM(A.CIR_QTY_PERCENT) AS OPT_PERCENT,
+    SUM(A.CIR_QTY) AS OPT_QTY,
+    A.CHAR_DESC,
+    A.CHAR_NAME,
+    B.CHAR_TYPE,
+    A.CHARVAL_DESC,
+    A.VERSION_NAME,
+    A.SCENARIO_NAME,
+    NULL AS LOCATION_DESC,
+    NULL AS PROD_DESC,
+    CAST('102' AS NVARCHAR(10)) AS KEY_FIG_ID,
+    D.KEY_FIG_DESC,
+    D.DISPLAY_ORDER,
+    D.PRIORITY_ORDER,
+    C.CALENDAR_WEEK,
+    C.TELESCOPIC_WEEK,
+    C.WEEK_STARTDATE,
+    C.WEEK_ENDDATE,
+    C.PERIODSTART,
+    C.PERIODEND,
+    NULL AS LOCK,
+    NULL AS COMMENTS,
+    NULL AS USER,
+    NULL AS OLD_VALUE,
+    NULL AS DATE_TIME,
+    NULL AS "ACT_DEM_VC",
+    NULL AS "ACT_DEM_PERCENT"
+FROM V_CIRUNIQUECHAR AS A
+LEFT JOIN CP_VARCHAR_PS AS B
+    ON A.PRODUCT_ID = B.PRODUCT_ID 
+    AND A.CHAR_NUM = B.CHAR_NUM
+INNER JOIN CP_KEY_FIGURE_MASTER AS D
+    ON D.KEY_FIG_ID = '102'
+LEFT JOIN V_WEEK_DESCRIPTOR AS C
+    ON A.WEEK_DATE BETWEEN C.WEEK_STARTDATE AND C.WEEK_ENDDATE
+GROUP BY
+    A.LOCATION_ID, A.PRODUCT_ID,
+    A.MODEL_VERSION, A.CHAR_NUM, A.CHARVAL_NUM,
+    A.VERSION, A.SCENARIO,
+    A.CHAR_DESC, A.CHAR_NAME, B.CHAR_TYPE,
+    A.CHARVAL_DESC, A.VERSION_NAME, A.SCENARIO_NAME,
+    D.KEY_FIG_DESC, D.DISPLAY_ORDER, D.PRIORITY_ORDER,
+    C.CALENDAR_WEEK, C.TELESCOPIC_WEEK,
+    C.WEEK_STARTDATE, C.WEEK_ENDDATE,
+    C.PERIODSTART, C.PERIODEND
+
+    /* ──────────────────────────────────────────────── */
+    /* ✅ Branch 4: Unconsumed Forecast at VC level (Only valid) (102) */
+    /* ──────────────────────────────────────────────── */
+ /* Branch 6:  (TYPE '103') */
+ UNION ALL
+SELECT
+        A.LOCATION_ID,
+        A.PRODUCT_ID,
+        A.CUSTOMER_GROUP,
+        A.MODEL_VERSION,
+        A.CHAR_NUM,
+        A.CHARVAL_NUM,
+        A.VERSION,
+        A.SCENARIO,
+        '103' AS TYPE,
+        -- (A.UNCONSUMED_QTY/ COALESCE( A."PROD_DEMAND", 0 ))*100 AS OPT_PERCENT,
+        COALESCE(A.UNCONSUMED_PERCENT, 0) AS OPT_PERCENT,
+       COALESCE(A.UNCONSUMED_QTY, 0) AS OPT_QTY,
+        A.CHAR_DESC,
+        A.CHAR_NAME,
+        B.CHAR_TYPE,
+        A.CHARVAL_DESC,
+        A.VERSION_NAME,
+        A.SCENARIO_NAME,
+        A.LOCATION_DESC,
+        A.PROD_DESC,
+        '103' AS KEY_FIG_ID,
+        D.KEY_FIG_DESC,
+        D.DISPLAY_ORDER,
+        D.PRIORITY_ORDER,
+        C.CALENDAR_WEEK,
+        C.TELESCOPIC_WEEK,
+        C.WEEK_STARTDATE,
+        C.WEEK_ENDDATE,
+        C.PERIODSTART,
+        C.PERIODEND,
+        NULL AS LOCK,
+        NULL AS COMMENTS,
+        NULL AS USER,
+        NULL AS OLD_VALUE,
+        NULL AS DATE_TIME,
+        A.ACT_DEM_VC,
+       ((COALESCE(A.EFFECTIVE_QTY, 0) - COALESCE(A.ACT_DEM_VC, 0)) / NULLIF(COALESCE(A.EFFECTIVE_QTY, 0), 0)) * 100 AS "ACT_DEM_PERCENT"
+
+    FROM V_EFFECTIVE_OPTION_PLAN AS A
+    LEFT JOIN CP_VARCHAR_PS AS B
+        ON A.PRODUCT_ID = B.PRODUCT_ID
+        AND A.CHAR_NUM = B.CHAR_NUM
+    INNER JOIN CP_KEY_FIGURE_MASTER AS D
+        ON D.KEY_FIG_ID = '103'
+    LEFT JOIN V_WEEK_DESCRIPTOR AS C
+        ON A.WEEK_DATE BETWEEN C.WEEK_STARTDATE AND C.WEEK_ENDDATE
+
+UNION ALL
+ 
+		-- Unconsumed Key fig
+ SELECT DISTINCT
+    A.LOCATION_ID,
+    A.PRODUCT_ID,
+    '' AS CUSTOMER_GROUP,
+    'EMPTY_MV' AS MODEL_VERSION,
+    NULL AS CHAR_NUM,
+    NULL AS CHARVAL_NUM,
+    A.VERSION,
+    A.SCENARIO,
+    '994' AS TYPE,
+    NULL AS OPT_PERCENT,
+    SUM(A.UNCONSUMED_FORECAST) AS OPT_QTY,
+    NULL AS CHAR_DESC,
+    NULL AS CHAR_NAME,
+    NULL AS CHAR_TYPE,
+    NULL AS CHARVAL_DESC,
+    '' AS VERSION_NAME,
+    '' AS SCENARIO_NAME,
+    LP.LOCATION_DESC,
+    LP.PROD_DESC,
+    D.KEY_FIG_ID,
+    D.KEY_FIG_DESC,
+    D.DISPLAY_ORDER,
+    D.PRIORITY_ORDER,
+    C."CALENDAR_WEEK",
+    C."TELESCOPIC_WEEK",
+    C."WEEK_STARTDATE",
+    C."WEEK_ENDDATE",
+    C."PERIODSTART",
+    C."PERIODEND",
+    NULL AS LOCK,
+    NULL AS COMMENTS,
+    NULL AS USER,
+    NULL AS OLD_VALUE,
+    NULL AS DATE_TIME,
+    NULL AS "ACT_DEM_VC",
+    NULL AS "ACT_DEM_PERCENT"
+FROM 
+    CP_CIR_GENERATED AS A
+    INNER JOIN CP_KEY_FIGURE_MASTER AS D
+        ON '994' = D.KEY_FIG_ID
+    LEFT OUTER JOIN V_FACTORYLOC AS LP
+        ON LP.DEMAND_LOC = A.LOCATION_ID 
+        AND LP.PRODUCT_ID = A.PRODUCT_ID
+    LEFT OUTER JOIN "V_WEEK_DESCRIPTOR" AS C
+        ON A."WEEK_DATE" >= C."WEEK_STARTDATE"
+        AND A."WEEK_DATE" <= C."WEEK_ENDDATE"
+GROUP BY
+    A.LOCATION_ID,
+    A.PRODUCT_ID,
+       A.VERSION,
+    A.SCENARIO,
+    LP.LOCATION_DESC,
+    LP.PROD_DESC,
+    D.KEY_FIG_ID,
+    D.KEY_FIG_DESC,
+    D.DISPLAY_ORDER,
+    D.PRIORITY_ORDER,
+    C."CALENDAR_WEEK",
+    C."TELESCOPIC_WEEK",
+    C."WEEK_STARTDATE",
+    C."WEEK_ENDDATE",
+    C."PERIODSTART",
+    C."PERIODEND"
+
+
+
+
+
+
+ORDER BY
+    LOCATION_ID, PRODUCT_ID, CUSTOMER_GROUP,
+    MODEL_VERSION, CHAR_NUM, CHARVAL_NUM,
+    VERSION, SCENARIO, TYPE, WEEK_STARTDATE

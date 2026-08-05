@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_PRODUCT_MASTER" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_PRODUCT_MASTER"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_PRODUCT">
+    <resourceUri>CP_PRODUCT</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews/>
+<logicalModel id="CP_PRODUCT">
+  <attributes>
+    <attribute id="PRODUCT_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="PROD_DESC" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROD_DESC"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="PROD_DESC"/>
+    </attribute>
+    <attribute id="PROD_FAMILY" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROD_FAMILY"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="PROD_FAMILY"/>
+    </attribute>
+    <attribute id="PROD_GROUP" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROD_GROUP"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="PROD_GROUP"/>
+    </attribute>
+    <attribute id="PROD_MODEL" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROD_MODEL"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="PROD_MODEL"/>
+    </attribute>
+    <attribute id="PROD_MDLRANGE" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROD_MDLRANGE"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="PROD_MDLRANGE"/>
+    </attribute>
+    <attribute id="PROD_SERIES" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROD_SERIES"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="PROD_SERIES"/>
+    </attribute>
+    <attribute id="PROD_TYPE" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROD_TYPE"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="PROD_TYPE"/>
+    </attribute>
+    <attribute id="RESERVE_FIELD1" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RESERVE_FIELD1"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="RESERVE_FIELD1"/>
+    </attribute>
+    <attribute id="RESERVE_FIELD2" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RESERVE_FIELD2"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="RESERVE_FIELD2"/>
+    </attribute>
+    <attribute id="RESERVE_FIELD3" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RESERVE_FIELD3"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="RESERVE_FIELD3"/>
+    </attribute>
+    <attribute id="RESERVE_FIELD4" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RESERVE_FIELD4"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="RESERVE_FIELD4"/>
+    </attribute>
+    <attribute id="RESERVE_FIELD5" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RESERVE_FIELD5"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="RESERVE_FIELD5"/>
+    </attribute>
+    <attribute id="AUTH_GROUP" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="AUTH_GROUP"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="AUTH_GROUP"/>
+    </attribute>
+    <attribute id="NON_CONFIGURABLE" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="NON_CONFIGURABLE"/>
+      <keyMapping columnObjectName="CP_PRODUCT" columnName="NON_CONFIGURABLE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures>
+    <measure id="COUNT" order="16" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="SQL">
+      <descriptions defaultDescription="COUNT"/>
+      <formula>1</formula>
+      
+      <exceptionAggregationMetadata/>
+    </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

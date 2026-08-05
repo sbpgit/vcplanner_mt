@@ -1,0 +1,388 @@
+-- VIEW "V_TELESCOPIC_FINAL_PLAN_NEW1" AS
+
+
+-- /* --------------------------------------------------------------
+--     Product-level demand (denominator for most key figures)
+--    -------------------------------------------------------------- */
+-- WITH PRODEMAND AS (
+--     SELECT 
+--         FD.LOCATION_ID,
+--         FD.PRODUCT_ID,
+--         FD.CUSTOMER_GROUP,
+--         FD.VERSION,
+--         FD.SCENARIO,
+--         W.TELESCOPIC_WEEK,
+--         SUM(FD.QUANTITY) AS QUANTITY
+--     FROM CP_IBP_FUTUREDEMAND_LOCPRODCUST FD
+--     LEFT JOIN V_WEEK_DESCRIPTOR W
+--         ON FD.WEEK_DATE BETWEEN W.WEEK_STARTDATE AND W.WEEK_ENDDATE
+--     GROUP BY
+--         FD.LOCATION_ID, FD.PRODUCT_ID, FD.CUSTOMER_GROUP,
+--         FD.VERSION, FD.SCENARIO, W.TELESCOPIC_WEEK
+-- ),
+
+-- /* --------------------------------------------------------------
+--     Forecast total for KF 102 denominator
+--    -------------------------------------------------------------- */
+-- FORECAST_TOTAL AS (
+--     SELECT 
+--         FO.LOCATION_ID,
+--         FO.PRODUCT_ID,
+--         FO.VERSION,
+--         FO.SCENARIO,
+--         FO.MODEL_VERSION,
+--         W.TELESCOPIC_WEEK,
+--         SUM(FO.CIR_QTY) AS QUANTITY
+--     FROM CP_CIR_GENERATED FO
+--     LEFT JOIN V_WEEK_DESCRIPTOR W
+--         ON FO.WEEK_DATE BETWEEN W.WEEK_STARTDATE AND W.WEEK_ENDDATE
+--     GROUP BY 
+--         FO.LOCATION_ID, FO.PRODUCT_ID, FO.VERSION,
+--         FO.SCENARIO, FO.MODEL_VERSION, W.TELESCOPIC_WEEK
+-- ),
+
+-- /* --------------------------------------------------------------
+--     DETAILS: Aggregated base values
+--    -------------------------------------------------------------- */
+-- DETAILS AS (
+--     SELECT
+--         K.LOCATION_ID,
+--         K.PRODUCT_ID,
+--         K.CUSTOMER_GROUP,
+--         K.MODEL_VERSION,
+--         K.CHAR_NUM,
+--         K.CHARVAL_NUM,
+--         K.VERSION,
+--         K.SCENARIO,
+--         K.TYPE,
+--         K.KEY_FIG_ID,
+--         K.KEY_FIG_DESC,
+--         K.DISPLAY_ORDER,
+--         K.PRIORITY_ORDER,
+
+--         W.TELESCOPIC_WEEK,
+--         W.PERIODSTART,
+--         W.PERIODEND,
+
+--         K.CHAR_DESC,
+--         K.CHAR_NAME,
+--         K.CHAR_TYPE,
+--         K.CHARVAL_DESC,
+--         K.VERSION_NAME,
+--         K.SCENARIO_NAME,
+--         K.LOCATION_DESC,
+--         K.PROD_DESC,
+--         K.ACT_DEM_VC,
+--         K.ACT_DEM_PERCENT,
+
+--         -- aggregate quantity
+--         CAST(SUM(K.OPT_QTY) AS DECIMAL(15,0)) AS OPT_QTY
+
+--     FROM V_ACT_FOR_UNC_KEYFIGS_NEW K
+--     LEFT JOIN V_WEEK_DESCRIPTOR W
+--         ON K.WEEK_DATE BETWEEN W.WEEK_STARTDATE AND W.WEEK_ENDDATE
+
+--     GROUP BY
+--         K.LOCATION_ID, K.PRODUCT_ID, K.CUSTOMER_GROUP,
+--         K.MODEL_VERSION, K.CHAR_NUM, K.CHARVAL_NUM,
+--         K.VERSION, K.SCENARIO, K.TYPE,
+--         K.KEY_FIG_ID, K.KEY_FIG_DESC,
+--         K.DISPLAY_ORDER, K.PRIORITY_ORDER,
+--         W.TELESCOPIC_WEEK, W.PERIODSTART, W.PERIODEND,
+--         K.CHAR_DESC, K.CHAR_NAME, K.CHAR_TYPE,
+--         K.CHARVAL_DESC, K.VERSION_NAME, K.SCENARIO_NAME,
+--         K.LOCATION_DESC, K.PROD_DESC,
+--         K.ACT_DEM_VC, K.ACT_DEM_PERCENT
+-- )
+
+-- /* --------------------------------------------------------------
+--     FINAL OUTPUT
+--    -------------------------------------------------------------- */
+
+-- SELECT
+--     D.LOCATION_ID,
+--     D.PRODUCT_ID,
+--     D.CUSTOMER_GROUP,
+--     D.MODEL_VERSION,
+--     D.CHAR_NUM,
+--     D.CHARVAL_NUM,
+--     D.VERSION,
+--     D.SCENARIO,
+--     D.TYPE,
+
+--     CAST(
+--         CASE 
+--             WHEN D.KEY_FIG_ID = 102 THEN 
+--                 CASE
+--                     WHEN MAX(FO.QUANTITY) IS NULL OR MAX(FO.QUANTITY) = 0 THEN 0
+--                     ELSE ROUND(SUM(D.OPT_QTY) * 100.0 / MAX(FO.QUANTITY), 2)
+--                 END
+--             ELSE
+--                 CASE
+--                     WHEN MAX(PD.QUANTITY) IS NULL OR MAX(PD.QUANTITY) = 0 THEN 0
+--                     ELSE ROUND(SUM(D.OPT_QTY) * 100.0 / MAX(PD.QUANTITY), 2)
+--                 END
+--         END AS DECIMAL(15,2)
+--     ) AS OPT_PERCENT,
+
+--     CAST(SUM(D.OPT_QTY) AS DECIMAL(15,0)) AS OPT_QTY,
+
+--     D.KEY_FIG_ID,
+--     D.KEY_FIG_DESC,
+--     D.DISPLAY_ORDER,
+--     D.PRIORITY_ORDER,
+--     D.TELESCOPIC_WEEK,
+--     D.PERIODSTART,
+--     D.PERIODEND,
+
+--     D.CHAR_DESC,
+--     D.CHAR_NAME,
+--     D.CHAR_TYPE,
+--     D.CHARVAL_DESC,
+--     D.VERSION_NAME,
+--     D.SCENARIO_NAME,
+--     D.LOCATION_DESC,
+--     D.PROD_DESC,
+--     D.ACT_DEM_VC,
+--     D.ACT_DEM_PERCENT
+
+-- FROM DETAILS D
+
+-- LEFT JOIN PRODEMAND PD
+--     ON PD.LOCATION_ID      = D.LOCATION_ID
+--    AND PD.PRODUCT_ID       = D.PRODUCT_ID
+--    AND PD.CUSTOMER_GROUP   = D.CUSTOMER_GROUP
+--    AND PD.TELESCOPIC_WEEK  = D.TELESCOPIC_WEEK
+--    AND (
+--         D.CHAR_NUM IS NULL
+--         OR
+--         (D.CHAR_NUM IS NOT NULL
+--          AND PD.VERSION  = D.VERSION
+--          AND PD.SCENARIO = D.SCENARIO)
+--    )
+
+-- LEFT JOIN FORECAST_TOTAL FO
+--     ON FO.LOCATION_ID = D.LOCATION_ID
+--    AND FO.PRODUCT_ID  = D.PRODUCT_ID
+--    AND FO.VERSION     = D.VERSION
+--    AND FO.SCENARIO    = D.SCENARIO
+--    AND FO.MODEL_VERSION = D.MODEL_VERSION
+--    AND FO.TELESCOPIC_WEEK = D.TELESCOPIC_WEEK
+
+-- GROUP BY
+--     D.LOCATION_ID, D.PRODUCT_ID, D.CUSTOMER_GROUP,
+--     D.MODEL_VERSION, D.CHAR_NUM, D.CHARVAL_NUM,
+--     D.VERSION, D.SCENARIO, D.TYPE,
+--     D.KEY_FIG_ID, D.KEY_FIG_DESC, D.DISPLAY_ORDER,
+--     D.PRIORITY_ORDER, D.TELESCOPIC_WEEK, D.PERIODSTART,
+--     D.PERIODEND, D.CHAR_DESC, D.CHAR_NAME,
+--     D.CHAR_TYPE, D.CHARVAL_DESC, D.VERSION_NAME,
+--     D.SCENARIO_NAME, D.LOCATION_DESC, D.PROD_DESC,
+--     D.ACT_DEM_VC, D.ACT_DEM_PERCENT
+
+-- ORDER BY
+--     D.LOCATION_ID, D.PRODUCT_ID, D.CUSTOMER_GROUP,
+--     D.CHAR_NUM, D.PERIODSTART;
+
+
+VIEW "V_TELESCOPIC_FINAL_PLAN_NEW1" AS
+ 
+ 
+WITH PRODEMAND AS (
+    SELECT
+        FD.LOCATION_ID,
+        FD.PRODUCT_ID,
+        FD.CUSTOMER_GROUP,
+        FD.VERSION,
+        FD.SCENARIO,
+        W.TELESCOPIC_WEEK,
+        SUM(FD.QUANTITY) AS QUANTITY
+    FROM CP_IBP_FUTUREDEMAND_LOCPRODCUST FD
+    LEFT JOIN V_WEEK_DESCRIPTOR W
+        ON FD.WEEK_DATE BETWEEN W.WEEK_STARTDATE AND W.WEEK_ENDDATE
+    GROUP BY
+        FD.LOCATION_ID, FD.PRODUCT_ID, FD.CUSTOMER_GROUP,
+        FD.VERSION, FD.SCENARIO, W.TELESCOPIC_WEEK
+),
+ 
+/* --------------------------------------------------------------
+    Forecast total for KF 102 denominator
+   -------------------------------------------------------------- */
+FORECAST_TOTAL AS (
+    SELECT
+        FO.LOCATION_ID,
+        FO.PRODUCT_ID,
+        FO.VERSION,
+        FO.SCENARIO,
+        FO.MODEL_VERSION,
+        W.TELESCOPIC_WEEK,
+        SUM(FO.CIR_QTY) AS QUANTITY
+    FROM CP_CIR_GENERATED FO
+    LEFT JOIN V_WEEK_DESCRIPTOR W
+        ON FO.WEEK_DATE BETWEEN W.WEEK_STARTDATE AND W.WEEK_ENDDATE
+    GROUP BY
+        FO.LOCATION_ID, FO.PRODUCT_ID, FO.VERSION,
+        FO.SCENARIO, FO.MODEL_VERSION, W.TELESCOPIC_WEEK
+),
+ 
+/* --------------------------------------------------------------
+    DETAILS: Aggregated base values
+   -------------------------------------------------------------- */
+DETAILS AS (
+    SELECT
+        K.LOCATION_ID,
+        K.PRODUCT_ID,
+        K.CUSTOMER_GROUP,
+        K.MODEL_VERSION,
+        K.CHAR_NUM,
+        K.CHARVAL_NUM,
+        K.VERSION,
+        K.SCENARIO,
+        K.TYPE,
+        K.KEY_FIG_ID,
+        K.KEY_FIG_DESC,
+        K.DISPLAY_ORDER,
+        K.PRIORITY_ORDER,
+ 
+        W.TELESCOPIC_WEEK,
+        W.PERIODSTART,
+        W.PERIODEND,
+ 
+        K.CHAR_DESC,
+        K.CHAR_NAME,
+        K.CHAR_TYPE,
+        K.CHARVAL_DESC,
+        K.VERSION_NAME,
+        K.SCENARIO_NAME,
+        K.LOCATION_DESC,
+        K.PROD_DESC,
+        K.ACT_DEM_VC,
+        K.ACT_DEM_PERCENT,
+ 
+MAX(K.OPT_PERCENT) AS OPT_PERCENT,
+        -- aggregate quantity
+        CAST(SUM(K.OPT_QTY) AS DECIMAL(15,0)) AS OPT_QTY
+ 
+    FROM V_ACT_FOR_UNC_KEYFIGS_NEW K
+    LEFT JOIN V_WEEK_DESCRIPTOR W
+        ON K.WEEK_DATE BETWEEN W.WEEK_STARTDATE AND W.WEEK_ENDDATE
+ 
+    GROUP BY
+        K.LOCATION_ID, K.PRODUCT_ID, K.CUSTOMER_GROUP,
+        K.MODEL_VERSION, K.CHAR_NUM, K.CHARVAL_NUM,
+        K.VERSION, K.SCENARIO, K.TYPE,
+        K.KEY_FIG_ID, K.KEY_FIG_DESC,
+        K.DISPLAY_ORDER, K.PRIORITY_ORDER,
+        W.TELESCOPIC_WEEK, W.PERIODSTART, W.PERIODEND,
+        K.CHAR_DESC, K.CHAR_NAME, K.CHAR_TYPE,
+        K.CHARVAL_DESC, K.VERSION_NAME, K.SCENARIO_NAME,
+        K.LOCATION_DESC, K.PROD_DESC,
+        K.ACT_DEM_VC, K.ACT_DEM_PERCENT
+)
+ 
+/* --------------------------------------------------------------
+    FINAL OUTPUT
+   -------------------------------------------------------------- */
+ 
+SELECT
+    D.LOCATION_ID,
+    D.PRODUCT_ID,
+    D.CUSTOMER_GROUP,
+    D.MODEL_VERSION,
+    D.CHAR_NUM,
+    D.CHARVAL_NUM,
+    D.VERSION,
+    D.SCENARIO,
+    D.TYPE,
+ 
+  CAST(
+    CASE
+ 
+        /* Actual Demand % at VC */
+       WHEN D.KEY_FIG_ID = 101 THEN
+    MAX(D.OPT_PERCENT)
+ 
+        /* Forecast at VC */
+        WHEN D.KEY_FIG_ID = 102 THEN
+            CASE
+                WHEN MAX(FO.QUANTITY) IS NULL
+                  OR MAX(FO.QUANTITY) = 0 THEN 0
+                ELSE ROUND(
+                        SUM(D.OPT_QTY) * 100.0 /
+                        MAX(FO.QUANTITY),
+                        2
+                     )
+            END
+ 
+        /* All other key figures */
+        ELSE
+            CASE
+                WHEN MAX(PD.QUANTITY) IS NULL
+                  OR MAX(PD.QUANTITY) = 0 THEN 0
+                ELSE ROUND(
+                        SUM(D.OPT_QTY) * 100.0 /
+                        MAX(PD.QUANTITY),
+                        2
+                     )
+            END
+    END AS DECIMAL(15,2)
+) AS OPT_PERCENT,
+ 
+    CAST(SUM(D.OPT_QTY) AS DECIMAL(15,0)) AS OPT_QTY,
+ 
+    D.KEY_FIG_ID,
+    D.KEY_FIG_DESC,
+    D.DISPLAY_ORDER,
+    D.PRIORITY_ORDER,
+    D.TELESCOPIC_WEEK,
+    D.PERIODSTART,
+    D.PERIODEND,
+ 
+    D.CHAR_DESC,
+    D.CHAR_NAME,
+    D.CHAR_TYPE,
+    D.CHARVAL_DESC,
+    D.VERSION_NAME,
+    D.SCENARIO_NAME,
+    D.LOCATION_DESC,
+    D.PROD_DESC,
+    D.ACT_DEM_VC,
+    D.ACT_DEM_PERCENT
+ 
+FROM DETAILS D
+ 
+LEFT JOIN PRODEMAND PD
+    ON PD.LOCATION_ID      = D.LOCATION_ID
+   AND PD.PRODUCT_ID       = D.PRODUCT_ID
+   AND PD.CUSTOMER_GROUP   = D.CUSTOMER_GROUP
+   AND PD.TELESCOPIC_WEEK  = D.TELESCOPIC_WEEK
+   AND (
+        D.CHAR_NUM IS NULL
+        OR
+        (D.CHAR_NUM IS NOT NULL
+         AND PD.VERSION  = D.VERSION
+         AND PD.SCENARIO = D.SCENARIO)
+   )
+ 
+LEFT JOIN FORECAST_TOTAL FO
+    ON FO.LOCATION_ID = D.LOCATION_ID
+   AND FO.PRODUCT_ID  = D.PRODUCT_ID
+   AND FO.VERSION     = D.VERSION
+   AND FO.SCENARIO    = D.SCENARIO
+   AND FO.MODEL_VERSION = D.MODEL_VERSION
+   AND FO.TELESCOPIC_WEEK = D.TELESCOPIC_WEEK
+ 
+GROUP BY
+    D.LOCATION_ID, D.PRODUCT_ID, D.CUSTOMER_GROUP,
+    D.MODEL_VERSION, D.CHAR_NUM, D.CHARVAL_NUM,
+    D.VERSION, D.SCENARIO, D.TYPE,
+    D.KEY_FIG_ID, D.KEY_FIG_DESC, D.DISPLAY_ORDER,
+    D.PRIORITY_ORDER, D.TELESCOPIC_WEEK, D.PERIODSTART,
+    D.PERIODEND, D.CHAR_DESC, D.CHAR_NAME,
+    D.CHAR_TYPE, D.CHARVAL_DESC, D.VERSION_NAME,
+    D.SCENARIO_NAME, D.LOCATION_DESC, D.PROD_DESC,
+    D.ACT_DEM_VC, D.ACT_DEM_PERCENT
+ 
+ORDER BY
+    D.LOCATION_ID, D.PRODUCT_ID, D.CUSTOMER_GROUP,
+    D.CHAR_NUM, D.PERIODSTART;

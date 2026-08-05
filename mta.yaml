@@ -1,0 +1,142 @@
+_schema-version: 3.3.0
+ID: vcplanner_mt
+version: 1.0.0
+description: "VC Planner application"
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
+modules:
+  - name: vcplanner_mt-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+      disk-quota: 8192M
+      memory: 8192M
+      instances: 1
+    build-parameters:
+      ignore:
+      - env
+      - ./node_modules
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: vcplanner_mt-auth
+      - name: vcplanner_mt-db
+      - name: vcplanner_mt-connectivity
+      - name: vcplanner_mt-destination
+      - name: mttjob
+      - name: applogs
+
+  - name: vcplanner_mt-mtx
+    type: nodejs
+    path: gen/mtx/sidecar
+    requires:
+      - name: vcplanner_mt-auth
+      - name: vcplanner_mt-db
+      - name: vcplanner_mt-registry
+      - name: vcplanner_mt-destination
+    build-parameters:
+      builder: npm-ci
+    parameters:
+      instances: 1
+      memory: 256M
+      disk-quota: 512M
+    hooks:
+      - name: upgrade-all
+        type: task
+        phases:
+          - blue-green.application.before-start.idle
+          - deploy.application.before-start
+        parameters:
+          name: upgrade
+          memory: 512M # increase as required
+          disk-quota: 768M # increase as required
+          command: cds-mtx upgrade '*'
+    provides:
+      - name: mtx-api
+        properties:
+          mtx-url: ${default-url}
+
+  - name: vcplanner_mt-py3srv
+    type: python
+    path: python
+    requires:
+    - name: vcplanner_mt-db
+    provides:
+    - name: py3srv-api
+      properties:
+        url: ${default-url}
+    parameters:
+      buildpack: python_buildpack
+      disk-quota: 1024M
+      memory: 256M
+      command: python server.py
+resources:
+  - name: vcplanner_mt-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: vcplanner_mt-${org}-${space}
+        tenant-mode: shared
+        oauth2-configuration:
+          credential-types:
+            - "binding-secret"
+            - "x509"
+  - name: vcplanner_mt-db
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: service-manager
+      service-plan: container
+  - name: vcplanner_mt-registry
+    type: org.cloudfoundry.managed-service
+    requires:
+      - name: mtx-api
+    parameters:
+      service: saas-registry
+      service-plan: application
+      config:
+        xsappname: vcplanner_mt-${org}-${space}
+        appName: vcplanner_mt-${org}-${space}
+        displayName: vcplanner_mt
+        description: VC Planner application.
+        category: 'VC Planner Subscriptions'
+        appUrls:
+          getDependencies: ~{mtx-api/mtx-url}/-/cds/saas-provisioning/dependencies
+          onSubscription: ~{mtx-api/mtx-url}/-/cds/saas-provisioning/tenant/{tenantId}
+          onSubscriptionAsync: true
+          onUnSubscriptionAsync: true
+          onUpdateDependenciesAsync: true
+          callbackTimeoutMillis: 300000 # Increase if your deployments are taking longer than that
+  - name: vcplanner_mt-connectivity
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: connectivity
+      service-plan: lite
+  - name: vcplanner_mt-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+  - name: mttjob
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        enable-xsuaa-support: true
+      service: jobscheduler
+      service-plan: standard    
+  - name: applogs
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: application-logs
+      service-plan: lite

@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_FORECASTORDER" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_FORECASTORDER"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_CIR_GENERATED">
+    <resourceUri>CP_CIR_GENERATED</resourceUri>
+  </DataSource>
+  <DataSource id="CP_UNIQUE_ID_ITEM">
+    <resourceUri>CP_UNIQUE_ID_ITEM</resourceUri>
+  </DataSource>
+  <DataSource id="CP_SALESH">
+    <resourceUri>CP_SALESH</resourceUri>
+  </DataSource>
+  <DataSource id="Join_2$$$$CP_CIR_GENERATED$$">
+    <resourceUri>CP_CIR_GENERATED</resourceUri>
+  </DataSource>
+  <DataSource id="Join_4$$$$CP_CIR_GENERATED$$">
+    <resourceUri>CP_CIR_GENERATED</resourceUri>
+  </DataSource>
+  <DataSource id="Join_4$$$$CP_SALESH$$">
+    <resourceUri>CP_SALESH</resourceUri>
+  </DataSource>
+  <DataSource id="Join_5$$$$CP_UNIQUE_ID_ITEM$$">
+    <resourceUri>CP_UNIQUE_ID_ITEM</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$UNIQUE_ID$UNIQUE_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_CIR_GENERATED">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$UNIQUE_ID$UNIQUE_ID" source="UNIQUE_ID"/>
+    </input>
+    <input node="CP_UNIQUE_ID_ITEM">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$UNIQUE_ID$UNIQUE_ID" source="UNIQUE_ID"/>
+    </input>
+    <joinAttribute name="JOIN$UNIQUE_ID$UNIQUE_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_SALESH">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <input node="Join_2$$$$CP_CIR_GENERATED$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="UNIQUE_ID" aggregationType="sum"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_4$$$$CP_CIR_GENERATED$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <input node="Join_4$$$$CP_SALESH$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+    </input>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute hidden="true" id="JOIN$UNIQUE_ID$UNIQUE_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$UNIQUE_ID$UNIQUE_ID" source="UNIQUE_ID"/>
+    </input>
+    <input node="Join_5$$$$CP_UNIQUE_ID_ITEM$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$UNIQUE_ID$UNIQUE_ID" source="UNIQUE_ID"/>
+    </input>
+    <joinAttribute name="JOIN$UNIQUE_ID$UNIQUE_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_5"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_6">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="CIR_QTY_TOT" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+    </input>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY_TOT" source="CIR_QTY"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_6">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Join_6" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Join_6" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="CUSTOMER_GROUP" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_GROUP"/>
+      <keyMapping columnObjectName="Join_6" columnName="CUSTOMER_GROUP"/>
+    </attribute>
+    <attribute id="CHAR_NUM" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NUM"/>
+      <keyMapping columnObjectName="Join_6" columnName="CHAR_NUM"/>
+    </attribute>
+    <attribute id="CHARVAL_NUM" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_NUM"/>
+      <keyMapping columnObjectName="Join_6" columnName="CHARVAL_NUM"/>
+    </attribute>
+    <attribute id="MODEL_VERSION" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MODEL_VERSION"/>
+      <keyMapping columnObjectName="Join_6" columnName="MODEL_VERSION"/>
+    </attribute>
+    <attribute id="VERSION" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VERSION"/>
+      <keyMapping columnObjectName="Join_6" columnName="VERSION"/>
+    </attribute>
+    <attribute id="SCENARIO" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCENARIO"/>
+      <keyMapping columnObjectName="Join_6" columnName="SCENARIO"/>
+    </attribute>
+    <attribute id="WEEK_DATE" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_DATE"/>
+      <keyMapping columnObjectName="Join_6" columnName="WEEK_DATE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="CIR_QTY" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CIR_QTY"/>
+      <measureMapping columnObjectName="Join_6" columnName="CIR_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="CIR_QTY_TOT" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CIR_QTY_1"/>
+      <measureMapping columnObjectName="Join_6" columnName="CIR_QTY_TOT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="297" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="496"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="CP_CIR_GENERATED" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="203"/>
+    </shape>
+    <shape modelObjectName="CP_UNIQUE_ID_ITEM" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="188"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="512" y="496"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="CP_SALESH" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="208"/>
+    </shape>
+    <shape modelObjectName="CP_CIR_GENERATED" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="203"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="636"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="CP_CIR_GENERATED" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="203"/>
+    </shape>
+    <shape modelObjectName="CP_SALESH" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="208"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="382" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="195"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="180"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="526"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_4" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="195"/>
+    </shape>
+    <shape modelObjectName="CP_UNIQUE_ID_ITEM" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="188"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="364"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="297" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_3" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="195"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="195"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_CLUSTER_HEATMAP02" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="CV_CLUSTER_HEATMAP02"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_UNIQUE_ID_ITEM">
+    <resourceUri>CP_UNIQUE_ID_ITEM</resourceUri>
+  </DataSource>
+  <DataSource id="CP_CLUSTERS_UID_SEQUENCE">
+    <resourceUri>CP_CLUSTERS_UID_SEQUENCE</resourceUri>
+  </DataSource>
+  <DataSource id="CV_CHAR_COLOR_CODE">
+    <resourceUri>CV_CHAR_COLOR_CODE</resourceUri>
+  </DataSource>
+  <DataSource id="V_PARTIALPROD">
+    <resourceUri>V_PARTIALPROD</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="UNIQUE_ID"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="CHAR_VALUE"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="UNIQUE_ID_NCHAR" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>TO_NCHAR(&quot;UNIQUE_ID&quot;)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="CP_UNIQUE_ID_ITEM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CLUSTER_ID" aggregationType="sum"/>
+      <viewAttribute id="UNIQUE_ID"/>
+      <viewAttribute id="SORT_SEQ" aggregationType="sum"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute hidden="true" id="JOIN$UNIQUE_ID$UNIQUE_ID_NCHAR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_CLUSTERS_UID_SEQUENCE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLUSTER_ID" source="CLUSTER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SORT_SEQ" source="SORT_SEQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$UNIQUE_ID$UNIQUE_ID_NCHAR" source="UNIQUE_ID"/>
+    </input>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$UNIQUE_ID$UNIQUE_ID_NCHAR" source="UNIQUE_ID_NCHAR"/>
+    </input>
+    <joinAttribute name="JOIN$UNIQUE_ID$UNIQUE_ID_NCHAR"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3_1" cardinality="CN_N" joinType="inner" multiJoinNode="Join_3" multiJoinCentralTable="Join_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CLUSTER_ID" aggregationType="sum"/>
+      <viewAttribute id="UNIQUE_ID"/>
+      <viewAttribute id="SORT_SEQ" aggregationType="sum"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="COLOR_CODE"/>
+      <viewAttribute id="ORDER" aggregationType="sum"/>
+      <viewAttribute id="COLOR_NAME"/>
+      <viewAttribute hidden="true" id="JOIN$CHAR_NUM$CHAR_NUM"/>
+      <viewAttribute hidden="true" id="JOIN$CHARVAL_NUM$CHARVAL_NUM"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLUSTER_ID" source="CLUSTER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SORT_SEQ" source="SORT_SEQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHAR_NUM$CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHARVAL_NUM$CHARVAL_NUM" source="CHARVAL_NUM"/>
+    </input>
+    <input node="CV_CHAR_COLOR_CODE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_CODE" source="COLOR_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORDER" source="ORDER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_NAME" source="COLOR_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHAR_NUM$CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHARVAL_NUM$CHARVAL_NUM" source="CHARVAL_NUM"/>
+    </input>
+    <joinAttribute name="JOIN$CHAR_NUM$CHAR_NUM"/>
+    <joinAttribute name="JOIN$CHARVAL_NUM$CHARVAL_NUM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3_2" cardinality="CN_N" joinType="leftOuter" multiJoinNode="Join_3" multiJoinCentralTable="Join_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CLUSTER_ID" aggregationType="sum"/>
+      <viewAttribute id="UNIQUE_ID"/>
+      <viewAttribute id="SORT_SEQ" aggregationType="sum"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="COLOR_CODE"/>
+      <viewAttribute id="ORDER" aggregationType="sum"/>
+      <viewAttribute id="COLOR_NAME"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="COUNT" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_3_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CLUSTER_ID" source="CLUSTER_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SORT_SEQ" source="SORT_SEQ"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_CODE" source="COLOR_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORDER" source="ORDER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_NAME" source="COLOR_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <input node="V_PARTIALPROD">
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_3_2">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Join_3_2" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Join_3_2" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="CLUSTER_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CLUSTER_ID"/>
+      <keyMapping columnObjectName="Join_3_2" columnName="CLUSTER_ID"/>
+    </attribute>
+    <attribute id="UNIQUE_ID" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="UNIQUE_ID"/>
+      <keyMapping columnObjectName="Join_3_2" columnName="UNIQUE_ID"/>
+    </attribute>
+    <attribute id="SORT_SEQ" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SORT_SEQ"/>
+      <keyMapping columnObjectName="Join_3_2" columnName="SORT_SEQ"/>
+    </attribute>
+    <attribute id="CHAR_NUM" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NUM"/>
+      <keyMapping columnObjectName="Join_3_2" columnName="CHAR_NUM"/>
+    </attribute>
+    <attribute id="CHARVAL_NUM" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_NUM"/>
+      <keyMapping columnObjectName="Join_3_2" columnName="CHARVAL_NUM"/>
+    </attribute>
+    <attribute id="COLOR_CODE" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COLOR_CODE"/>
+      <keyMapping columnObjectName="Join_3_2" columnName="COLOR_CODE"/>
+    </attribute>
+    <attribute id="ORDER" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ORDER"/>
+      <keyMapping columnObjectName="Join_3_2" columnName="ORDER"/>
+    </attribute>
+    <attribute id="COLOR_NAME" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COLOR_NAME"/>
+      <keyMapping columnObjectName="Join_3_2" columnName="COLOR_NAME"/>
+    </attribute>
+    <attribute id="REF_PRODID" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REF_PRODID"/>
+      <keyMapping columnObjectName="Join_3_2" columnName="REF_PRODID"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="COUNT" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="COUNT"/>
+      <measureMapping columnObjectName="Join_3_2" columnName="COUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="92" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="492"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="352"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="CP_CLUSTERS_UID_SEQUENCE" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="253"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="168"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="V_PARTIALPROD" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_3">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="164"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_3">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="168"/>
+    </shape>
+    <shape modelObjectName="CV_CHAR_COLOR_CODE" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_3">
+      <upperLeftCorner x="920" y="30"/>
+      <rectangleSize width="225"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

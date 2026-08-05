@@ -1,0 +1,21 @@
+PROCEDURE AES_MAIN(
+IN it_group_data PAL_AES_DATA_GRP_T,
+OUT ot_group_stats PAL_AES_STATS_GRP_T,
+OUT ot_group_forecast PAL_AES_FORECAST_GRP_T
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER
+AS
+BEGIN
+    DECLARE lt_group_stats PAL_AES_STATS_GRP_T;
+    DECLARE lt_group_forecast PAL_AES_FORECAST_GRP_T;
+
+    lt_dummy = SELECT 1 a FROM dummy;
+    MAP_REDUCE(:lt_dummy, AES_MAPPER(:lt_dummy.a, :it_group_data) GROUP BY "GROUP_ID" AS "GROUP_DATA",
+    AES_REDUCER("GROUP_DATA"."GROUP_ID", "GROUP_DATA",  lt_group_stats,lt_group_forecast) );
+    ot_group_stats = SELECT * FROM :lt_group_stats;
+    ot_group_forecast = SELECT * FROM :lt_group_forecast;
+    insert into PAL_AES_STATS_GRP_TAB select * from :lt_group_stats;
+    insert into PAL_AES_FORECAST_GRP_TAB select * from :lt_group_forecast;
+
+END;

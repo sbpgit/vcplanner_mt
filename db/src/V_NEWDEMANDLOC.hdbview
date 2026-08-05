@@ -1,0 +1,14 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_NEWDEMANDLOC
+-- Description:     Get demand locations based on Product ID
+-- Join Details:    CP_FACTORY_SALESLOC -  For Factory sales Location and Products
+--                  CP_LOCATION   - Locations
+-----------------------------------------------------------------------------------------
+VIEW "V_NEWDEMANDLOC" AS
+SELECT DISTINCT
+A.LOCATION_ID as DEMAND_LOC,
+B.LOCATION_DESC AS DEMAND_DESC,
+A.PRODUCT_ID as PRODUCT_ID
+FROM "CP_FACTORY_SALESLOC" AS A
+INNER JOIN "CP_LOCATION" AS B
+ON A."LOCATION_ID" = B."LOCATION_ID"

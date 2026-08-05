@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_CLUSTERS" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Projection" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" analyticViewCompatibilityMode="true">
+<descriptions defaultDescription="CV_Clusters"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_V_AHC_CLUSTERS_SORTED">
+    <resourceUri>CP_V_AHC_CLUSTERS_SORTED</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews/>
+<logicalModel id="CP_V_AHC_CLUSTERS_SORTED">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="MODEL_PROFILE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MODEL_PROFILE"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="MODEL_PROFILE"/>
+    </attribute>
+    <attribute id="CLUSTER_ID" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CLUSTER_ID"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="CLUSTER_ID"/>
+    </attribute>
+    <attribute id="UNIQUE_ID" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="UNIQUE_ID"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="UNIQUE_ID"/>
+    </attribute>
+    <attribute id="C1" order="6" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C1"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C1"/>
+    </attribute>
+    <attribute id="C2" order="7" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C2"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C2"/>
+    </attribute>
+    <attribute id="C3" order="8" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C3"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C3"/>
+    </attribute>
+    <attribute id="C4" order="9" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C4"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C4"/>
+    </attribute>
+    <attribute id="C5" order="10" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C5"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C5"/>
+    </attribute>
+    <attribute id="C6" order="11" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C6"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C6"/>
+    </attribute>
+    <attribute id="C7" order="12" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C7"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C7"/>
+    </attribute>
+    <attribute id="C8" order="13" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C8"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C8"/>
+    </attribute>
+    <attribute id="C9" order="14" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C9"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C9"/>
+    </attribute>
+    <attribute id="C10" order="15" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C10"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C10"/>
+    </attribute>
+    <attribute id="C11" order="16" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C11"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C11"/>
+    </attribute>
+    <attribute id="C12" order="17" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C12"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C12"/>
+    </attribute>
+    <attribute id="C13" order="18" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C13"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C13"/>
+    </attribute>
+    <attribute id="C14" order="19" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C14"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C14"/>
+    </attribute>
+    <attribute id="C15" order="20" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C15"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C15"/>
+    </attribute>
+    <attribute id="C16" order="21" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C16"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C16"/>
+    </attribute>
+    <attribute id="C17" order="22" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C17"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C17"/>
+    </attribute>
+    <attribute id="C18" order="23" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C18"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C18"/>
+    </attribute>
+    <attribute id="C19" order="24" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C19"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C19"/>
+    </attribute>
+    <attribute id="C20" order="25" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C20"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C20"/>
+    </attribute>
+    <attribute id="C21" order="26" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C21"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C21"/>
+    </attribute>
+    <attribute id="C22" order="27" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C22"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C22"/>
+    </attribute>
+    <attribute id="C23" order="28" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C23"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C23"/>
+    </attribute>
+    <attribute id="C24" order="29" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C24"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C24"/>
+    </attribute>
+    <attribute id="C25" order="30" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C25"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C25"/>
+    </attribute>
+    <attribute id="C26" order="31" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C26"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C26"/>
+    </attribute>
+    <attribute id="C27" order="32" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C27"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C27"/>
+    </attribute>
+    <attribute id="C28" order="33" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C28"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C28"/>
+    </attribute>
+    <attribute id="C29" order="34" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C29"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C29"/>
+    </attribute>
+    <attribute id="C30" order="35" displayAttribute="false" attributeHierarchyActive="false" semanticType="empty">
+      <descriptions defaultDescription="C30"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="C30"/>
+    </attribute>
+  
+    <attribute id="END_DATE" order="37" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="END_DATE"/>
+  
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="END_DATE"/>
+  
+    </attribute>
+    <attribute id="START_DATE" order="38" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="START_DATE"/>
+      <keyMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="START_DATE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes>
+    <calculatedAttribute id="YEAR_QUARTER" order="39" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="YEAR_QUARTER"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="13">
+        <formula>QUARTER(&quot;START_DATE&quot;)</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="QUARTER" order="40" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="QUARTER"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="13">
+        <formula> RIGHT(QUARTER(&quot;START_DATE&quot;), 2)</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  
+    <calculatedAttribute id="YEAR_MONTH" order="41" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="YEAR_MONTH"/>
+  
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="13">
+  
+        <formula>LEFT(&quot;START_DATE&quot;, 7)</formula>
+  
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="YEAR" order="42" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="YEAR"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="13">
+        <formula>YEAR(&quot;START_DATE&quot;)</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="YEAR_WEEK" order="43" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="YEAR_WEEK"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="13">
+        <formula>ISOWEEK(&quot;START_DATE&quot;)</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
+  <baseMeasures>
+  
+    <measure id="DEMAND" order="36" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="DEMAND"/>
+      <measureMapping columnObjectName="CP_V_AHC_CLUSTERS_SORTED" columnName="DEMAND"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

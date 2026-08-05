@@ -1,0 +1,11 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_OBJDEP
+-- Description:     Get objectdependency with counter
+-- Join Details:    CP_OBJDEP_HEADER -  object dependency rules
+-----------------------------------------------------------------------------------------
+VIEW "V_OBJDEP"
+AS SELECT DISTINCT
+OBJ_DEP,
+OBJ_COUNTER,
+CONCAT(OBJ_DEP, CONCAT('_',OBJ_COUNTER))  AS "OBJ_DEP_CN"
+FROM CP_OBJDEP_HEADER

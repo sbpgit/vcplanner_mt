@@ -1,0 +1,31 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_SALESHCFG_CHARVAL
+-- Description:     View to get sales history configuration with charanteristic values
+-- Join Details:    A: V_SALESH_UID_CONFIG-  Table for sales history configuration
+--                  B: V_CHARVAL  - View to characteristics and char. values for its internal counters
+--                  C: CP_SALESH - Table for sales history
+-----------------------------------------------------------------------------------------
+VIEW "V_SALESHCFG_CHARVAL"
+AS SELECT distinct
+    A.SALES_DOC,
+	A.SALESDOC_ITEM,
+    C.DOC_CREATEDDATE,
+    C.SCHEDULELINE_NUM,
+	C.PRODUCT_ID,
+    C.REASON_REJ,  
+    C.UOM,
+    C.CONFIRMED_QTY,
+    C.ORD_QTY,
+    C.MAT_AVAILDATE,
+    C.NET_VALUE, 
+    C.CUSTOMER_GROUP,
+    C.LOCATION_ID,
+	B.CHAR_NAME,
+	B.CHAR_VALUE
+FROM V_SALESH_UID_CONFIG AS A
+LEFT OUTER JOIN V_CHARVAL AS B
+ON ( A.CHAR_NUM = B.CHAR_NUM
+AND A.CHARVAL_NUM = B.CHARVAL_NUM )
+INNER JOIN CP_SALESH AS C
+ON ( A.SALES_DOC = C.SALES_DOC
+AND A.SALESDOC_ITEM = C.SALESDOC_ITEM );

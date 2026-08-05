@@ -1,0 +1,185 @@
+VIEW "V_FPLAN_CONS" AS
+
+-- SELECT 
+-- "LOCATION_ID",    
+-- "PRODUCT_ID",     
+-- "CHAR_NUM",       
+-- "CHAR_NAME",      
+-- "CHAR_DESC",      
+-- "CHARVAL_NUM",    
+-- "CHAR_VALUE",     
+-- "CHARVAL_DESC",   
+-- "VERSION",        
+-- "SCENARIO",       
+-- "VERSION_NAME",   
+-- "SCENARIO_NAME",  
+-- "CALENDAR_WEEK",  
+-- "TELESCOPIC_WEEK",
+-- "WEEK_STARTDATE", 
+-- "WEEK_ENDDATE",   
+-- "OPT_PERCENT",    
+-- "QUANTITY"       
+ SELECT * FROM V_FPLAN_CONS_FCHAR
+UNION ALL
+SELECT * FROM V_FPLAN_CONS_FDEMAND;
+
+
+-- SELECT 
+--   A."LOCATION_ID",
+--   A."PRODUCT_ID",
+--   A."CHAR_NUM",
+--   A."CHAR_NAME",
+--   A."CHAR_DESC",
+--   A."CHARVAL_NUM",
+--   A."CHAR_VALUE",
+--   A."CHARVAL_DESC",
+--   A."VERSION",
+--   A."SCENARIO",
+--   B."CALENDAR_WEEK",
+--   B."TELESCOPIC_WEEK",
+--   B."WEEK_STARTDATE",
+--   B."WEEK_ENDDATE",
+--   A."OPT_PERCENT",
+--   A."OPT_QTY" AS "QUANTITY",
+--   CP_IBPVERSIONSCENARIO.VERSION_NAME,
+--   CP_IBPVERSIONSCENARIO.SCENARIO_NAME
+-- FROM "V_FCHARPLAN" A
+--   LEFT OUTER JOIN "V_WEEK_DESCRIPTOR" AS B
+--  ON A."WEEK_DATE" >= B."WEEK_STARTDATE"
+--   AND A."WEEK_DATE" <= B."WEEK_ENDDATE"
+  
+-- LEFT OUTER JOIN CP_IBPVERSIONSCENARIO
+-- ON CP_IBPVERSIONSCENARIO.VERSION = A."VERSION"
+-- AND CP_IBPVERSIONSCENARIO.SCENARIO = A."SCENARIO"
+
+-- UNION ALL
+
+-- SELECT
+--   A."LOCATION_ID",
+--   A."PRODUCT_ID",
+--   '' AS "CHAR_NUM",
+--   '' AS "CHAR_NAME",
+--   '' AS "CHAR_DESC",
+--   '' AS "CHARVAL_NUM",
+--   '' AS "CHAR_VALUE",
+--   '' AS "CHARVAL_DESC",
+--   A."VERSION",
+--   A."SCENARIO",
+--   B."CALENDAR_WEEK",
+--   B."TELESCOPIC_WEEK",
+--   B."WEEK_STARTDATE",
+--   B."WEEK_ENDDATE",
+--   A."QUANTITY" AS "OPT_PERCENT",
+--   A."QUANTITY" AS "OPT_PERCENT",
+--   CP_IBPVERSIONSCENARIO.VERSION_NAME,
+--   CP_IBPVERSIONSCENARIO.SCENARIO_NAME
+-- FROM "CP_IBP_FUTUREDEMAND" A
+--   LEFT OUTER JOIN "V_WEEK_DESCRIPTOR" B
+--  ON A."WEEK_DATE" >= B."WEEK_STARTDATE"
+--   AND A."WEEK_DATE" <= B."WEEK_ENDDATE"
+  
+-- LEFT OUTER JOIN CP_IBPVERSIONSCENARIO
+-- ON CP_IBPVERSIONSCENARIO.VERSION = A."VERSION"
+-- AND CP_IBPVERSIONSCENARIO.SCENARIO = A."SCENARIO"
+  
+
+-- ORDER BY 
+--   A."LOCATION_ID" ASC,
+--   A."PRODUCT_ID" ASC,
+--   A."CHAR_NUM" ASC,
+--   A."CHARVAL_NUM" ASC,
+--   B."CALENDAR_WEEK" ASC,
+--   B."TELESCOPIC_WEEK" ASC
+
+-- SELECT
+--     S."LOCATION_ID",
+--     S."PRODUCT_ID",
+--     /* Characteristics — only populated for V_FCHARPLAN */
+--     CASE WHEN S."SOURCE" = 'FCHARPLAN' THEN S."CHAR_NUM" ELSE '' END AS "CHAR_NUM",
+--     CASE WHEN S."SOURCE" = 'FCHARPLAN' THEN S."CHAR_NAME" ELSE '' END AS "CHAR_NAME",
+--     CASE WHEN S."SOURCE" = 'FCHARPLAN' THEN S."CHAR_DESC" ELSE '' END AS "CHAR_DESC",
+--     CASE WHEN S."SOURCE" = 'FCHARPLAN' THEN S."CHARVAL_NUM" ELSE '' END AS "CHARVAL_NUM",
+--     CASE WHEN S."SOURCE" = 'FCHARPLAN' THEN S."CHAR_VALUE" ELSE '' END AS "CHAR_VALUE",
+--     CASE WHEN S."SOURCE" = 'FCHARPLAN' THEN S."CHARVAL_DESC" ELSE '' END AS "CHARVAL_DESC",
+
+--     S."VERSION",
+--     S."SCENARIO",
+
+--     W."CALENDAR_WEEK",
+--     W."TELESCOPIC_WEEK",
+--     W."WEEK_STARTDATE",
+--     W."WEEK_ENDDATE",
+
+--     /* OPT_PERCENT comes from different fields */
+--     CASE 
+--         WHEN S."SOURCE" = 'FCHARPLAN' THEN S."OPT_PERCENT"
+--         ELSE S."QUANTITY"
+--     END AS "OPT_PERCENT",
+
+--     /* Quantity value unified */
+--     CASE
+--         WHEN S."SOURCE" = 'FCHARPLAN' THEN S."OPT_QTY"
+--         ELSE S."QUANTITY"
+--     END AS "QUANTITY",
+
+--     VS.VERSION_NAME,
+--     VS.SCENARIO_NAME
+
+-- FROM (
+--     /* Create a single combined data set */
+--     SELECT
+--         'FCHARPLAN' AS "SOURCE",
+--         A."LOCATION_ID",
+--         A."PRODUCT_ID",
+--         A."CHAR_NUM",
+--         A."CHAR_NAME",
+--         A."CHAR_DESC",
+--         A."CHARVAL_NUM",
+--         A."CHAR_VALUE",
+--         A."CHARVAL_DESC",
+--         A."VERSION",
+--         A."SCENARIO",
+--         A."WEEK_DATE",
+--         A."OPT_PERCENT",
+--         A."OPT_QTY",
+--         NULL AS "QUANTITY"
+--     FROM "V_FCHARPLAN" A
+    
+--     UNION ALL
+    
+--     SELECT
+--         'FUTUREDEMAND' AS "SOURCE",
+--         A."LOCATION_ID",
+--         A."PRODUCT_ID",
+--         NULL,
+--         NULL,
+--         NULL,
+--         NULL,
+--         NULL,
+--         NULL,
+--         A."VERSION",
+--         A."SCENARIO",
+--         A."WEEK_DATE",
+--         NULL,
+--         NULL,
+--         A."QUANTITY"
+--     FROM "CP_IBP_FUTUREDEMAND" A
+-- ) AS S
+
+-- LEFT JOIN "V_WEEK_DESCRIPTOR" W
+--     ON S."WEEK_DATE" BETWEEN W."WEEK_STARTDATE" AND W."WEEK_ENDDATE"
+
+-- LEFT JOIN CP_IBPVERSIONSCENARIO VS
+--     ON VS.VERSION = S."VERSION"
+--     AND VS.SCENARIO = S."SCENARIO"
+
+-- ORDER BY
+--     S."LOCATION_ID",
+--     S."PRODUCT_ID",
+--     "CHAR_NUM",
+--     "CHARVAL_NUM",
+--     "CALENDAR_WEEK",
+--     "TELESCOPIC_WEEK";
+
+ 
+  

@@ -1,0 +1,20 @@
+    ----------------------------------------------------------------------------------------
+-- Name:            V_ORD_COUNT
+-- Description:     Get order count for location product on a weekly basis
+-- Join Details:    CP_SALESH -  Master table for sales history 
+-----------------------------------------------------------------------------------------
+
+VIEW "V_ORD_COUNT" AS
+SELECT 
+	"LOCATION_ID",
+	"PRODUCT_ID",
+	ADD_DAYS("MAT_AVAILDATE",WEEKDAY("MAT_AVAILDATE") * -1 ) AS "WEEK_DATE",	
+	CONCAT(YEAR(ADD_DAYS("MAT_AVAILDATE",WEEKDAY("MAT_AVAILDATE") * -1 )), LPAD(WEEK(ADD_DAYS("MAT_AVAILDATE",WEEKDAY("MAT_AVAILDATE") * -1 )), 2, '0')) AS "WEEK_NO",	
+	SUM("ORD_QTY") AS ORD_QTY
+FROM V_SALES_H
+GROUP BY 
+	"LOCATION_ID",
+	"PRODUCT_ID",
+	ADD_DAYS("MAT_AVAILDATE",WEEKDAY("MAT_AVAILDATE") * -1 ),
+	CONCAT(YEAR(ADD_DAYS("MAT_AVAILDATE",WEEKDAY("MAT_AVAILDATE") * -1 )), LPAD(WEEK(ADD_DAYS("MAT_AVAILDATE",WEEKDAY("MAT_AVAILDATE") * -1 )), 2, '0'));
+	

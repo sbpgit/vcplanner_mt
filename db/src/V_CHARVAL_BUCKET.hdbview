@@ -1,0 +1,53 @@
+------------------------------------------------------------------------------------------------
+-- Name:            V_CHARVAL_BUCKET
+-- Description:     View to fetch int. number and its values for Characteristics and its values
+-- Join Details:    A: CP_CLASS  - Table for Class Details
+--                  B: CP_CHARACTERISTICS -  Table for int. number of characteristics and values
+--                  C: CP_CHARVAL_BUCKET - Table for characteristic values bucket
+-------------------------------------------------------------------------------------------------
+VIEW "V_CHARVAL_BUCKET" AS
+SELECT DISTINCT
+	A.IBPCHAR_CHK,
+	B.CHAR_NUM,
+	B.CHAR_NAME,
+	B.CHAR_DESC,
+	B.CHAR_GROUP,
+	B.CHAR_TYPE,
+	B.ENTRY_REQ,
+	B.CHAR_CATGRY,
+	B.MULTI_CHAR,
+	B.REF_CHAR_NUM,
+	B.REF_CHAR_NAME,
+	B.REF_CHAR_DESC,
+	C.CHAR_VALUE,
+	C.RANGE_FROM,
+	C.RANGE_TO,
+	C.MEDIAN
+FROM 
+	CP_CLASS AS A
+INNER JOIN CP_CHARACTERISTICS AS B
+	    ON A.CLASS_NUM = B.CLASS_NUM
+INNER JOIN CP_CHARVAL_BUCKET AS C
+	ON  B.CHAR_NUM = C.CHAR_NUM;
+
+
+-- SELECT A.CLASS_NUM,
+--   A.CHAR_NUM,
+--   A.CHAR_NAME,
+--   A.CHAR_DESC,
+--   A.CHAR_GROUP,
+--   A.CHAR_TYPE,
+--   A.ENTRY_REQ,
+--   A.CHAR_CATGRY,
+--   A.MULTI_CHAR,
+--   A.REF_CHAR_NUM,
+--   A.REF_CHAR_NAME,
+--   A.REF_CHAR_DESC,
+--   B.CHAR_VALUE,
+--   B.RANGE_FROM,
+--   B.RANGE_TO,
+--   B.MEDIAN
+-- FROM CP_CHARACTERISTICS AS A
+--   INNER JOIN CP_CHARVAL_BUCKET AS B
+--  ON A.CLASS_NUM = B.CLASS_NUM
+--  AND A.CHAR_NUM = B.CHAR_NUM;

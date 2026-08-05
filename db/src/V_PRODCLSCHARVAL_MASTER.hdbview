@@ -1,0 +1,22 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_PRODCLSCHARVAL_MASTER
+-- Description:     Get products, location and class  details
+-- Join Details:    A: CP_PRODUCT_CLASS -  Product class master data
+--                  B: V_CLASSCHARVAL - View for class, characteristics and its values
+-----------------------------------------------------------------------------------------
+VIEW "V_PRODCLSCHARVAL_MASTER"
+AS SELECT distinct A.PRODUCT_ID,
+          A.CLASS_NUM,
+          B.CLASS_NAME,
+          B.CLASS_DESC,
+          B.IBPCHAR_CHK,
+          B.CHAR_NUM,
+          B.CHAR_NAME,
+          B.CHAR_DESC,
+          B.CHARVAL_NUM,
+          B.CHAR_VALUE,
+          B.CHARVAL_DESC,
+          B.MULTI_CHAR
+    FROM  CP_PRODUCT_CLASS AS A
+    INNER JOIN "V_CLASSCHARVAL_MASTER" AS B
+    ON A.CLASS_NUM = B.CLASS_NUM;

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_TS_HIS_CUST_PAL" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_TS_HIS_CUST_PAL"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CV_TS_HISTORY_CUST">
+    <resourceUri>CV_TS_HISTORY_CUST</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews/>
+<logicalModel id="CV_TS_HISTORY_CUST">
+  <attributes>
+    <attribute id="LOCATION_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="CV_TS_HISTORY_CUST" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="CV_TS_HISTORY_CUST" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="WEEK_DATE" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_DATE"/>
+      <keyMapping columnObjectName="CV_TS_HISTORY_CUST" columnName="WEEK_DATE"/>
+    </attribute>
+    <attribute id="PRPID" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRPID"/>
+      <keyMapping columnObjectName="CV_TS_HISTORY_CUST" columnName="GROUP_ID"/>
+    </attribute>
+    <attribute id="CUSTOMER_GROUP" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_GROUP"/>
+      <keyMapping columnObjectName="CV_TS_HISTORY_CUST" columnName="CUSTOMER_GROUP"/>
+    </attribute>
+    <attribute id="PERIOD_NUM" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PERIOD_NUM"/>
+      <keyMapping columnObjectName="CV_TS_HISTORY_CUST" columnName="PERIOD_NUM"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes>
+    <calculatedAttribute id="GROUP_ID" order="1" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GROUP_ID"/>
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="13">
+        <formula>&quot;PRPID&quot; || '_1'
+</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+    <calculatedAttribute id="TYPE" order="11" semanticType="empty" displayAttribute="false" attributeHierarchyActive="false">
+      <keyCalculation datatype="NVARCHAR" expressionLanguage="SQL" length="13">
+        <formula>'PI'</formula>
+      </keyCalculation>
+      </calculatedAttribute>
+  </calculatedAttributes>
+  <baseMeasures>
+    <measure id="GROUP_COUNT" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CONFIRMED_QTY"/>
+      <measureMapping columnObjectName="CV_TS_HISTORY_CUST" columnName="GROUP_COUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="GROUP_COUNT_RATE" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="GROUP_COUNT_RATE"/>
+      <measureMapping columnObjectName="CV_TS_HISTORY_CUST" columnName="GROUP_COUNT_RATE"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="CONFIRMED_QTY_TOT_CONFIRMED" order="7" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CONFIRMED_QTY_TOT_CONFIRMED"/>
+      <measureMapping columnObjectName="CV_TS_HISTORY_CUST" columnName="CONFIRMED_QTY_TOT_CONFIRMED"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

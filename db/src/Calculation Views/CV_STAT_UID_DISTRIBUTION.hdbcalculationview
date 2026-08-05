@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_STAT_UID_DISTRIBUTION" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="CV_STAT_UID_DISTRIBUTION"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_STAT_DISTRIBUTION_RESULTS">
+    <resourceUri>CP_STAT_DISTRIBUTION_RESULTS</resourceUri>
+  </DataSource>
+  <DataSource id="Join_1$$$$CP_STAT_DISTRIBUTION_RESULTS$$">
+    <resourceUri>CP_STAT_DISTRIBUTION_RESULTS</resourceUri>
+  </DataSource>
+  <DataSource id="CP_IBP_FUTUREDEMAND">
+    <resourceUri>CP_IBP_FUTUREDEMAND</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="PRIMARY_ID"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="QUANTITY"/>
+      <viewAttribute id="WEEK_DATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_STAT_DISTRIBUTION_RESULTS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="TOT_QUANTITY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOT_QUANTITY" source="QUANTITY"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="TOT_QUANTITY" aggregationType="sum"/>
+      <viewAttribute id="QUANTITY" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$CUSTOMER_GROUP$CUSTOMER_GROUP"/>
+      <viewAttribute hidden="true" id="JOIN$WEEK_DATE$WEEK_DATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="PERCENTAGE_OF_UNIQUE_ID_DISTRIBUTION" datatype="DECIMAL" length="13" scale="3" expressionLanguage="SQL">
+        <formula>case
+when &quot;TOT_QUANTITY&quot; = 0
+then 0
+else (&quot;QUANTITY&quot; / &quot;TOT_QUANTITY&quot;) * 100
+end</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_1$$$$CP_STAT_DISTRIBUTION_RESULTS$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QUANTITY" source="QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUSTOMER_GROUP$CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+    </input>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOT_QUANTITY" source="TOT_QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUSTOMER_GROUP$CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$CUSTOMER_GROUP$CUSTOMER_GROUP"/>
+    <joinAttribute name="JOIN$WEEK_DATE$WEEK_DATE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="TOT_QUANTITY" aggregationType="sum"/>
+      <viewAttribute id="QUANTITY" aggregationType="sum"/>
+      <viewAttribute id="PERCENTAGE_OF_UNIQUE_ID_DISTRIBUTION" aggregationType="sum"/>
+      <viewAttribute id="TOT_FUTURE_DEMAND" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$WEEK_DATE$WEEK_DATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="UNIQUE_ID_FUTURE_DEMAND" datatype="DECIMAL" length="13" scale="3" expressionLanguage="SQL">
+        <formula>(&quot;TOT_FUTURE_DEMAND&quot; * &quot;PERCENTAGE_OF_UNIQUE_ID_DISTRIBUTION&quot;) / 100</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOT_QUANTITY" source="TOT_QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="QUANTITY" source="QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PERCENTAGE_OF_UNIQUE_ID_DISTRIBUTION" source="PERCENTAGE_OF_UNIQUE_ID_DISTRIBUTION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+    </input>
+    <input node="CP_IBP_FUTUREDEMAND">
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TOT_FUTURE_DEMAND" source="QUANTITY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$WEEK_DATE$WEEK_DATE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_2">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Join_2" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Join_2" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="CUSTOMER_GROUP" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_GROUP"/>
+      <keyMapping columnObjectName="Join_2" columnName="CUSTOMER_GROUP"/>
+    </attribute>
+    <attribute id="WEEK_DATE" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_DATE"/>
+      <keyMapping columnObjectName="Join_2" columnName="WEEK_DATE"/>
+    </attribute>
+    <attribute id="PRIMARY_ID" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRIMARY_ID"/>
+      <keyMapping columnObjectName="Join_2" columnName="PRIMARY_ID"/>
+    </attribute>
+    <attribute id="VERSION" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VERSION"/>
+      <keyMapping columnObjectName="Join_2" columnName="VERSION"/>
+    </attribute>
+    <attribute id="SCENARIO" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCENARIO"/>
+      <keyMapping columnObjectName="Join_2" columnName="SCENARIO"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="TOT_QUANTITY" order="8" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUANTITY"/>
+      <measureMapping columnObjectName="Join_2" columnName="TOT_QUANTITY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="QUANTITY" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUANTITY"/>
+      <measureMapping columnObjectName="Join_2" columnName="QUANTITY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="PERCENTAGE_OF_UNIQUE_ID_DISTRIBUTION" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PERCENTAGE_OF_UNIQUE_ID_DISTRIBUTION"/>
+      <measureMapping columnObjectName="Join_2" columnName="PERCENTAGE_OF_UNIQUE_ID_DISTRIBUTION"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="TOT_FUTURE_DEMAND" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUANTITY_TOT_FUTURE_DEMAND"/>
+      <measureMapping columnObjectName="Join_2" columnName="TOT_FUTURE_DEMAND"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="UNIQUE_ID_FUTURE_DEMAND" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="UNIQUE_ID_FUTURE_DEMAND"/>
+      <measureMapping columnObjectName="Join_2" columnName="UNIQUE_ID_FUTURE_DEMAND"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="92" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="602"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="497"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="357"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="CP_STAT_DISTRIBUTION_RESULTS" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="270"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="195"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="332"/>
+    </shape>
+    <shape modelObjectName="CP_IBP_FUTUREDEMAND" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="215"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

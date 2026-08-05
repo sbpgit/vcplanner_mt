@@ -1,0 +1,23 @@
+PROCEDURE PCA_CAT_REDUCER_T(
+IN iv_group_id NVARCHAR(100),
+IN it_data PAL_PCA_CAT_DATA_T,
+OUT ot_pca_loadings PAL_PCA_CAT_LOADINGS_GRP_T,
+OUT ot_pca_loadings_information PAL_PCA_CAT_LOADINGS_INFORMATION_GRP_T,
+OUT ot_pca_scores PAL_PCA_CAT_SCORES_GRP_T,
+OUT ot_pca_scaling_inormation PAL_PCA_CAT_SCALING_INFORMATION_GRP_T,
+OUT ot_pca_quantification PAL_PCA_CAT_QUANTIFICATION_GRP_T,
+OUT ot_pca_stat PAL_PCA_CAT_STAT_GRP_T
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER
+READS SQL DATA AS
+BEGIN
+lt_param = SELECT "PARAM_NAME", "INT_VALUE", "DOUBLE_VALUE", "STRING_VALUE" FROM PAL_PCA_CAT_PARAMETER_GRP_TAB WHERE "GROUP_ID" = :iv_group_id;
+CALL CATPCA(:it_data, :lt_param, lt_loadings, lt_loadings_info, lt_scores, lt_scaling_info, lt_quantification, lt_stat);
+ot_pca_loadings = SELECT :iv_group_id AS "GROUP_ID", "VARIABLE_NAME", "COMPONENT_ID", "COMPONENT_LOADING" FROM :lt_loadings;
+ot_pca_loadings_information = SELECT :iv_group_id AS "GROUP_ID", "COMPONENT_ID", "METRIC_NAME", "METRIC_VALUE" FROM :lt_loadings_info;
+ot_pca_scores = SELECT :iv_group_id AS "GROUP_ID", "ID","COMPONENT_ID","COMPONENT_SCORE" FROM :lt_scores;
+ot_pca_scaling_inormation = SELECT :iv_group_id AS "GROUP_ID","VARIABLE_NAME","MEAN","SCALE" FROM :lt_scaling_info;
+ot_pca_quantification = SELECT :iv_group_id AS "GROUP_ID","VARIABLE_NAME","CATEGORY_VALUE","COMPONENT_ID","QUANTIFICATION" FROM :lt_quantification;
+ot_pca_stat = SELECT :iv_group_id AS "GROUP_ID","STAT_NAME","STAT_VALUE" FROM :lt_stat;
+END;

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_CP_CIR_GENERATED" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="CV_CP_CIR_GENERATED"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_CIR_GENERATED">
+    <resourceUri>CP_CIR_GENERATED</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="CIR_ID"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="UNIQUE_ID"/>
+      <viewAttribute id="CIR_QTY"/>
+      <viewAttribute id="BFORECHNG_CIRQTY"/>
+      <viewAttribute id="SNAPSHOT_CHK"/>
+      <viewAttribute id="ACTUAL_QTY"/>
+      <viewAttribute id="UNCONSUMED_FORECAST"/>
+      <viewAttribute id="PRODORD_QTY"/>
+      <viewAttribute id="OPEN_ASSEMBLY"/>
+      <viewAttribute id="COMMENTS"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_CIR_GENERATED"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Projection_1">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="WEEK_DATE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_DATE"/>
+      <keyMapping columnObjectName="Projection_1" columnName="WEEK_DATE"/>
+    </attribute>
+    <attribute id="CIR_ID" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CIR_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="CIR_ID"/>
+    </attribute>
+    <attribute id="MODEL_VERSION" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MODEL_VERSION"/>
+      <keyMapping columnObjectName="Projection_1" columnName="MODEL_VERSION"/>
+    </attribute>
+    <attribute id="VERSION" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VERSION"/>
+      <keyMapping columnObjectName="Projection_1" columnName="VERSION"/>
+    </attribute>
+    <attribute id="SCENARIO" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCENARIO"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SCENARIO"/>
+    </attribute>
+    <attribute id="UNIQUE_ID" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="UNIQUE_ID"/>
+      <keyMapping columnObjectName="Projection_1" columnName="UNIQUE_ID"/>
+    </attribute>
+    <attribute id="SNAPSHOT_CHK" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SNAPSHOT_CHK"/>
+      <keyMapping columnObjectName="Projection_1" columnName="SNAPSHOT_CHK"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="CIR_QTY" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CIR_QTY"/>
+      <measureMapping columnObjectName="Projection_1" columnName="CIR_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="BFORECHNG_CIRQTY" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="BFORECHNG_CIRQTY"/>
+      <measureMapping columnObjectName="Projection_1" columnName="BFORECHNG_CIRQTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="ACTUAL_QTY" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ACTUAL_QTY"/>
+      <measureMapping columnObjectName="Projection_1" columnName="ACTUAL_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="UNCONSUMED_FORECAST" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="UNCONSUMED_FORECAST"/>
+      <measureMapping columnObjectName="Projection_1" columnName="UNCONSUMED_FORECAST"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="PRODORD_QTY" order="14" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PRODORD_QTY"/>
+      <measureMapping columnObjectName="Projection_1" columnName="PRODORD_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="OPEN_ASSEMBLY" order="15" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="OPEN_ASSEMBLY"/>
+      <measureMapping columnObjectName="Projection_1" columnName="OPEN_ASSEMBLY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures>
+    <measure id="COUNT" order="16" aggregationType="sum" measureType="simple" aggregatable="true" datatype="INTEGER" expressionLanguage="SQL">
+      <descriptions defaultDescription="Count"/>
+      <formula>1</formula>
+      
+      <exceptionAggregationMetadata/>
+    </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="208"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

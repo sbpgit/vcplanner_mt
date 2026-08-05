@@ -1,0 +1,3 @@
+-- IDX_ROLE_PARAM_READ -  For application filters with join on Role name and Read
+INDEX "IDX_ROLE_READ"
+    ON "CP_ROLE_DETAILS" ("ROLE_NAME", "READ");

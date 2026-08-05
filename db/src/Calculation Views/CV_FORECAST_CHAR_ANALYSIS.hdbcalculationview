@@ -1,0 +1,891 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_FORECAST_CHAR_ANALYSIS" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="CV_FORECAST_CHAR_ANALYSIS"/>
+<localVariables>
+  <variable id="START_DATE" parameter="true">
+    <descriptions defaultDescription="Start Date"/>
+    <variableProperties datatype="DATE" mandatory="true">
+      <valueDomain type="Date"/>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="END_DATE" parameter="true">
+    <descriptions defaultDescription="End Date"/>
+    <variableProperties datatype="DATE" mandatory="true">
+      <valueDomain type="Date"/>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_CIR_GENERATED">
+    <resourceUri>CP_CIR_GENERATED</resourceUri>
+  </DataSource>
+  <DataSource id="CP_CHARACTERISTICS">
+    <resourceUri>CP_CHARACTERISTICS</resourceUri>
+  </DataSource>
+  <DataSource id="CP_PARTIALPROD_INTRO">
+    <resourceUri>CP_PARTIALPROD_INTRO</resourceUri>
+  </DataSource>
+  <DataSource id="CP_PRODUCT">
+    <resourceUri>CP_PRODUCT</resourceUri>
+  </DataSource>
+  <DataSource id="CV_PID_UID_DISTRIBUTION">
+    <resourceUri>CV_PID_UID_DISTRIBUTION</resourceUri>
+  </DataSource>
+  <DataSource id="CP_CHAR_VALUES">
+    <resourceUri>CP_CHAR_VALUES</resourceUri>
+  </DataSource>
+  <DataSource id="CP_UNIQUE_ID_HEADER">
+    <resourceUri>CP_UNIQUE_ID_HEADER</resourceUri>
+  </DataSource>
+  <DataSource id="CP_UNIQUE_ID_ITEM">
+    <resourceUri>CP_UNIQUE_ID_ITEM</resourceUri>
+  </DataSource>
+  <DataSource id="CP_IBPVERSIONSCENARIO">
+    <resourceUri>CP_IBPVERSIONSCENARIO</resourceUri>
+  </DataSource>
+  <DataSource id="CP_VARCHAR_PS">
+    <resourceUri>CP_VARCHAR_PS</resourceUri>
+  </DataSource>
+  <DataSource id="CV_CHAR_COLOR_CODE">
+    <resourceUri>CV_CHAR_COLOR_CODE</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="UNIQUE_ID"/>
+      <viewAttribute id="CIR_QTY"/>
+      <viewAttribute id="ACTUAL_QTY"/>
+      <viewAttribute id="UNCONSUMED_FORECAST"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_CIR_GENERATED"/>
+    <filter>&quot;WEEK_DATE&quot; &gt;= '$$START_DATE$$'
+AND &quot;WEEK_DATE&quot; &lt;= '$$END_DATE$$'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHAR_NAME"/>
+      <viewAttribute id="CHAR_DESC"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_CHARACTERISTICS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PROD_DESC"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="REF_PROD_DESC"/>
+      <viewAttribute hidden="true" id="JOIN$REF_PRODID$PRODUCT_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_PARTIALPROD_INTRO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DESC" source="PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$REF_PRODID$PRODUCT_ID" source="REF_PRODID"/>
+    </input>
+    <input node="CP_PRODUCT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PROD_DESC" source="PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$REF_PRODID$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <joinAttribute name="JOIN$REF_PRODID$PRODUCT_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_3">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRIMARY_ID"/>
+      <viewAttribute id="UNIQUE_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="CV_PID_UID_DISTRIBUTION"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_5">
+    <viewAttributes>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="CHARVAL_DESC"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="CP_CHAR_VALUES"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="UNIQUE_ID"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="UNCONSUMED_FORECAST" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+    <viewAttributes>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHAR_NAME"/>
+      <viewAttribute id="CHAR_DESC"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_2"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_6" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="UNIQUE_ID" aggregationType="sum"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="UNCONSUMED_FORECAST" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$UNIQUE_ID$UNIQUE_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNCONSUMED_FORECAST" source="UNCONSUMED_FORECAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$UNIQUE_ID$UNIQUE_ID" source="UNIQUE_ID"/>
+    </input>
+    <input node="Aggregation_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$UNIQUE_ID$UNIQUE_ID" source="UNIQUE_ID"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$UNIQUE_ID$UNIQUE_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_4">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="PRIMARY_ID"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="UNCONSUMED_FORECAST" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_6"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_1" cardinality="CN_N" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="CP_UNIQUE_ID_ITEM" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="PRIMARY_ID_DESC"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="UNCONSUMED_FORECAST" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$UNIQUE_ID$PRIMARY_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_UNIQUE_ID_HEADER">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID_DESC" source="UNIQUE_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$UNIQUE_ID$PRIMARY_ID" source="UNIQUE_ID"/>
+    </input>
+    <input node="Aggregation_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNCONSUMED_FORECAST" source="UNCONSUMED_FORECAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$UNIQUE_ID$PRIMARY_ID" source="PRIMARY_ID"/>
+    </input>
+    <joinAttribute name="JOIN$UNIQUE_ID$PRIMARY_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_2" cardinality="CN_N" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="CP_UNIQUE_ID_ITEM" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="PRIMARY_ID_DESC"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="CHAR_VALUE"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="UNCONSUMED_FORECAST" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$UNIQUE_ID$PRIMARY_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_UNIQUE_ID_ITEM">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_VALUE" source="CHAR_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$UNIQUE_ID$PRIMARY_ID" source="UNIQUE_ID"/>
+    </input>
+    <input node="Join_1_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID_DESC" source="PRIMARY_ID_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNCONSUMED_FORECAST" source="UNCONSUMED_FORECAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$UNIQUE_ID$PRIMARY_ID" source="PRIMARY_ID"/>
+    </input>
+    <joinAttribute name="JOIN$UNIQUE_ID$PRIMARY_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2_1" cardinality="CN_N" joinType="inner" multiJoinNode="Join_2" multiJoinCentralTable="Join_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="VERSION_NAME"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="SCENARIO_NAME"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="PRIMARY_ID_DESC"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="CHAR_VALUE"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="UNCONSUMED_FORECAST" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$VERSION$VERSION"/>
+      <viewAttribute hidden="true" id="JOIN$SCENARIO$SCENARIO"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_1_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_VALUE" source="CHAR_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNCONSUMED_FORECAST" source="UNCONSUMED_FORECAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID_DESC" source="PRIMARY_ID_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VERSION$VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCENARIO$SCENARIO" source="SCENARIO"/>
+    </input>
+    <input node="CP_IBPVERSIONSCENARIO">
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION_NAME" source="VERSION_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_NAME" source="SCENARIO_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VERSION$VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCENARIO$SCENARIO" source="SCENARIO"/>
+    </input>
+    <joinAttribute name="JOIN$VERSION$VERSION"/>
+    <joinAttribute name="JOIN$SCENARIO$SCENARIO"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2_2" cardinality="CN_N" joinType="inner" multiJoinNode="Join_2" multiJoinCentralTable="Join_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PROD_DESC"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="REF_PROD_DESC"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="VERSION_NAME"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="SCENARIO_NAME"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="PRIMARY_ID_DESC"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="CHAR_VALUE"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="UNCONSUMED_FORECAST" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_2_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION_NAME" source="VERSION_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_NAME" source="SCENARIO_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID_DESC" source="PRIMARY_ID_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_VALUE" source="CHAR_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNCONSUMED_FORECAST" source="UNCONSUMED_FORECAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <input node="Join_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DESC" source="PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PROD_DESC" source="REF_PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2_3" cardinality="CN_N" joinType="inner" multiJoinNode="Join_2" multiJoinCentralTable="Join_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PROD_DESC"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="REF_PROD_DESC"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="VERSION_NAME"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="SCENARIO_NAME"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="PRIMARY_ID_DESC"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHAR_NAME"/>
+      <viewAttribute id="CHAR_DESC"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="CHAR_VALUE"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="UNCONSUMED_FORECAST" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$CHAR_NUM$CHAR_NUM"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_2_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DESC" source="PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PROD_DESC" source="REF_PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION_NAME" source="VERSION_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_NAME" source="SCENARIO_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID_DESC" source="PRIMARY_ID_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_VALUE" source="CHAR_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNCONSUMED_FORECAST" source="UNCONSUMED_FORECAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHAR_NUM$CHAR_NUM" source="CHAR_NUM"/>
+    </input>
+    <input node="Aggregation_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NAME" source="CHAR_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_DESC" source="CHAR_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHAR_NUM$CHAR_NUM" source="CHAR_NUM"/>
+    </input>
+    <joinAttribute name="JOIN$CHAR_NUM$CHAR_NUM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" cardinality="CN_N" joinType="inner" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PROD_DESC"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="REF_PROD_DESC"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="VERSION_NAME"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="SCENARIO_NAME"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="PRIMARY_ID_DESC"/>
+      <viewAttribute id="CHAR_TYPE"/>
+      <viewAttribute id="SEQUENCE" aggregationType="sum"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHAR_NAME"/>
+      <viewAttribute id="CHAR_DESC"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="CHAR_VALUE"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="UNCONSUMED_FORECAST" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$REF_PRODID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$CHAR_NUM$CHAR_NUM"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_2_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DESC" source="PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PROD_DESC" source="REF_PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION_NAME" source="VERSION_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_NAME" source="SCENARIO_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NAME" source="CHAR_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_DESC" source="CHAR_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_VALUE" source="CHAR_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNCONSUMED_FORECAST" source="UNCONSUMED_FORECAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID_DESC" source="PRIMARY_ID_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$REF_PRODID$PRODUCT_ID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHAR_NUM$CHAR_NUM" source="CHAR_NUM"/>
+    </input>
+    <input node="CP_VARCHAR_PS">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_TYPE" source="CHAR_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE" source="SEQUENCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$REF_PRODID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHAR_NUM$CHAR_NUM" source="CHAR_NUM"/>
+    </input>
+    <filter>&quot;CHAR_TYPE&quot; = 'P'</filter>
+    <joinAttribute name="JOIN$REF_PRODID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$CHAR_NUM$CHAR_NUM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PROD_DESC"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="REF_PROD_DESC"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="VERSION_NAME"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="SCENARIO_NAME"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="PRIMARY_ID_DESC"/>
+      <viewAttribute id="CHAR_TYPE"/>
+      <viewAttribute id="SEQUENCE" aggregationType="sum"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHAR_NAME"/>
+      <viewAttribute id="CHAR_DESC"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="CHAR_VALUE"/>
+      <viewAttribute id="COLOR_CODE"/>
+      <viewAttribute id="COLOR_NAME"/>
+      <viewAttribute id="COLOR_FAMILY"/>
+      <viewAttribute id="COLORBLIND_RATIONALE"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="UNCONSUMED_FORECAST" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$CHAR_NUM$CHAR_NUM"/>
+      <viewAttribute hidden="true" id="JOIN$CHARVAL_NUM$CHARVAL_NUM"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DESC" source="PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PROD_DESC" source="REF_PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION_NAME" source="VERSION_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_NAME" source="SCENARIO_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_TYPE" source="CHAR_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE" source="SEQUENCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NAME" source="CHAR_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_DESC" source="CHAR_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_VALUE" source="CHAR_VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNCONSUMED_FORECAST" source="UNCONSUMED_FORECAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID_DESC" source="PRIMARY_ID_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHAR_NUM$CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHARVAL_NUM$CHARVAL_NUM" source="CHARVAL_NUM"/>
+    </input>
+    <input node="CV_CHAR_COLOR_CODE">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_CODE" source="COLOR_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_NAME" source="COLOR_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_FAMILY" source="COLOR_FAMILY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLORBLIND_RATIONALE" source="COLORBLIND_RATIONALE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHAR_NUM$CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHARVAL_NUM$CHARVAL_NUM" source="CHARVAL_NUM"/>
+    </input>
+    <joinAttribute name="JOIN$CHAR_NUM$CHAR_NUM"/>
+    <joinAttribute name="JOIN$CHARVAL_NUM$CHARVAL_NUM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_7" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PROD_DESC"/>
+      <viewAttribute id="REF_PRODID"/>
+      <viewAttribute id="REF_PROD_DESC"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="VERSION_NAME"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="SCENARIO_NAME"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="PRIMARY_ID_DESC"/>
+      <viewAttribute id="CHAR_TYPE"/>
+      <viewAttribute id="SEQUENCE" aggregationType="sum"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHAR_NAME"/>
+      <viewAttribute id="CHAR_DESC"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="CHAR_VALUE"/>
+      <viewAttribute id="COLOR_CODE"/>
+      <viewAttribute id="COLOR_NAME"/>
+      <viewAttribute id="COLOR_FAMILY"/>
+      <viewAttribute id="COLORBLIND_RATIONALE"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="UNCONSUMED_FORECAST" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$CHAR_NUM$CHAR_NUM"/>
+      <viewAttribute hidden="true" id="JOIN$CHARVAL_NUM$CHARVAL_NUM"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PROD_DESC" source="PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PRODID" source="REF_PRODID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="REF_PROD_DESC" source="REF_PROD_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION_NAME" source="VERSION_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO_NAME" source="SCENARIO_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID_DESC" source="PRIMARY_ID_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_TYPE" source="CHAR_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SEQUENCE" source="SEQUENCE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NAME" source="CHAR_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_DESC" source="CHAR_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_CODE" source="COLOR_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_NAME" source="COLOR_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLOR_FAMILY" source="COLOR_FAMILY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COLORBLIND_RATIONALE" source="COLORBLIND_RATIONALE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="CIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNCONSUMED_FORECAST" source="UNCONSUMED_FORECAST"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHAR_NUM$CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHARVAL_NUM$CHARVAL_NUM" source="CHARVAL_NUM"/>
+    </input>
+    <input node="Aggregation_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_VALUE" source="CHARVAL_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHAR_NUM$CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHARVAL_NUM$CHARVAL_NUM" source="CHARVAL_NUM"/>
+    </input>
+    <joinAttribute name="JOIN$CHAR_NUM$CHAR_NUM"/>
+    <joinAttribute name="JOIN$CHARVAL_NUM$CHARVAL_NUM"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_7">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Join_7" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Join_7" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="PROD_DESC" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PROD_DESC"/>
+      <keyMapping columnObjectName="Join_7" columnName="PROD_DESC"/>
+    </attribute>
+    <attribute id="REF_PRODID" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REF_PRODID"/>
+      <keyMapping columnObjectName="Join_7" columnName="REF_PRODID"/>
+    </attribute>
+    <attribute id="REF_PROD_DESC" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="REF_PROD_DESC"/>
+      <keyMapping columnObjectName="Join_7" columnName="REF_PROD_DESC"/>
+    </attribute>
+    <attribute id="MODEL_VERSION" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MODEL_VERSION"/>
+      <keyMapping columnObjectName="Join_7" columnName="MODEL_VERSION"/>
+    </attribute>
+    <attribute id="VERSION" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VERSION"/>
+      <keyMapping columnObjectName="Join_7" columnName="VERSION"/>
+    </attribute>
+    <attribute id="VERSION_NAME" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VERSION_NAME"/>
+      <keyMapping columnObjectName="Join_7" columnName="VERSION_NAME"/>
+    </attribute>
+    <attribute id="SCENARIO" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCENARIO"/>
+      <keyMapping columnObjectName="Join_7" columnName="SCENARIO"/>
+    </attribute>
+    <attribute id="SCENARIO_NAME" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCENARIO_NAME"/>
+      <keyMapping columnObjectName="Join_7" columnName="SCENARIO_NAME"/>
+    </attribute>
+    <attribute id="PRIMARY_ID" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRIMARY_ID"/>
+      <keyMapping columnObjectName="Join_7" columnName="PRIMARY_ID"/>
+    </attribute>
+    <attribute id="PRIMARY_ID_DESC" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRIMARY_ID_DESC"/>
+      <keyMapping columnObjectName="Join_7" columnName="PRIMARY_ID_DESC"/>
+    </attribute>
+    <attribute id="CHAR_TYPE" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_TYPE"/>
+      <keyMapping columnObjectName="Join_7" columnName="CHAR_TYPE"/>
+    </attribute>
+    <attribute id="SEQUENCE" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SEQUENCE"/>
+      <keyMapping columnObjectName="Join_7" columnName="SEQUENCE"/>
+    </attribute>
+    <attribute id="CHAR_NUM" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NUM"/>
+      <keyMapping columnObjectName="Join_7" columnName="CHAR_NUM"/>
+    </attribute>
+    <attribute id="CHAR_NAME" order="16" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NAME"/>
+      <keyMapping columnObjectName="Join_7" columnName="CHAR_NAME"/>
+    </attribute>
+    <attribute id="CHAR_DESC" order="17" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_DESC"/>
+      <keyMapping columnObjectName="Join_7" columnName="CHAR_DESC"/>
+    </attribute>
+    <attribute id="CHARVAL_NUM" order="18" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_NUM"/>
+      <keyMapping columnObjectName="Join_7" columnName="CHARVAL_NUM"/>
+    </attribute>
+    <attribute id="CHAR_VALUE" order="19" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_VALUE"/>
+      <keyMapping columnObjectName="Join_7" columnName="CHAR_VALUE"/>
+    </attribute>
+    <attribute id="COLOR_CODE" order="20" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COLOR_CODE"/>
+      <keyMapping columnObjectName="Join_7" columnName="COLOR_CODE"/>
+    </attribute>
+    <attribute id="COLOR_NAME" order="21" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COLOR_NAME"/>
+      <keyMapping columnObjectName="Join_7" columnName="COLOR_NAME"/>
+    </attribute>
+    <attribute id="COLOR_FAMILY" order="22" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COLOR_FAMILY"/>
+      <keyMapping columnObjectName="Join_7" columnName="COLOR_FAMILY"/>
+    </attribute>
+    <attribute id="COLORBLIND_RATIONALE" order="23" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COLORBLIND_RATIONALE"/>
+      <keyMapping columnObjectName="Join_7" columnName="COLORBLIND_RATIONALE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="CIR_QTY" order="24" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CIR_QTY"/>
+      <measureMapping columnObjectName="Join_7" columnName="CIR_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="ACTUAL_QTY" order="25" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ACTUAL_QTY"/>
+      <measureMapping columnObjectName="Join_7" columnName="ACTUAL_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="UNCONSUMED_FORECAST" order="26" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="UNCONSUMED_FORECAST"/>
+      <measureMapping columnObjectName="Join_7" columnName="UNCONSUMED_FORECAST"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="398" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="263" y="1376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="1006"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="513" y="846"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="CP_PARTIALPROD_INTRO" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="217"/>
+    </shape>
+    <shape modelObjectName="CP_PRODUCT" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="203"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="473" y="1271"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="490" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="263" y="1271"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="864"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_6" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="347" y="1111"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="252"/>
+    </shape>
+    <shape modelObjectName="Aggregation_3" modelObjectNameSpace="Join_6" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="178"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="347" y="1006"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="307" y="536"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_2_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape>
+    <shape modelObjectName="CP_VARCHAR_PS" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="175"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="280" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_4" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="232"/>
+    </shape>
+    <shape modelObjectName="CV_CHAR_COLOR_CODE" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="225"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_7" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="398" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_5" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="252"/>
+    </shape>
+    <shape modelObjectName="Aggregation_5" modelObjectNameSpace="Join_7" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="193"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="303" y="849"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="CP_UNIQUE_ID_ITEM" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="188"/>
+    </shape>
+    <shape modelObjectName="CP_UNIQUE_ID_HEADER" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="210"/>
+    </shape>
+    <shape modelObjectName="Aggregation_4" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="11" y="253"/>
+      <rectangleSize width="252"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="307" y="676"/>
+      <rectangleSize height="30" width="160"/>
+    </shape><shape><upperLeftCorner/><rectangleSize/></shape>
+    <shape modelObjectName="Aggregation_2" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_2">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="155"/>
+    </shape>
+    <shape modelObjectName="Join_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_2">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Join_1_2" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_2">
+      <upperLeftCorner x="920" y="30"/>
+      <rectangleSize width="250"/>
+    </shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape><shape><upperLeftCorner/><rectangleSize/></shape>
+    <shape modelObjectName="CP_IBPVERSIONSCENARIO" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_2">
+      <upperLeftCorner x="620" y="195"/>
+      <rectangleSize width="224"/>
+    </shape></shapes>
+</layout>
+</Calculation:scenario>

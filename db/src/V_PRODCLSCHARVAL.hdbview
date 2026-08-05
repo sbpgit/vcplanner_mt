@@ -1,0 +1,54 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_PRODCLSCHARVAL
+-- Description:     Get products, location and class  details
+-- Join Details:    A: CP_PRODUCT_CLASS -  Product class master data
+--                  B: V_CLASSCHARVAL - View for class, characteristics and its values
+-----------------------------------------------------------------------------------------
+-- VIEW "V_PRODCLSCHARVAL"
+-- AS SELECT distinct A.PRODUCT_ID,
+--           A.CLASS_NUM,
+--           B.CLASS_NAME,
+--           B.CLASS_DESC,
+--           B.IBPCHAR_CHK,
+--           B.CHAR_NUM,
+--           B.CHAR_NAME,
+--           B.CHAR_DESC,
+--           B.CHARVAL_NUM,
+--           B.CHAR_VALUE,
+--           B.CHARVAL_DESC,
+--           B.MULTI_CHAR,
+--           B.REF_CHAR_NUM,
+--           B.REF_CHAR_NAME,
+--           B.REF_CHAR_DESC,
+--           B.REF_CHAR_VALUE
+--     FROM  CP_PRODUCT_CLASS AS A
+--     INNER JOIN "V_CLASSCHARVAL" AS B
+--     ON A.CLASS_NUM = B.CLASS_NUM;
+
+--Changed by Pradeep 01/11/2024 adding Char_type
+    VIEW "V_PRODCLSCHARVAL"
+AS SELECT distinct A.PRODUCT_ID,
+          A.CLASS_NUM,
+          B.CLASS_NAME,
+          B.CLASS_DESC,
+          B.IBPCHAR_CHK,
+          B.CHAR_NUM,
+          C.CHAR_TYPE,
+          B.CHAR_NAME,
+          B.CHAR_DESC,
+          B.CHARVAL_NUM,
+          B.CHAR_VALUE,
+          B.CHARVAL_DESC,
+          B.MULTI_CHAR,
+          B.REF_CHAR_NUM,
+          B.REF_CHAR_NAME,
+          B.REF_CHAR_DESC,
+          B.REF_CHAR_VALUE,
+          B.GENFLAG
+    FROM  CP_PRODUCT_CLASS AS A
+    INNER JOIN "V_CLASSCHARVAL" AS B
+    ON A.CLASS_NUM = B.CLASS_NUM    
+    LEFT OUTER JOIN "CP_VARCHAR_PS" AS C
+    ON B.CHAR_NUM = C.CHAR_NUM
+    AND A.PRODUCT_ID = C.PRODUCT_ID
+    ORDER BY PRODUCT_ID,CHAR_NUM;

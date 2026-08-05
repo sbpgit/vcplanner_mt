@@ -1,0 +1,35 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_OBDHDR_M
+-- Description:     Get BOM objectdependency rules and its characteristics
+-- Join Details:    A: CP_BOM_DEP -  object dependency rules
+--                  B: V_BOMOD_DEMDFACLOC_M - BOM object dependency
+-----------------------------------------------------------------------------------------
+VIEW "V_OBDHDR_M"
+AS SELECT  
+B.LOCATION_ID,
+B.PRODUCT_ID,
+B.ITEM_NUM,
+B.COMPONENT,
+B.COMP_QTY,
+A.DEPENDENCY AS OBJ_DEP,
+B.OBJDEP_DESC,
+A.CHAR_NUM,
+A.CHAR_VAL AS CHARVAL_NUM,
+A.CHAR_VAL AS CHAR_VALUE,
+A.OD_CONDITION,
+A.DEP_COUNTER AS OBJ_COUNTER,
+A.CHAR_COUNTER,
+A.ROW_ID,
+B.OD_VALID_FROM,
+B.OD_VALID_TO,
+B.VALID_FROM,
+B.VALID_TO,
+C.CLASS_NUM
+FROM CP_BOM_DEP  AS A
+INNER JOIN V_BOMOD_DEMDFACLOC_M AS B ON ( A.DEPENDENCY = B.OBJ_DEP )
+LEFT OUTER JOIN CP_OBJDEP_HEADER AS C
+ON A.DEPENDENCY = C.OBJ_DEP
+AND A.DEP_COUNTER = C.OBJ_COUNTER
+AND A.CHAR_NUM = C.CHAR_NUM
+AND A.CHAR_VAL = C.CHAR_VALUE 
+AND A.CHAR_COUNTER = C.CHAR_COUNTER

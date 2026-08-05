@@ -1,0 +1,29 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_PRODCOMPDESC
+-- Description:     Product data with Description
+-- Join Details:    A: CP_LOCATION_PRODUCT -  Location Product
+--                  B: CP_PARTIALPROD_INTRO - Product
+--                  C: CP_ASSEMBLY_COMP - Assembly Component
+--                  D: CP_BOMHEADER - BOM Header
+-----------------------------------------------------------------------------------------
+VIEW "V_PRODCOMPDESC" AS
+SELECT DISTINCT
+A.PRODUCT_ID,
+A.PROD_DESC
+FROM CP_PARTIALPROD_INTRO AS A
+INNER JOIN CP_LOCATION_PRODUCT AS B
+ON A.PRODUCT_ID = B.PRODUCT_ID 
+UNION
+SELECT DISTINCT
+C.COMPONENT AS PRODUCT_ID,
+C.COMP_DESC AS PROD_DESC
+FROM CP_ASSEMBLY_COMP AS C
+INNER JOIN CP_LOCATION_PRODUCT AS D
+ON C.COMPONENT = D.PRODUCT_ID
+UNION
+SELECT DISTINCT
+E.COMPONENT AS PRODUCT_ID,
+E.COMP_DESC AS PROD_DESC
+FROM CP_BOMHEADER AS E
+INNER JOIN CP_LOCATION_PRODUCT AS F
+ON E.COMPONENT = F.PRODUCT_ID;

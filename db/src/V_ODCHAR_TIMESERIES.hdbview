@@ -1,0 +1,54 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_ODCHAR_TIMESERIES
+-- Description:     Get timeseries for Object dependency characteristics - History
+-- Join Details:    V_ORD_COUNT -  Get order count for a location- product on weekly 
+--                  V_OBDHDR - BOM object dependency rules
+--                  V_ORDCHAR - Product master table
+-----------------------------------------------------------------------------------------
+VIEW "V_ODCHAR_TIMESERIES"
+AS  
+SELECT  "V_ORD_COUNT"."WEEK_DATE" as "CAL_DATE",
+		"V_ORD_COUNT"."LOCATION_ID", 
+		"V_ORD_COUNT"."PRODUCT_ID", 
+		'OD' as "OBJ_TYPE", 
+		"V_OBDHDR"."OBJ_DEP", 
+		"V_OBDHDR"."OBJ_COUNTER", 
+		"V_OBDHDR"."ROW_ID", 
+		CASE
+		WHEN SUM("V_ORDCHAR"."ORD_QTY") > 0 THEN
+		 ROUND(SUM("V_ORDCHAR"."ORD_QTY"),0)
+		ELSE
+		0
+		END AS SUCCESS,
+		CASE
+		WHEN SUM("V_ORDCHAR"."ORD_QTY")/"V_ORD_COUNT"."ORD_QTY" > 0 THEN
+		ROUND((SUM("V_ORDCHAR"."ORD_QTY")/"V_ORD_COUNT"."ORD_QTY" * 100),2)
+		ELSE
+		0
+		END AS SUCCESS_RATE
+FROM 
+	V_ORD_COUNT
+	INNER JOIN
+	V_OBDHDR
+	ON "V_ORD_COUNT"."LOCATION_ID" = "V_OBDHDR"."LOCATION_ID"
+   AND "V_ORD_COUNT"."PRODUCT_ID"  = "V_OBDHDR"."PRODUCT_ID"
+	LEFT OUTER JOIN
+	V_ORDCHAR
+	ON      "V_ORD_COUNT"."LOCATION_ID" = "V_ORDCHAR"."LOCATION_ID"
+		AND "V_ORD_COUNT"."PRODUCT_ID" = "V_ORDCHAR"."PRODUCT_ID"
+		AND "V_ORD_COUNT"."WEEK_DATE" = "V_ORDCHAR"."WEEK_DATE"
+		AND "V_OBDHDR"."OBJ_DEP" = "V_ORDCHAR"."OBJ_DEP"
+		AND "V_OBDHDR"."OBJ_COUNTER" = "V_ORDCHAR"."OBJ_COUNTER"
+		AND "V_OBDHDR"."ROW_ID" = "V_ORDCHAR"."ROW_ID"
+		and "V_OBDHDR"."CHAR_COUNTER" = "V_ORDCHAR"."CHAR_COUNTER"
+		AND "V_OBDHDR"."CHARVAL_NUM" = "V_ORDCHAR"."CHARVAL_NUM"
+		AND "V_ORDCHAR"."SUCCESS" = 'S'
+	GROUP BY  "V_ORD_COUNT"."WEEK_DATE",
+		"V_ORD_COUNT"."LOCATION_ID", 
+		"V_ORD_COUNT"."PRODUCT_ID", 
+		'OD', 
+		"V_OBDHDR"."OBJ_DEP", 
+		"V_OBDHDR"."OBJ_COUNTER", 
+		"V_OBDHDR"."ROW_ID", 
+		"V_ORD_COUNT"."ORD_QTY";
+

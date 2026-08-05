@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_OPTION_PERCENTAGE" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_OPTION_PERCENTAGE"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_IBP_FCHARPLAN">
+    <resourceUri>CP_IBP_FCHARPLAN</resourceUri>
+  </DataSource>
+  <DataSource id="CP_PAL_FCHARPLAN">
+    <resourceUri>CP_PAL_FCHARPLAN</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="CHAR_NUM"/>
+      <viewAttribute id="CHARVAL_NUM"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="TYPE" aggregationType="sum"/>
+      <viewAttribute id="EFF_OPT_PERCENT" aggregationType="sum"/>
+      <viewAttribute id="EFF_OPT_QTY" aggregationType="sum"/>
+      <viewAttribute id="STAT_OPT_PERCENT" aggregationType="sum"/>
+      <viewAttribute id="STAT_OPT_QTY" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$CHARVAL_NUM$CHARVAL_NUM"/>
+      <viewAttribute hidden="true" id="JOIN$VERSION$VERSION"/>
+      <viewAttribute hidden="true" id="JOIN$SCENARIO$SCENARIO"/>
+      <viewAttribute hidden="true" id="JOIN$MODEL_VERSION$MODEL_VERSION"/>
+      <viewAttribute hidden="true" id="JOIN$WEEK_DATE$WEEK_DATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_IBP_FCHARPLAN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHAR_NUM" source="CHAR_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EFF_OPT_PERCENT" source="OPT_PERCENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="EFF_OPT_QTY" source="OPT_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHARVAL_NUM$CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VERSION$VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCENARIO$SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MODEL_VERSION$MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+    </input>
+    <input node="CP_PAL_FCHARPLAN">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_OPT_PERCENT" source="OPT_PERCENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="STAT_OPT_QTY" source="OPT_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="TYPE" source="TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CHARVAL_NUM$CHARVAL_NUM" source="CHARVAL_NUM"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$VERSION$VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SCENARIO$SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MODEL_VERSION$MODEL_VERSION" source="MODEL_VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+    </input>
+    <filter>&quot;TYPE&quot; = 1</filter>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$CHARVAL_NUM$CHARVAL_NUM"/>
+    <joinAttribute name="JOIN$VERSION$VERSION"/>
+    <joinAttribute name="JOIN$SCENARIO$SCENARIO"/>
+    <joinAttribute name="JOIN$MODEL_VERSION$MODEL_VERSION"/>
+    <joinAttribute name="JOIN$WEEK_DATE$WEEK_DATE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_1">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Join_1" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Join_1" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="CUSTOMER_GROUP" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_GROUP"/>
+      <keyMapping columnObjectName="Join_1" columnName="CUSTOMER_GROUP"/>
+    </attribute>
+    <attribute id="CHAR_NUM" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NUM"/>
+      <keyMapping columnObjectName="Join_1" columnName="CHAR_NUM"/>
+    </attribute>
+    <attribute id="CHARVAL_NUM" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHARVAL_NUM"/>
+      <keyMapping columnObjectName="Join_1" columnName="CHARVAL_NUM"/>
+    </attribute>
+    <attribute id="MODEL_VERSION" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MODEL_VERSION"/>
+      <keyMapping columnObjectName="Join_1" columnName="MODEL_VERSION"/>
+    </attribute>
+    <attribute id="VERSION" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VERSION"/>
+      <keyMapping columnObjectName="Join_1" columnName="VERSION"/>
+    </attribute>
+    <attribute id="SCENARIO" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCENARIO"/>
+      <keyMapping columnObjectName="Join_1" columnName="SCENARIO"/>
+    </attribute>
+    <attribute id="WEEK_DATE" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_DATE"/>
+      <keyMapping columnObjectName="Join_1" columnName="WEEK_DATE"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="EFF_OPT_PERCENT" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="OPT_PERCENT"/>
+      <measureMapping columnObjectName="Join_1" columnName="EFF_OPT_PERCENT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="EFF_OPT_QTY" order="11" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="OPT_QTY"/>
+      <measureMapping columnObjectName="Join_1" columnName="EFF_OPT_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="STAT_OPT_PERCENT" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="OPT_PERCENT"/>
+      <measureMapping columnObjectName="Join_1" columnName="STAT_OPT_PERCENT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="STAT_OPT_QTY" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="OPT_QTY"/>
+      <measureMapping columnObjectName="Join_1" columnName="STAT_OPT_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="92" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="CP_IBP_FCHARPLAN" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="188.681640625"/>
+    </shape>
+    <shape modelObjectName="CP_PAL_FCHARPLAN" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="195.19970703125"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

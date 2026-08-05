@@ -1,0 +1,12 @@
+PARAMETER;DESCRIPTION;PARAMETER_VALUE;TYPE;CREATED_DATE;CREATED_BY;CREATED_TIME;CHANGED_DATE;CHANGED_BY;CHANGED_TIME
+PARALLEL_JOBS;Parallel Jobs Execution in Job Scheduler;1;I;;;;;;
+MAX_SNAPSHOT;Maximum Number of Snapshots allowed;104;I;;;;;;
+CRITICAL_ASSEMBLY;Mark Assemblies and Components as Critical;Yes;C;;;;;;
+MULTILEVEL_CONFIGPRODUCT;Process Multilevel Configurable Product;Yes;C;;;;;;
+TIMEZONE;Preferred Timezone for Jobs Execution;(UTC+05:30);S;;;;;;
+MAP_CHARVALUE_CHARVALNUM;Map Characteristic Internal Number with Characteristic Value;No;C;;;;;;
+UNIQUE_ID;Unique Id Value;;I;;;;;;
+MAX_RECORDS;Maximum Number Of Records;30000;I;;;;;;
+IBP_OPTION_PERCENT;Import IBP Option Percent;Yes;C;;;;;;
+LAGS;Number of Calendar month Lags;4;I;;;;;;
+DERIVED_CHAR_LIMIT;Number of supported Char;10;X;;;;;;

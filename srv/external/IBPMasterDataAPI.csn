@@ -1,0 +1,3274 @@
+{
+  "meta": {
+    "creator": "cds-dk 4.9.2"
+  },
+  "$version": "2.0",
+  "definitions": {
+    "IBPMasterDataAPI": {
+      "kind": "service",
+      "@cds.external": true,
+      "@m.IsDefaultEntityContainer": "true",
+      "@sap.supported.formats": "atom json xlsx pdf"
+    },
+    "IBPMasterDataAPI.Commit": {
+      "kind": "function",
+      "params": {
+        "P_TransactionID": {
+          "type": "cds.LargeString"
+        }
+      },
+      "returns": {
+        "type": "IBPMasterDataAPI.ValueResultSet"
+      }
+    },
+    "IBPMasterDataAPI.GetExportResult": {
+      "kind": "function",
+      "params": {
+        "P_TransactionID": {
+          "type": "cds.LargeString"
+        }
+      },
+      "returns": {
+        "items": {
+          "type": "IBPMasterDataAPI.ValueResultSet"
+        }
+      }
+    },
+    "IBPMasterDataAPI.GetTransactionID": {
+      "kind": "function",
+      "returns": {
+        "type": "IBPMasterDataAPI.ValueResultSet"
+      }
+    },
+    "IBPMasterDataAPI.ValueResultSet": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.addressable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "Name": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.unicode": "false",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "Value": {
+          "type": "cds.LargeString",
+          "@sap.unicode": "false",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VersionSpecificMasterDataTypes": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.pageable": "false",
+      "@sap.addressable": "false",
+      "@sap.content.version": "1",
+      "elements": {
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.unicode": "false",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.unicode": "false",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "MasterDataTypeID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.unicode": "false",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "PlanningAreaDescr": {
+          "type": "cds.LargeString",
+          "@sap.unicode": "false",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        },
+        "VersionName": {
+          "type": "cds.LargeString",
+          "@sap.unicode": "false",
+          "@sap.creatable": "false",
+          "@sap.updatable": "false",
+          "@sap.sortable": "false",
+          "@sap.filterable": "false"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPSOURCECUSTOMER": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Compound",
+      "elements": {
+        "PRDID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Product ID"
+        },
+        "CUSTID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Customer ID"
+        },
+        "LOCID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Location ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "RATIOTS": {
+          "type": "cds.LargeString",
+          "@sap.label": "Time Series Transportation Sourcing Indicator"
+        },
+        "CLEADTIME": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Customer Transportation LeadTime"
+        },
+        "FCSTCONSMODE": {
+          "type": "cds.Integer",
+          "@sap.label": "Forecast Consumption Mode"
+        },
+        "CRATIO": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Customer Sourcing Ratio"
+        },
+        "CINVALID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Source Invalid"
+        },
+        "MATTRSOURCECUSTOMER": {
+          "type": "cds.LargeString",
+          "@sap.label": "Mandatory Attribute Source Customer"
+        },
+        "CROUNDING": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Lot-Size Rounding Value for Customer Receipts"
+        },
+        "TIMESERIESPROPERTY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Time Series Property"
+        },
+        "CBALANCERECEIPTSCOPE": {
+          "type": "cds.Integer",
+          "@sap.label": "Customer Source Balance Receipt Scope"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPSOURCECUSTOMERTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPSOURCECUSTOMER": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPSOURCECUSTOMER",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPSOURCECUSTOMERMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPSOURCECUSTOMER": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPSOURCECUSTOMER",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCUSTOMER": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "CUSTID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Customer ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "CUSTCHANNEL": {
+          "type": "cds.LargeString",
+          "@sap.label": "Channel"
+        },
+        "CUSTSALESREP": {
+          "type": "cds.LargeString",
+          "@sap.label": "Sales Rep."
+        },
+        "CUSTDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Desc."
+        },
+        "GEOLONGITUDE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Geo Longitude"
+        },
+        "CUSTIDDISPLAY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer ID Display"
+        },
+        "CUSTREGION": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Region"
+        },
+        "CUSTSALESVP": {
+          "type": "cds.LargeString",
+          "@sap.label": "Sales VP"
+        },
+        "CUSTGROUP": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Group / Segment"
+        },
+        "CUSTBUPAID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Business Partner ID"
+        },
+        "CUSTVALID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Validity"
+        },
+        "GEOLATITUDE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Geo Latitude"
+        },
+        "CUSTCOUNTRY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Country/Region"
+        },
+        "KEYACCOUNT": {
+          "type": "cds.LargeString",
+          "@sap.label": "Key Account (Y/N)"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCUSTOMERTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPCUSTOMER": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPCUSTOMER",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCUSTOMERMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPCUSTOMER": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPCUSTOMER",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPPRODUCT": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "PRDID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Product ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VCPRODATT04": {
+          "type": "cds.LargeString",
+          "@sap.label": "Body Code"
+        },
+        "VCMODELRANGE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Model Range"
+        },
+        "ABCDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "ABC Desc"
+        },
+        "XYZID": {
+          "type": "cds.LargeString",
+          "@sap.label": "XYZ Code"
+        },
+        "VCBUILDSTRAT": {
+          "type": "cds.LargeString",
+          "@sap.label": "Build Strategy"
+        },
+        "ABCID": {
+          "type": "cds.LargeString",
+          "@sap.label": "ABC Code"
+        },
+        "PRDSUBFAMILY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Product Subfamily"
+        },
+        "ABCXYZCOUNTERHELPER": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "ABCXYZCOUNTERHELPER"
+        },
+        "PLMSTATUS": {
+          "type": "cds.LargeString",
+          "@sap.label": "PLM Status"
+        },
+        "UOMDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Base UOM Desc."
+        },
+        "CATEGORY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Category"
+        },
+        "VCPRODATT07": {
+          "type": "cds.LargeString",
+          "@sap.label": "Market Code"
+        },
+        "PRDFAMILY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Product Family"
+        },
+        "VCPRODATT03": {
+          "type": "cds.LargeString",
+          "@sap.label": "Sales Version"
+        },
+        "VCPN012": {
+          "type": "cds.LargeString",
+          "@sap.label": "PN012"
+        },
+        "PRDGROUP": {
+          "type": "cds.LargeString",
+          "@sap.label": "Product Group"
+        },
+        "VCPRODATT05": {
+          "type": "cds.LargeString",
+          "@sap.label": "Transmission"
+        },
+        "QUICKTURNMARKET": {
+          "type": "cds.LargeString",
+          "@sap.label": "Quick Turn Market Available"
+        },
+        "ITEMTYPECATEGORY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Item Type Category Indicator"
+        },
+        "UOMID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Base UOM"
+        },
+        "XYZLOCKED": {
+          "type": "cds.LargeString",
+          "@sap.label": "XYZ Locked"
+        },
+        "VCMODEL": {
+          "type": "cds.LargeString",
+          "@sap.label": "Model"
+        },
+        "VCBUILDSTRATDESC": {
+          "type": "cds.LargeString",
+          "@sap.label": "Build Strategy Desc"
+        },
+        "VCPRODATT02": {
+          "type": "cds.LargeString",
+          "@sap.label": "Engine Code"
+        },
+        "MATTYPEID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Material Type ID"
+        },
+        "VCPRODATT06": {
+          "type": "cds.LargeString",
+          "@sap.label": "Steering Position"
+        },
+        "ABCLOCKED": {
+          "type": "cds.LargeString",
+          "@sap.label": "ABC Locked"
+        },
+        "VCPRODATT01": {
+          "type": "cds.LargeString",
+          "@sap.label": "Main Type Code"
+        },
+        "XYZDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "XYZ Desc"
+        },
+        "PRDDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Product Desc"
+        },
+        "BRAND": {
+          "type": "cds.LargeString",
+          "@sap.label": "Brand ID"
+        },
+        "PRDSERIES": {
+          "type": "cds.LargeString",
+          "@sap.label": "Product Series"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPPRODUCTTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPPRODUCT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPPRODUCT",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPPRODUCTMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPPRODUCT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPPRODUCT",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTLOCATIONPRODUCT": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Compound",
+      "elements": {
+        "PRDID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Product ID"
+        },
+        "LOCID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Location ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "PLUNITID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Subnetwork ID"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTLOCATIONPRODUCTTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTLOCATIONPRODUCT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTLOCATIONPRODUCT",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTLOCATIONPRODUCTMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTLOCATIONPRODUCT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTLOCATIONPRODUCT",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCURRENCY": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "CURRID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Currency ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "CURRDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Currency Desc."
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCURRENCYTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPCURRENCY": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPCURRENCY",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCURRENCYMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPCURRENCY": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPCURRENCY",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTCOMPONENT": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Reference",
+      "elements": {
+        "PRDFR": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Component Product ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "PRDFRSUBFAMILY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Component Sub Family"
+        },
+        "PRDFRFAMILY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Component Family"
+        },
+        "PRDFRDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Component Desc."
+        },
+        "PRDFRSERIES": {
+          "type": "cds.LargeString",
+          "@sap.label": "Component Series"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCRESTRICTION": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Compound",
+      "elements": {
+        "LOCID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Location ID"
+        },
+        "VCRESTRICTIONID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Restriction ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VCPLACEHOLDER": {
+          "type": "cds.LargeString",
+          "@sap.label": "VC Place Holder"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCRESTRICTIONTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPLOCRESTRICTION": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPLOCRESTRICTION",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCRESTRICTIONMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPLOCRESTRICTION": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPLOCRESTRICTION",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCOMPONENT": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Reference",
+      "elements": {
+        "PRDFR": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Component Product ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "PRDFRDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Component Desc."
+        },
+        "PRDFRSUBFAMILY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Component Sub Family"
+        },
+        "PRDFRFAMILY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Component Family"
+        },
+        "PRDFRSERIES": {
+          "type": "cds.LargeString",
+          "@sap.label": "Component Series"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTLOCATION": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "LOCID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Location ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "PROFILESETID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Buffer profile set ID for creating multiple buffer profiles"
+        },
+        "LOCREGION": {
+          "type": "cds.LargeString",
+          "@sap.label": "Location Region"
+        },
+        "LOCTYPE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Location Type"
+        },
+        "LOCDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Location"
+        },
+        "LOCBUPAID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Location Business Partner ID"
+        },
+        "GEOLATITUDE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Geo Latitude"
+        },
+        "GEOLONGITUDE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Geo Longitude"
+        },
+        "HOLDINGCOSTPCT": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Holding Cost Percentage"
+        },
+        "LOCVALID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Location Validity"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTLOCATIONTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTLOCATION": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTLOCATION",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTLOCATIONMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTLOCATION": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTLOCATION",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCLASS": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "VCCHAR": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic ID"
+        },
+        "VCCHARVALUE": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic value ID"
+        },
+        "VCCLASS": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Class ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VCFLEX3": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Flex 3 %"
+        },
+        "VCCHARNAME": {
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic"
+        },
+        "VCCHARTYPE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic Type"
+        },
+        "VCCHARPRIORITY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic Priority"
+        },
+        "VCFLEX3HORIZON": {
+          "type": "cds.Integer",
+          "@sap.label": "Horizon for Flex 3"
+        },
+        "VCFLEX2": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Flex 2 %"
+        },
+        "VCCHARGROUP": {
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic Group"
+        },
+        "VCCLASSNAME": {
+          "type": "cds.LargeString",
+          "@sap.label": "Class"
+        },
+        "VCFLEX2HORIZON": {
+          "type": "cds.Integer",
+          "@sap.label": "Horizon for Flex 2"
+        },
+        "VCCHARVALUENAME": {
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic value"
+        },
+        "VCSORTCHARVALUE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Sort Characteristic Value"
+        },
+        "VCSORTCHAR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Sort Characteristic"
+        },
+        "VCFLEX1HORIZON": {
+          "type": "cds.Integer",
+          "@sap.label": "Horizon for Flex 1"
+        },
+        "VCFLEX1": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Flex 1 %"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCLASSTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPCLASS": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPCLASS",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCLASSMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPCLASS": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPCLASS",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPFORECASTCONSUMPTIONMODE": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "FCSTCONSMODE": {
+          "key": true,
+          "type": "cds.Integer",
+          "@sap.label": "Forecast Consumption Mode"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "SALESORDERSEQUENCEID": {
+          "type": "cds.Integer",
+          "@sap.label": "Sales Order Consumption Sequence"
+        },
+        "BOUNDARYID": {
+          "type": "cds.Integer",
+          "@sap.label": "Boundary"
+        },
+        "DIRECTIONID": {
+          "type": "cds.Integer",
+          "@sap.label": "Direction of the Forecast Consumption"
+        },
+        "BACKWARDPERIODS": {
+          "type": "cds.Integer",
+          "@sap.label": "Number of Backward Consumption Periods"
+        },
+        "DIRECTIONDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Direction Description"
+        },
+        "FORWARDPERIODS": {
+          "type": "cds.Integer",
+          "@sap.label": "Number of Forward Consumption Periods"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPFORECASTCONSUMPTIONMODETrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPFORECASTCONSUMPTIONMODE": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPFORECASTCONSUMPTIONMODE",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPFORECASTCONSUMPTIONMODEMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPFORECASTCONSUMPTIONMODE": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPFORECASTCONSUMPTIONMODE",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTCLASS": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "VCCLASS": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Class ID"
+        },
+        "VCCHAR": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic ID"
+        },
+        "VCCHARVALUE": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic value ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VCCHARPRIORITY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic Priority"
+        },
+        "VCFLEX3HORIZON": {
+          "type": "cds.Integer",
+          "@sap.label": "Horizon for Flex 3"
+        },
+        "VCCHARVALUENAME": {
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic value"
+        },
+        "VCSORTCHARVALUE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Sort Characteristic Value"
+        },
+        "VCSORTCHAR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Sort Characteristic"
+        },
+        "VCFLEX3": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Flex 3 %"
+        },
+        "VCCHARNAME": {
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic"
+        },
+        "VCCHARTYPE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic Type"
+        },
+        "VCFLEX2HORIZON": {
+          "type": "cds.Integer",
+          "@sap.label": "Horizon for Flex 2"
+        },
+        "VCFLEX2": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Flex 2 %"
+        },
+        "VCFLEX1": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Flex 1 %"
+        },
+        "VCCLASSNAME": {
+          "type": "cds.LargeString",
+          "@sap.label": "Class"
+        },
+        "VCCHARGROUP": {
+          "type": "cds.LargeString",
+          "@sap.label": "Characteristic Group"
+        },
+        "VCFLEX1HORIZON": {
+          "type": "cds.Integer",
+          "@sap.label": "Horizon for Flex 1"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTCLASSTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTCLASS": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTCLASS",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTCLASSMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTCLASS": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTCLASS",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCPRODCOMPONENT": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Compound",
+      "elements": {
+        "LOCID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Location ID"
+        },
+        "PRDFR": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Component Product ID"
+        },
+        "PRDID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Product ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VCSTRUCTURENODE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Structure Node"
+        },
+        "FCSTCONSMODE": {
+          "type": "cds.Integer",
+          "@sap.label": "Forecast Consumption Mode"
+        },
+        "COMPONENTCOEFFICIENT": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Component Coefficient"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCPRODCOMPONENTTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPLOCPRODCOMPONENT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPLOCPRODCOMPONENT",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCPRODCOMPONENTMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPLOCPRODCOMPONENT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPLOCPRODCOMPONENT",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTCURRENCY": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "CURRID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Currency ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "CURRDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Currency Desc."
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTCURRENCYTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTCURRENCY": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTCURRENCY",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTCURRENCYMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTCURRENCY": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTCURRENCY",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPRESTRICTION": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "VCRESTRICTIONID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Restriction ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VCRESTRICTIONTYPE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Restriction type"
+        },
+        "VCRESTRICTIONDESC": {
+          "type": "cds.LargeString",
+          "@sap.label": "Restriction Desc"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPRESTRICTIONTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPRESTRICTION": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPRESTRICTION",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPRESTRICTIONMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPRESTRICTION": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPRESTRICTION",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTCUSTOMER": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "CUSTID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Customer ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "CUSTCOUNTRY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Country/Region"
+        },
+        "KEYACCOUNT": {
+          "type": "cds.LargeString",
+          "@sap.label": "Key Account (Y/N)"
+        },
+        "CUSTDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Desc."
+        },
+        "CUSTREGION": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Region"
+        },
+        "CUSTGROUP": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Group / Segment"
+        },
+        "CUSTSALESREP": {
+          "type": "cds.LargeString",
+          "@sap.label": "Sales Rep."
+        },
+        "CUSTBUPAID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Business Partner ID"
+        },
+        "GEOLATITUDE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Geo Latitude"
+        },
+        "CUSTVALID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer Validity"
+        },
+        "CUSTIDDISPLAY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Customer ID Display"
+        },
+        "CUSTCHANNEL": {
+          "type": "cds.LargeString",
+          "@sap.label": "Channel"
+        },
+        "GEOLONGITUDE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Geo Longitude"
+        },
+        "CUSTSALESVP": {
+          "type": "cds.LargeString",
+          "@sap.label": "Sales VP"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTCUSTOMERTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTCUSTOMER": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTCUSTOMER",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTCUSTOMERMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTCUSTOMER": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTCUSTOMER",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCATION": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "LOCID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Location ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "LOCVALID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Location Validity"
+        },
+        "GEOLATITUDE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Geo Latitude"
+        },
+        "GEOLONGITUDE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Geo Longitude"
+        },
+        "LOCTYPE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Location Type"
+        },
+        "LOCDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Location"
+        },
+        "HOLDINGCOSTPCT": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Holding Cost Percentage"
+        },
+        "LOCBUPAID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Location Business Partner ID"
+        },
+        "PROFILESETID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Buffer profile set ID for creating multiple buffer profiles"
+        },
+        "LOCREGION": {
+          "type": "cds.LargeString",
+          "@sap.label": "Location Region"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCATIONTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPLOCATION": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPLOCATION",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCATIONMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPLOCATION": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPLOCATION",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCATIONPRODUCTCURRENCY": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Compound",
+      "elements": {
+        "PRDID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Product ID"
+        },
+        "CURRID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Currency ID"
+        },
+        "LOCID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Location ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VCAVERAGEPRODCOST": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Average Product Cost"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCATIONPRODUCTCURRENCYTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPLOCATIONPRODUCTCURRENCY": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPLOCATIONPRODUCTCURRENCY",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCATIONPRODUCTCURRENCYMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPLOCATIONPRODUCTCURRENCY": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPLOCATIONPRODUCTCURRENCY",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTPRODUCT": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "PRDID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Product ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "PLMSTATUS": {
+          "type": "cds.LargeString",
+          "@sap.label": "PLM Status"
+        },
+        "UOMDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Base UOM Desc."
+        },
+        "XYZLOCKED": {
+          "type": "cds.LargeString",
+          "@sap.label": "XYZ Locked"
+        },
+        "VCMODEL": {
+          "type": "cds.LargeString",
+          "@sap.label": "Model"
+        },
+        "PRDFAMILY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Product Family"
+        },
+        "VCBUILDSTRATDESC": {
+          "type": "cds.LargeString",
+          "@sap.label": "Build Strategy Desc"
+        },
+        "MATTYPEID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Material Type ID"
+        },
+        "PRDDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Product Desc"
+        },
+        "ABCLOCKED": {
+          "type": "cds.LargeString",
+          "@sap.label": "ABC Locked"
+        },
+        "XYZDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "XYZ Desc"
+        },
+        "PRDSERIES": {
+          "type": "cds.LargeString",
+          "@sap.label": "Product Series"
+        },
+        "VCMODELRANGE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Model Range"
+        },
+        "ABCDESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "ABC Desc"
+        },
+        "PRDGROUP": {
+          "type": "cds.LargeString",
+          "@sap.label": "Product Group"
+        },
+        "ITEMTYPECATEGORY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Item Type Category Indicator"
+        },
+        "UOMID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Base UOM"
+        },
+        "QUICKTURNMARKET": {
+          "type": "cds.LargeString",
+          "@sap.label": "Quick Turn Market Available"
+        },
+        "VCBUILDSTRAT": {
+          "type": "cds.LargeString",
+          "@sap.label": "Build Strategy"
+        },
+        "ABCID": {
+          "type": "cds.LargeString",
+          "@sap.label": "ABC Code"
+        },
+        "BRAND": {
+          "type": "cds.LargeString",
+          "@sap.label": "Brand ID"
+        },
+        "ABCXYZCOUNTERHELPER": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "ABCXYZCOUNTERHELPER"
+        },
+        "CATEGORY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Category"
+        },
+        "XYZID": {
+          "type": "cds.LargeString",
+          "@sap.label": "XYZ Code"
+        },
+        "PRDSUBFAMILY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Product Subfamily"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTPRODUCTTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTPRODUCT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTPRODUCT",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTPRODUCTMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTPRODUCT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTPRODUCT",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPEXCHANGERATE": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Compound",
+      "elements": {
+        "CURRTOID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Target Currency"
+        },
+        "CURRID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Currency ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "EXCHANGERATE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Exchange rate"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPEXCHANGERATETrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPEXCHANGERATE": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPEXCHANGERATE",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPEXCHANGERATEMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPEXCHANGERATE": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPEXCHANGERATE",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCATIONPRODUCT": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Compound",
+      "elements": {
+        "PRDID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Product ID"
+        },
+        "LOCID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Location ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "PLUNITID": {
+          "type": "cds.LargeString",
+          "@sap.label": "Subnetwork ID"
+        },
+        "PROCUREMENTTYPE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Procurement Type"
+        },
+        "VCLOTSIZE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Lot Size Qty"
+        },
+        "PLANNINGSTRGY": {
+          "type": "cds.LargeString",
+          "@sap.label": "Planning Strategy"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCATIONPRODUCTTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPLOCATIONPRODUCT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPLOCATIONPRODUCT",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLOCATIONPRODUCTMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPLOCATIONPRODUCT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPLOCATIONPRODUCT",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTLOCPRODCOMPONENT": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Compound",
+      "elements": {
+        "PRDFR": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Component Product ID"
+        },
+        "PRDID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Product ID"
+        },
+        "LOCID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Location ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "COMPONENTCOEFFICIENT": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Component Coefficient"
+        },
+        "VCSTRUCTURENODE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Structure Node"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTLOCPRODCOMPONENTTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTLOCPRODCOMPONENT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTLOCPRODCOMPONENT",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTLOCPRODCOMPONENTMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTLOCPRODCOMPONENT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTLOCPRODCOMPONENT",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTLOCRESTRICTION": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Compound",
+      "elements": {
+        "LOCID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Location ID"
+        },
+        "VCRESTRICTIONID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Restriction ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VCPLACEHOLDER": {
+          "type": "cds.LargeString",
+          "@sap.label": "VC Place Holder"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTLOCRESTRICTIONTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTLOCRESTRICTION": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTLOCRESTRICTION",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTLOCRESTRICTIONMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTLOCRESTRICTION": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTLOCRESTRICTION",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPUOMCONVERSIONFACTOR": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Compound",
+      "elements": {
+        "PRDID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Product ID"
+        },
+        "UOMTOID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Target UoM"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "UOMCONVERSIONFACTOR": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "UOM Conversion Factor"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPUOMCONVERSIONFACTORTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPUOMCONVERSIONFACTOR": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPUOMCONVERSIONFACTOR",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPUOMCONVERSIONFACTORMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPUOMCONVERSIONFACTOR": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPUOMCONVERSIONFACTOR",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLAG": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "LAG": {
+          "key": true,
+          "type": "cds.Integer",
+          "@sap.label": "Lag"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLAGTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPLAG": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPLAG",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPLAGMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPLAG": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPLAG",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTRESTRICTION": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "VCRESTRICTIONID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Restriction ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VCRESTRICTIONTYPE": {
+          "type": "cds.LargeString",
+          "@sap.label": "Restriction type"
+        },
+        "VCRESTRICTIONDESC": {
+          "type": "cds.LargeString",
+          "@sap.label": "Restriction Desc"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTRESTRICTIONTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTRESTRICTION": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTRESTRICTION",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTRESTRICTIONMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTRESTRICTION": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTRESTRICTION",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCURRENCYTO": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Reference",
+      "elements": {
+        "CURRTOID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Target Currency"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "CURRTODESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Target Currency Desc."
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPUOMTO": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "UOMTOID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Target UoM"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "UOMTODESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Target UoM Desc."
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPUOMTOTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPUOMTO": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPUOMTO",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPUOMTOMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPUOMTO": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPUOMTO",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCUSTOMERPRODUCT": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Compound",
+      "elements": {
+        "PRDID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Product ID"
+        },
+        "CUSTID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Customer ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MARKETSEGMENT": {
+          "type": "cds.LargeString",
+          "@sap.label": "Market Segment"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCUSTOMERPRODUCTTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPCUSTOMERPRODUCT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPCUSTOMERPRODUCT",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPCUSTOMERPRODUCTMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPCUSTOMERPRODUCT": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPCUSTOMERPRODUCT",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPSOURCECUSTOMERCURRENCY": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Compound",
+      "elements": {
+        "CUSTID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Customer ID"
+        },
+        "CURRID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Currency ID"
+        },
+        "LOCID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Location ID"
+        },
+        "PRDID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Product ID"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VCAVERAGEPRODUCTPRICE": {
+          "type": "cds.Decimal",
+          "precision": 18,
+          "scale": 6,
+          "@sap.label": "Average Product Price"
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPSOURCECUSTOMERCURRENCYTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPSOURCECUSTOMERCURRENCY": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPSOURCECUSTOMERCURRENCY",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCPSOURCECUSTOMERCURRENCYMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCPSOURCECUSTOMERCURRENCY": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCPSOURCECUSTOMERCURRENCY",
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTCURRENCYTO": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Reference",
+      "elements": {
+        "CURRTOID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Target Currency"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "CURRTODESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Target Currency Desc."
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTUOMTO": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "@sap.configuration.type": "Simple",
+      "elements": {
+        "UOMTOID": {
+          "key": true,
+          "type": "cds.LargeString",
+          "@sap.label": "Target UoM"
+        },
+        "PlanningAreaID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "UOMTODESCR": {
+          "type": "cds.LargeString",
+          "@sap.label": "Target UoM Desc."
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTUOMTOTrans": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "DoCommit": {
+          "type": "cds.Boolean"
+        },
+        "RequestedAttributes": {
+          "type": "cds.LargeString"
+        },
+        "PlanningAreaID": {
+          "type": "cds.LargeString"
+        },
+        "VersionID": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTUOMTO": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTUOMTO",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "IBPMasterDataAPI.VCTUOMTOMessage": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.requires.filter": "true",
+      "@sap.content.version": "1",
+      "elements": {
+        "TransactionID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageID": {
+          "key": true,
+          "type": "cds.LargeString"
+        },
+        "MessageText": {
+          "type": "cds.LargeString"
+        },
+        "NavVCTUOMTO": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "IBPMasterDataAPI.VCTUOMTO",
+          "keys": []
+        }
+      }
+    }
+  }
+}

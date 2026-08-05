@@ -1,0 +1,25 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_SAC_SalesH
+-- Description:     View to get sales history configuration with charanteristic values
+-- Join Details:    A:V_SALES_H
+-----------------------------------------------------------------------------------------
+VIEW "V_SAC_SALESH"
+AS SELECT 
+LOCATION_ID,
+PRODUCT_ID,
+"UNIQUE_ID",
+"PRIMARY_ID",
+ORD_QTY,
+SALES_ORG,
+DISTR_CHANNEL,
+DIVISION,
+SAL_DOCU_TYPE,
+ITEM_CREATED_DATE,
+ITEM_CHANGE_DATE,
+IBP_CUSTOMER,
+RELEVENT_FOR_PLAN,
+ON_HAND_STOCK,
+IN_TRANSIT,
+SHIP_FROM_LOC,  
+ADD_DAYS (TO_DATE ("MAT_AVAILDATE", 'YYYY-MM-DD'), -WEEKDAY (TO_DATE ("MAT_AVAILDATE", 'YYYY-MM-DD'))) AS "WEEK_DATE"
+frOM V_SALES_H 

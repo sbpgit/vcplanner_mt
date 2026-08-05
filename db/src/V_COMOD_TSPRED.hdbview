@@ -1,0 +1,26 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_COMPOD_TSPRED
+-- Description:     Get history timeseries predictions of BOM object dependency 
+-- Join Details:    A: V_BOMOD_DEMDFACLOC -  Master table for BOM object dependency
+--                  B: CP_TS_PREDICTIONS - HIstory timeseries table for object dependency 
+-----------------------------------------------------------------------------------------
+VIEW "V_COMPOD_TSPRED"
+ AS SELECT distinct A.LOCATION_ID,
+ A.PRODUCT_ID,
+ A.ITEM_NUM,
+ A.COMPONENT,
+ A.OBJ_DEP,
+--  A.OBJDEP_DESC,
+ B.OBJ_COUNTER,
+ B.MODEL_VERSION,
+ B.VERSION,
+ B.SCENARIO,
+ B.CAL_DATE,
+ ROUND(B.PREDICTED, 2) AS PREDICTED
+from "V_BOM_CONFIG_PARTIAL" AS A
+JOIN CP_TS_PREDICTIONS AS B
+ ON A.LOCATION_ID = B.LOCATION_ID
+ AND A.PRODUCT_ID = B.PRODUCT_ID
+ AND A.OBJ_DEP = B.OBJ_DEP
+ and (B.CAL_DATE >= A.VALID_FROM AND B.CAL_DATE <= A.VALID_TO)
+ where B.OBJ_TYPE = 'OD'

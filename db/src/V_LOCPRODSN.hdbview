@@ -1,0 +1,16 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_LOCPROD
+-- Description:     Fetch structure node for a Location and products
+-- Join Details:    A: CP_PVS_NODES-  Master table for PVS nodes( Access, Structure and View nodes)
+--                  B: CP_PROD_ACCNODE- Master table for Access node for a Products
+-----------------------------------------------------------------------------------------
+VIEW "V_LOCPRODSN" AS
+SELECT B.LOCATION_ID,
+  B.PRODUCT_ID,
+  A.CHILD_NODE AS STRUC_NODE,
+  A.UPPERLIMIT,
+  A.LOWERLIMIT
+FROM "CP_PVS_NODES" AS A
+  INNER JOIN "CP_PROD_ACCNODE" AS B
+ ON A.PARENT_NODE = B.ACCESS_NODE
+WHERE NODE_TYPE = 'SN'

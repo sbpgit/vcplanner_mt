@@ -1,0 +1,3435 @@
+{
+ "meta": {
+  "creator": "cds-dk 7.1.0"
+ },
+ "$version": "2.0",
+ "definitions": {
+  "cap_servs": {
+   "kind": "service",
+   "@cds.external": true,
+   "@m.IsDefaultEntityContainer": "true"
+  },
+  "cap_servs.LOCATION": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "LOCATION_DESC": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "LOCATION_TYPE": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "LATITUDE": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "LONGITUTE": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD1": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD2": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD3": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD4": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD5": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "AUTH_GROUP": {
+     "type": "cds.LargeString"
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.LOCATION_IBP": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "LOCATION_DESC": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "LOCATION_TYPE": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "LATITUDE": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "LONGITUTE": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD1": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD2": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD3": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD4": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD5": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "AUTH_GROUP": {
+     "type": "cds.LargeString"
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.SALES_HIS": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "SALES_DOCUMENT": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "SALES_DOCUMENT_ITEM": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "CHARACTERSTIC": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "CHARACTERSTIC_VALUE": {
+     "type": "cds.String",
+     "length": 70
+    },
+    "PRODUCT_ID": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "PROD_AVAILABILITY_DT": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CLASS": {
+     "type": "cds.String",
+     "length": 18
+    },
+    "CLASS_NUM": {
+     "type": "cds.Integer"
+    },
+    "CHARACTERSTIC_NUM": {
+     "type": "cds.Integer"
+    },
+    "VALUE_NUM": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.SALES": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "SALES_DOCUMENT": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "SALES_DOCUMENT_ITEM": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "DOC_CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "SCHEDULE_LINE_NO": {
+     "type": "cds.Integer"
+    },
+    "PRODUCT_ID": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "REASON_4REJECTION": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "UOM": {
+     "type": "cds.String",
+     "length": 3
+    },
+    "CONFIRMED_QTY": {
+     "type": "cds.Integer64"
+    },
+    "QTY_UNITS": {
+     "type": "cds.Integer64"
+    },
+    "PROD_AVAILABILITY_DT": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "NET_VALUE": {
+     "type": "cds.Double"
+    },
+    "CUSTOMER_GROUP": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "LOCATION_ID": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "SALES_ORG": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "DISTR_CHANNEL": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "DIVISION": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "SAL_DOCU_TYPE": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "ITEM_CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "ITEM_CHANGE_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "OPEN_ORDER": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "CHARG": {
+     "type": "cds.String",
+     "length": 10
+    },
+    "IBP_CUSTOMER": {
+     "type": "cds.String",
+     "length": 10
+    },
+    "NOT_PLANNING": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "ON_HAND_STOCK": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "IN_TRANSIT": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "SHIP_FROM_LOC": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "RESERVE_FIELD1": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD2": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD3": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "STOCK_LOC": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "TRANS_TO_LOC": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "TRANS_FROM_LOC": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.PRODUCT": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "PRODUCT_DESC": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "PRODUCT_TYPE": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "PRODUCT_FAMILY": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "PRODUCT_GROUP": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "PRODUCT_MODEL": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "PRODUCT_MODEL_RANGE": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "PRODUCT_SERIES": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD1": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD2": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD3": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD4": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD5": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "AUTH_GROUP": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.DERIVECHAR": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "RECORD_TYPE": {
+     "key": true,
+     "type": "cds.String",
+     "length": 2,
+     "notNull": true
+    },
+    "CLAUSE": {
+     "key": true,
+     "type": "cds.String",
+     "length": 2,
+     "notNull": true
+    },
+    "DEP_NAME": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "CHAR_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CHARVAL_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 20,
+     "notNull": true
+    },
+    "SORT_COUNTER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "CHAR_COUNTER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 5,
+     "notNull": true
+    },
+    "INT_CLS_NUMBER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CHARACTERISTIC_VALUE": {
+     "type": "cds.String",
+     "length": 70
+    },
+    "OD_CONDITION": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "RULE_TYPE": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "CHANGE_NO": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "VALID_FROM": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "VALID_TO": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.MAT_LTE_MDATA": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "CLASS_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CHARACTERSTIC_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "VALUE_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 15,
+     "notNull": true
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.CUSTOMERS": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "CUSTOMER_GROUP": {
+     "key": true,
+     "type": "cds.String",
+     "length": 2,
+     "notNull": true
+    },
+    "CUSTOMER_DESC": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD1": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD2": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD3": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD4": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD5": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "AUTH_GROUP": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.LOC_PRODID": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "LOTSIZE_KEY": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "PROCUREMENT_TYPE": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "LOTSIZE": {
+     "type": "cds.String",
+     "length": 19
+    },
+    "PLANNING_STRATEGY": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.PROD_CLASS": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "CLASS": {
+     "key": true,
+     "type": "cds.String",
+     "length": 18,
+     "notNull": true
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.CLASS_C": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "INT_CLS_NUMBER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CLASS_TYPE": {
+     "type": "cds.String",
+     "length": 3
+    },
+    "CLASS": {
+     "type": "cds.String",
+     "length": 18
+    },
+    "ZDESC": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.CHARC_DATA": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "INT_CLS_NUMBER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CHAR_NAME": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "INT_CHAR": {
+     "type": "cds.String",
+     "length": 10
+    },
+    "CHAR_DESC": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "CHAR_GROUP": {
+     "type": "cds.String",
+     "length": 10
+    },
+    "CHAR_DATATYPE": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "CHAR_CATEGORY": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "ENTRY_REQ": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "MULTI_CHAR": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.CHARAC_VALUES": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "INT_CHAR": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "VALUE_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 15,
+     "notNull": true
+    },
+    "CHAR_NAME": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "CHARACTERISTIC_VALUE": {
+     "type": "cds.String",
+     "length": 70
+    },
+    "CHARACTERISTIC_VDESC": {
+     "type": "cds.String",
+     "length": 70
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.PROD_CONFIG": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_DESC": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "PRODUCT_TYPE": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "REF_PRODID": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.BOM_STAG": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "ITEM_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "COMPONENT": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "COMP_TYPE": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "PROD_DESC": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "COMPONENT_QTY": {
+     "type": "cds.String",
+     "length": 18
+    },
+    "VALID_FROM": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "VALID_TO": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CRITICAL_ASS": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "CHANGE_NO": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "DELETE_FLAG": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.BOM_DEPN": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "ITEM_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "COMPONENT": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "DEPENDENCY": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "DEP_DESC": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "COMPONENT_QTY": {
+     "type": "cds.String",
+     "length": 13
+    },
+    "VALID_FROM": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "VALID_TO": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGE_NO": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.BOM_OBJ_DEPEN": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "ITEM_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "COMPONENT": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "DEPENDENCY": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "DEP_DESC": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "COMPONENT_QTY": {
+     "type": "cds.String",
+     "length": 18
+    },
+    "VALID_FROM": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "VALID_TO": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGE_NO": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.ASS_COMP": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "ASSEMBLY": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "SUB_COMP": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "COMP_TYPE": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "PROD_DESC": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "COMPONENT_QTY": {
+     "type": "cds.String",
+     "length": 18
+    },
+    "VALID_FROM": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "VALID_TO": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CRITICAL_COMP": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "CHANGE_NO": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "DELETE_FLAG": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.OBJ_DEPEN_MAS_DATA": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "OBJ_DEP": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "OBJ_COUNTER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 5,
+     "notNull": true
+    },
+    "CLASS_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CHAR_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CHAR_COUNTER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 5,
+     "notNull": true
+    },
+    "CHARVAL_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 15,
+     "notNull": true
+    },
+    "OD_CONDITION": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "ROW_ID": {
+     "type": "cds.String",
+     "length": 5
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.MAST_DATA_NODE": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "CHILD_NODE": {
+     "key": true,
+     "type": "cds.String",
+     "length": 50,
+     "notNull": true
+    },
+    "PARENT_NODE": {
+     "key": true,
+     "type": "cds.String",
+     "length": 50,
+     "notNull": true
+    },
+    "ACCESS_NODE": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "NODE_TYPE": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "NODE_DESC": {
+     "type": "cds.String",
+     "length": 200
+    },
+    "AUTH_GROUP": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "UPPERLIMIT": {
+     "type": "cds.String",
+     "length": 8
+    },
+    "LOWERLIMIT": {
+     "type": "cds.String",
+     "length": 8
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.PVBLL_MAT": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "ITM_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "COMPONENT": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "STRUC_NODE": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.PROD_ACC_NODE": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "ACCESS_NODE": {
+     "type": "cds.String",
+     "length": 50
+    }
+   }
+  },
+  "cap_servs.MAINT_MRP": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "MRP_GROUP": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    }
+   }
+  },
+  "cap_servs.LOCATION_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "LOCATION_DESC": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "LOCATION_TYPE": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "LATITUDE": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "LONGITUTE": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD1": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD2": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD3": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD4": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD5": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "AUTH_GROUP": {
+     "type": "cds.LargeString"
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.PRODUCT_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "PRODUCT_DESC": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "PRODUCT_TYPE": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "PRODUCT_FAMILY": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "PRODUCT_GROUP": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "PRODUCT_MODEL": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "PRODUCT_MODEL_RANGE": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "PRODUCT_SERIES": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD1": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD2": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD3": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD4": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD5": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "AUTH_GROUP": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.DERIVECHAR_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "RECORD_TYPE": {
+     "key": true,
+     "type": "cds.String",
+     "length": 2,
+     "notNull": true
+    },
+    "CLAUSE": {
+     "key": true,
+     "type": "cds.String",
+     "length": 2,
+     "notNull": true
+    },
+    "DEP_NAME": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "CHAR_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CHARVAL_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 20,
+     "notNull": true
+    },
+    "SORT_COUNTER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "CHAR_COUNTER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 5,
+     "notNull": true
+    },
+    "INT_CLS_NUMBER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CHARACTERISTIC_VALUE": {
+     "type": "cds.String",
+     "length": 70
+    },
+    "OD_CONDITION": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "RULE_TYPE": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "CHANGE_NO": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "VALID_FROM": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "VALID_TO": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.customer_group": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "CUSTOMER_GROUP": {
+     "key": true,
+     "type": "cds.String",
+     "length": 2,
+     "notNull": true
+    },
+    "CUSTOMER_DESC": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD1": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD2": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD3": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD4": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD5": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "AUTH_GROUP": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.MAINT_MRP_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "MRP_GROUP": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    }
+   }
+  },
+  "cap_servs.CLASS_C_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "INT_CLS_NUMBER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CLASS_TYPE": {
+     "type": "cds.String",
+     "length": 3
+    },
+    "CLASS": {
+     "type": "cds.String",
+     "length": 18
+    },
+    "ZDESC": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.PROD_CLASS_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "CLASS": {
+     "key": true,
+     "type": "cds.String",
+     "length": 18,
+     "notNull": true
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.CHARC_DATA_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "INT_CLS_NUMBER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CHAR_NAME": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "INT_CHAR": {
+     "type": "cds.String",
+     "length": 10
+    },
+    "CHAR_DESC": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "CHAR_GROUP": {
+     "type": "cds.String",
+     "length": 10
+    },
+    "CHAR_DATATYPE": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "CHAR_CATEGORY": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "ENTRY_REQ": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "MULTI_CHAR": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.CHARAC_VALUES_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "INT_CHAR": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "VALUE_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 15,
+     "notNull": true
+    },
+    "CHAR_NAME": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "CHARACTERISTIC_VALUE": {
+     "type": "cds.String",
+     "length": 70
+    },
+    "CHARACTERISTIC_VDESC": {
+     "type": "cds.String",
+     "length": 70
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.BOM_STAG_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "ITEM_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "COMPONENT": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "COMP_TYPE": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "PROD_DESC": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "COMPONENT_QTY": {
+     "type": "cds.String",
+     "length": 18
+    },
+    "VALID_FROM": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "VALID_TO": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CRITICAL_ASS": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "CHANGE_NO": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "DELETE_FLAG": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.BOM_DEPN_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "ITEM_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "COMPONENT": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "DEPENDENCY": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "DEP_DESC": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "COMPONENT_QTY": {
+     "type": "cds.String",
+     "length": 13
+    },
+    "VALID_FROM": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "VALID_TO": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGE_NO": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.BOM_OBJ_DEPEN_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "ITEM_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "COMPONENT": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "DEPENDENCY": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "DEP_DESC": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "COMPONENT_QTY": {
+     "type": "cds.String",
+     "length": 18
+    },
+    "VALID_FROM": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "VALID_TO": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGE_NO": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.ASS_COMP_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "ASSEMBLY": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "SUB_COMP": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "COMP_TYPE": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "PROD_DESC": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "COMPONENT_QTY": {
+     "type": "cds.String",
+     "length": 18
+    },
+    "VALID_FROM": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "VALID_TO": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CRITICAL_COMP": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "CHANGE_NO": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "DELETE_FLAG": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.PROD_CONF_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_DESC": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "PRODUCT_TYPE": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "REF_PRODID": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.MAT_LTE_MDATA_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "CLASS_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CHARACTERSTIC_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "VALUE_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 15,
+     "notNull": true
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.LOC_PRODID_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "LOTSIZE_KEY": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "PROCUREMENT_TYPE": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "LOTSIZE": {
+     "type": "cds.String",
+     "length": 19
+    },
+    "PLANNING_STRATEGY": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.SALES_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "SALES_DOCUMENT": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "SALES_DOCUMENT_ITEM": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "DOC_CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "SCHEDULE_LINE_NO": {
+     "type": "cds.Integer"
+    },
+    "PRODUCT_ID": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "REASON_4REJECTION": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "UOM": {
+     "type": "cds.String",
+     "length": 3
+    },
+    "CONFIRMED_QTY": {
+     "type": "cds.Integer64"
+    },
+    "QTY_UNITS": {
+     "type": "cds.Integer64"
+    },
+    "PROD_AVAILABILITY_DT": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "NET_VALUE": {
+     "type": "cds.Double"
+    },
+    "CUSTOMER_GROUP": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "LOCATION_ID": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "SALES_ORG": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "DISTR_CHANNEL": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "DIVISION": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "SAL_DOCU_TYPE": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "ITEM_CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "ITEM_CHANGE_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "OPEN_ORDER": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "CHARG": {
+     "type": "cds.String",
+     "length": 10
+    },
+    "IBP_CUSTOMER": {
+     "type": "cds.String",
+     "length": 10
+    },
+    "NOT_PLANNING": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "ON_HAND_STOCK": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "IN_TRANSIT": {
+     "type": "cds.String",
+     "length": 1
+    },
+    "SHIP_FROM_LOC": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "RESERVE_FIELD1": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD2": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "RESERVE_FIELD3": {
+     "type": "cds.String",
+     "length": 20
+    },
+    "STOCK_LOC": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "TRANS_TO_LOC": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "TRANS_FROM_LOC": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.SALES_HIS_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "SALES_DOCUMENT": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "SALES_DOCUMENT_ITEM": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "CHARACTERSTIC": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "CHARACTERSTIC_VALUE": {
+     "type": "cds.String",
+     "length": 70
+    },
+    "PRODUCT_ID": {
+     "type": "cds.String",
+     "length": 40
+    },
+    "PROD_AVAILABILITY_DT": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CLASS": {
+     "type": "cds.String",
+     "length": 18
+    },
+    "CLASS_NUM": {
+     "type": "cds.Integer"
+    },
+    "CHARACTERSTIC_NUM": {
+     "type": "cds.Integer"
+    },
+    "VALUE_NUM": {
+     "type": "cds.String",
+     "length": 30
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.MAST_DATA_NODE_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "CHILD_NODE": {
+     "key": true,
+     "type": "cds.String",
+     "length": 50,
+     "notNull": true
+    },
+    "PARENT_NODE": {
+     "key": true,
+     "type": "cds.String",
+     "length": 50,
+     "notNull": true
+    },
+    "ACCESS_NODE": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "NODE_TYPE": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "NODE_DESC": {
+     "type": "cds.String",
+     "length": 200
+    },
+    "AUTH_GROUP": {
+     "type": "cds.String",
+     "length": 4
+    },
+    "UPPERLIMIT": {
+     "type": "cds.String",
+     "length": 8
+    },
+    "LOWERLIMIT": {
+     "type": "cds.String",
+     "length": 8
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.PVBLL_MAT_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "ITM_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 6,
+     "notNull": true
+    },
+    "COMPONENT": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "STRUC_NODE": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.OBJ_DEPEN_MAS_DATA_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "OBJ_DEP": {
+     "key": true,
+     "type": "cds.String",
+     "length": 30,
+     "notNull": true
+    },
+    "OBJ_COUNTER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 5,
+     "notNull": true
+    },
+    "CLASS_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CHAR_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 10,
+     "notNull": true
+    },
+    "CHAR_COUNTER": {
+     "key": true,
+     "type": "cds.String",
+     "length": 5,
+     "notNull": true
+    },
+    "CHARVAL_NUM": {
+     "key": true,
+     "type": "cds.String",
+     "length": 15,
+     "notNull": true
+    },
+    "OD_CONDITION": {
+     "type": "cds.String",
+     "length": 2
+    },
+    "ROW_ID": {
+     "type": "cds.String",
+     "length": 5
+    },
+    "CHANGED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CHANGED_TIME": {
+     "type": "cds.Time"
+    },
+    "CHANGED_BY": {
+     "type": "cds.String",
+     "length": 12
+    },
+    "CREATED_DATE": {
+     "type": "cds.Date",
+     "@sap.display.format": "Date"
+    },
+    "CREATED_TIME": {
+     "type": "cds.Time"
+    },
+    "CREATED_BY": {
+     "type": "cds.String",
+     "length": 12
+    }
+   }
+  },
+  "cap_servs.PROD_ACC_NODE_STB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "LOCATION_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 4,
+     "notNull": true
+    },
+    "PRODUCT_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 40,
+     "notNull": true
+    },
+    "ACCESS_NODE": {
+     "type": "cds.String",
+     "length": 50
+    }
+   }
+  },
+  "cap_servs.config_interface_log": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "OPERATION": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "TIMESTAMP": {
+     "key": true,
+     "type": "cds.Timestamp",
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@odata.Precision": 7,
+     "notNull": true
+    },
+    "DATA": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "SERVICE_NAME": {
+     "type": "cds.String",
+     "length": 100
+    },
+    "STATUS": {
+     "type": "cds.LargeString"
+    },
+    "MESSAGE": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "cap_servs.INTERFACE_TABLE": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "SERVICE_ID": {
+     "key": true,
+     "type": "cds.Integer64",
+     "notNull": true
+    },
+    "SERVICE_NAME": {
+     "type": "cds.String",
+     "length": 100
+    },
+    "SERVICE_DESC": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "cap_servs.CONFIG_INT_TAB": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "SERVICE_ID": {
+     "key": true,
+     "type": "cds.Integer64",
+     "notNull": true
+    },
+    "INTERFACE_TYPE": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    }
+   }
+  },
+  "cap_servs.interface_log_table": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "SERVICE_ID": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "OPERATION": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "TIMESTAMP": {
+     "key": true,
+     "type": "cds.Timestamp",
+     "@odata.Type": "Edm.DateTimeOffset",
+     "@odata.Precision": 7,
+     "notNull": true
+    },
+    "DATA": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "STATUS": {
+     "type": "cds.LargeString"
+    },
+    "MESSAGE": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "cap_servs.Options": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "PARAMETER_NAME": {
+     "key": true,
+     "type": "cds.String",
+     "length": 100,
+     "notNull": true
+    },
+    "SERVICE_NAME": {
+     "type": "cds.String",
+     "length": 100
+    },
+    "VALUE_ID": {
+     "type": "cds.String",
+     "length": 100
+    }
+   }
+  },
+  "cap_servs.INTERFACE_TYPE": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "INTERFACE_TYPE": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "TYPE_NAME": {
+     "type": "cds.String",
+     "length": 100
+    }
+   }
+  },
+  "cap_servs.INTERFACE_PARAMS": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "INTERFACE_TYPE": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "PARAMETER_ID": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "PARAMETER_NAME": {
+     "type": "cds.String",
+     "length": 100
+    }
+   }
+  },
+  "cap_servs.INTERFACE_PARAMS_VALUE": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "INTERFACE_TYPE": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "PARAMETER_ID": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "VALUE_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 100,
+     "notNull": true
+    },
+    "VALUE_NAME": {
+     "type": "cds.String",
+     "length": 200
+    },
+    "POSITION": {
+     "type": "cds.Integer"
+    }
+   }
+  },
+  "cap_servs.INTERFACE_SERV_CONFIG": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "SERVICE_ID": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "INTERFACE_TYPE": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "PARAMETER_ID": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "VALUE_ID": {
+     "type": "cds.String",
+     "length": 100
+    }
+   }
+  },
+  "cap_servs.interface_ext_log": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "SERVICE_ID": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "Connection": {
+     "key": true,
+     "type": "cds.LargeString",
+     "notNull": true
+    },
+    "Path": {
+     "type": "cds.LargeString"
+    },
+    "Auth_type": {
+     "type": "cds.LargeString"
+    },
+    "Approval_type": {
+     "type": "cds.LargeString"
+    },
+    "Credentials": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "cap_servs.Data_S4": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "ID": {
+     "key": true,
+     "type": "cds.Integer",
+     "notNull": true
+    },
+    "DATA": {
+     "type": "cds.LargeString"
+    }
+   }
+  },
+  "cap_servs.Config_Job_Status": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "JOb_NAME": {
+     "key": true,
+     "type": "cds.String",
+     "length": 100,
+     "notNull": true
+    },
+    "JOB_ID": {
+     "key": true,
+     "type": "cds.String",
+     "length": 100,
+     "notNull": true
+    },
+    "Time": {
+     "type": "cds.String",
+     "length": 50
+    },
+    "STATUS": {
+     "type": "cds.String",
+     "length": 25
+    }
+   }
+  },
+  "cap_servs.getJobFeedLog": {
+   "kind": "function",
+   "@cds.external": true,
+   "params": {
+    "jobName": {
+     "type": "cds.LargeString"
+    }
+   },
+   "returns": {
+    "type": "cds.LargeString"
+   }
+  },
+  "cap_servs.createJobFeed": {
+   "kind": "function",
+   "@cds.external": true,
+   "params": {
+    "jobFeedName": {
+     "type": "cds.LargeString"
+    },
+    "userName": {
+     "type": "cds.LargeString"
+    }
+   },
+   "returns": {
+    "type": "cds.LargeString"
+   }
+  },
+  "cap_servs.VC_interface": {
+   "kind": "function",
+   "@cds.external": true,
+   "params": {
+    "FLAG": {
+     "type": "cds.LargeString"
+    },
+    "Data": {
+     "type": "cds.LargeString"
+    }
+   },
+   "returns": {
+    "type": "cds.LargeString"
+   }
+  },
+  "cap_servs.deleteInterfaceLogs": {
+   "kind": "function",
+   "@cds.external": true,
+   "returns": {
+    "type": "cds.LargeString"
+   }
+  },
+  "cap_servs.process_dependency": {
+   "kind": "function",
+   "@cds.external": true,
+   "params": {
+    "UID": {
+     "type": "cds.LargeString"
+    },
+    "OD": {
+     "type": "cds.LargeString"
+    }
+   },
+   "returns": {
+    "type": "cds.LargeString"
+   }
+  }
+ }
+}

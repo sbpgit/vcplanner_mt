@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_TS_HISTORY_CUST" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_TS_HISTORY_CUST"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_SALESH">
+    <resourceUri>CP_SALESH</resourceUri>
+  </DataSource>
+  <DataSource id="CP_SALES_HM">
+    <resourceUri>CP_SALES_HM</resourceUri>
+  </DataSource>
+  <DataSource id="Join_1$$$$CP_SALESH$$">
+    <resourceUri>CP_SALESH</resourceUri>
+  </DataSource>
+  <DataSource id="Join_1$$$$CP_SALES_HM$$">
+    <resourceUri>CP_SALES_HM</resourceUri>
+  </DataSource>
+  <DataSource id="CP_CLUSTER_PRPIDS_MAPPED_PIDS">
+    <resourceUri>CP_CLUSTER_PRPIDS_MAPPED_PIDS</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CONFIRMED_QTY" aggregationType="sum"/>
+      <viewAttribute id="ORD_QTY" aggregationType="sum"/>
+      <viewAttribute id="MAT_AVAILDATE"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$SALES_DOC$SALES_DOC"/>
+      <viewAttribute hidden="true" id="JOIN$SALESDOC_ITEM$SALESDOC_ITEM"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="WEEK_DATE" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>ADD_DAYS (TO_DATE (&quot;MAT_AVAILDATE&quot;, 'YYYY-MM-DD'), -WEEKDAY (TO_DATE (&quot;MAT_AVAILDATE&quot;, 'YYYY-MM-DD')))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="CP_SALESH">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONFIRMED_QTY" source="CONFIRMED_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORD_QTY" source="ORD_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAT_AVAILDATE" source="MAT_AVAILDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SALES_DOC$SALES_DOC" source="SALES_DOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SALESDOC_ITEM$SALESDOC_ITEM" source="SALESDOC_ITEM"/>
+    </input>
+    <input node="CP_SALES_HM">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SALES_DOC$SALES_DOC" source="SALES_DOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SALESDOC_ITEM$SALESDOC_ITEM" source="SALESDOC_ITEM"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$SALES_DOC$SALES_DOC"/>
+    <joinAttribute name="JOIN$SALESDOC_ITEM$SALESDOC_ITEM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CONFIRMED_QTY" aggregationType="sum"/>
+      <viewAttribute id="ORD_QTY" aggregationType="sum"/>
+      <viewAttribute id="MAT_AVAILDATE"/>
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$SALES_DOC$SALES_DOC"/>
+      <viewAttribute hidden="true" id="JOIN$SALESDOC_ITEM$SALESDOC_ITEM"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="WEEK_DATE" datatype="DATE" expressionLanguage="SQL">
+        <formula>ADD_DAYS (TO_DATE (&quot;MAT_AVAILDATE&quot;, 'YYYY-MM-DD'), -WEEKDAY (TO_DATE (&quot;MAT_AVAILDATE&quot;, 'YYYY-MM-DD')))</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_1$$$$CP_SALESH$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONFIRMED_QTY" source="CONFIRMED_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORD_QTY" source="ORD_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAT_AVAILDATE" source="MAT_AVAILDATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SALES_DOC$SALES_DOC" source="SALES_DOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SALESDOC_ITEM$SALESDOC_ITEM" source="SALESDOC_ITEM"/>
+    </input>
+    <input node="Join_1$$$$CP_SALES_HM$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SALES_DOC$SALES_DOC" source="SALES_DOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$SALESDOC_ITEM$SALESDOC_ITEM" source="SALESDOC_ITEM"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$SALES_DOC$SALES_DOC"/>
+    <joinAttribute name="JOIN$SALESDOC_ITEM$SALESDOC_ITEM"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="PRPID"/>
+      <viewAttribute id="PID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_CLUSTER_PRPIDS_MAPPED_PIDS"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_2">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="CONFIRMED_QTY" aggregationType="sum"/>
+      <viewAttribute id="ORD_QTY" aggregationType="sum"/>
+    
+      <viewAttribute id="CUSTOMER_GROUP"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_2"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CONFIRMED_QTY" aggregationType="sum"/>
+      <viewAttribute id="ORD_QTY" aggregationType="sum"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="PRPID" aggregationType="sum"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute id="PID" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRIMARY_ID$PID"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="PRP_ID" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>COALESCE( &quot;PRPID&quot;, &quot;PID&quot;)  </formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONFIRMED_QTY" source="CONFIRMED_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORD_QTY" source="ORD_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PID" source="PRIMARY_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRIMARY_ID$PID" source="PRIMARY_ID"/>
+    </input>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRPID" source="PRPID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRIMARY_ID$PID" source="PID"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$PRIMARY_ID$PID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CONFIRMED_QTY" aggregationType="sum"/>
+      <viewAttribute id="ORD_QTY" aggregationType="sum"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="PRPID"/>
+    
+      <viewAttribute id="CUSTOMER_GROUP"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_4">
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRPID" source="PRP_ID"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="GROUP_COUNT" aggregationType="sum"/>
+      <viewAttribute id="CONFIRMED_QTY_TOT_CONFIRMED" aggregationType="sum"/>
+      <viewAttribute id="GROUP_ID"/>
+      <viewAttribute id="CUSTOMER_GROUP"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$WEEK_DATE$WEEK_DATE"/>
+      <viewAttribute hidden="true" id="JOIN$CUSTOMER_GROUP$CUSTOMER_GROUP"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="GROUP_COUNT_RATE" datatype="DECIMAL" length="13" scale="4" expressionLanguage="SQL">
+        <formula>(&quot;GROUP_COUNT&quot; / NULLIF(&quot;CONFIRMED_QTY_TOT_CONFIRMED&quot;, 0))*100</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="PERIOD_NUM" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>TO_VARCHAR( YEAR(&quot;WEEK_DATE&quot;) || LPAD(WEEK(&quot;WEEK_DATE&quot;), 2, '0'))
+
+</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_COUNT" source="ORD_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="GROUP_ID" source="PRPID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUSTOMER_GROUP$CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+    </input>
+    <input node="Aggregation_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CONFIRMED_QTY_TOT_CONFIRMED" source="ORD_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CUSTOMER_GROUP$CUSTOMER_GROUP" source="CUSTOMER_GROUP"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$WEEK_DATE$WEEK_DATE"/>
+    <joinAttribute name="JOIN$CUSTOMER_GROUP$CUSTOMER_GROUP"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_3">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Join_3" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Join_3" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="WEEK_DATE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_DATE"/>
+      <keyMapping columnObjectName="Join_3" columnName="WEEK_DATE"/>
+    </attribute>
+    <attribute id="GROUP_ID" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="GROUP_ID"/>
+      <keyMapping columnObjectName="Join_3" columnName="GROUP_ID"/>
+    </attribute>
+  
+    <attribute id="CUSTOMER_GROUP" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CUSTOMER_GROUP"/>
+  
+      <keyMapping columnObjectName="Join_3" columnName="CUSTOMER_GROUP"/>
+  
+    </attribute>
+  
+    <attribute id="PERIOD_NUM" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PERIOD_NUM"/>
+      <keyMapping columnObjectName="Join_3" columnName="PERIOD_NUM"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="GROUP_COUNT" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CONFIRMED_QTY"/>
+      <measureMapping columnObjectName="Join_3" columnName="GROUP_COUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="GROUP_COUNT_RATE" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="GROUP_COUNT_RATE"/>
+      <measureMapping columnObjectName="Join_3" columnName="GROUP_COUNT_RATE"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="CONFIRMED_QTY_TOT_CONFIRMED" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CONFIRMED_QTY_TOT_CONFIRMED"/>
+      <measureMapping columnObjectName="Join_3" columnName="CONFIRMED_QTY_TOT_CONFIRMED"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="241" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="103" y="501"/>
+      <rectangleSize height="30" width="138"/>
+    </shape>
+  
+    <shape modelObjectName="CP_SALESH" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="208"/>
+    </shape>
+    <shape modelObjectName="CP_SALES_HM" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="178"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="304" y="637"/>
+      <rectangleSize height="30" width="189"/>
+    </shape>
+    <shape modelObjectName="CP_SALESH" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+  
+    <shape modelObjectName="CP_SALES_HM" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="544" y="638"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="307" y="487"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="158"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="310" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="241" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="181"/>
+    </shape>
+    <shape modelObjectName="Aggregation_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="181"/>
+    </shape></shapes>
+</layout>
+</Calculation:scenario>

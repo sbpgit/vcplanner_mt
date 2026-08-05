@@ -1,0 +1,39 @@
+VIEW "V_RESTRICTION_RULE" AS
+SELECT B.LOCATION_ID,
+		A.PRODUCT_ID,
+		A.LINE_ID,
+		B.CHAR_NUM,
+		B.CHARVAL_NUM,
+		B.VERSION,
+		B.SCENARIO,
+		B.WEEK_DATE,
+		B.MODEL_VERSION,
+		C.RESTRICTION,
+		-- C.RTR_DESC,
+		SUM(B.OPT_PERCENT) as OPT_PERCENT,
+		SUM(B.OPT_QTY) as OPT_QTY
+		FROM CP_PROD_LOC_LINE as A
+		INNER JOIN CP_IBP_FCHARPLAN as B
+		ON B.LOCATION_ID IN (SELECT DISTINCT DEMAND_LOC
+                                FROM V_FACTORYLOC
+                                WHERE FACTORY_LOC =  A.LOCATION_ID)
+        AND B.PRODUCT_ID = A.PRODUCT_ID
+        INNER JOIN CP_RESTRICT_DETAILS AS C
+        ON C.LOCATION_ID = A.LOCATION_ID
+        AND C.LINE_ID = A.LINE_ID
+        AND C.CHAR_NUM = B.CHAR_NUM
+        AND C.CHAR_VALUE = B.CHARVAL_NUM
+       GROUP BY B.LOCATION_ID,
+                A.PRODUCT_ID,
+                A.LINE_ID,
+                B.CHAR_NUM,
+                B.CHARVAL_NUM,
+                B.VERSION,
+                B.SCENARIO,
+                B.WEEK_DATE,
+                B.MODEL_VERSION,
+                C.RESTRICTION,
+                -- C.RTR_DESC,
+                OPT_PERCENT,
+                OPT_QTY;
+		

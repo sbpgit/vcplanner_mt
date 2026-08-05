@@ -1,0 +1,42 @@
+VIEW "V_COMPREQ_SNAPSHOT" AS
+SELECT V_COMPREQ_MULTI."LOCATION_ID", V_COMPREQ_MULTI."PRODUCT_ID", "CP_ASSEMBLY_COMP"."COMPONENT",
+                                    V_COMPREQ_MULTI."WEEK_DATE",
+                                    V_COMPREQ_MULTI."FACTORY_LOC",
+                                   V_COMPREQ_MULTI."VERSION",
+                                   V_COMPREQ_MULTI."SCENARIO",
+                                    "CP_ASSEMBLY_COMP"."COMP_DESC",
+                                    "CP_COMPONENT_AVAIL"."COMPAVAIL_QTY", 
+                                    MAX(V_COMPREQ_MULTI."CIR_QTY") AS CIR_QTY,
+                                    SUM(CASE
+                                            WHEN (
+                                                V_COMPREQ_MULTI."COMP_QTY" * "CP_ASSEMBLY_COMP"."COMP_QTY" ) > 0 THEN ROUND(( V_COMPREQ_MULTI."COMP_QTY" * "CP_ASSEMBLY_COMP"."COMP_QTY" ), 0
+                                     ) ELSE 0
+                                    END) AS COMP_QTY
+                        FROM
+                           V_COMPREQ_MULTI
+                        INNER JOIN
+                            "CP_FACTORY_SALESLOC"
+                        ON "CP_FACTORY_SALESLOC"."LOCATION_ID" = V_COMPREQ_MULTI."LOCATION_ID"
+                        AND "CP_FACTORY_SALESLOC"."PRODUCT_ID" = V_COMPREQ_MULTI."PRODUCT_ID"
+                        INNER JOIN
+                            CP_ASSEMBLY_COMP
+                        ON  V_COMPREQ_MULTI.FACTORY_LOC = CP_ASSEMBLY_COMP.LOCATION_ID
+                        AND V_COMPREQ_MULTI.COMPONENT = CP_ASSEMBLY_COMP.ASSEMBLY
+                        LEFT OUTER JOIN "CP_COMPONENT_AVAIL"
+                            ON  V_COMPREQ_MULTI.WEEK_DATE   = CP_COMPONENT_AVAIL.WEEK_DATE
+                            AND V_COMPREQ_MULTI.FACTORY_LOC = CP_COMPONENT_AVAIL.LOCATION_ID
+                            AND CP_ASSEMBLY_COMP.COMPONENT   = CP_COMPONENT_AVAIL.COMPONENT
+                        WHERE V_COMPREQ_MULTI."WEEK_DATE" >= "CP_ASSEMBLY_COMP"."VALID_FROM"
+                         AND V_COMPREQ_MULTI."WEEK_DATE" <= "CP_ASSEMBLY_COMP"."VALID_TO"
+                        GROUP BY V_COMPREQ_MULTI."LOCATION_ID", V_COMPREQ_MULTI."PRODUCT_ID", "CP_ASSEMBLY_COMP"."COMPONENT",
+                                        V_COMPREQ_MULTI."WEEK_DATE",
+                                        V_COMPREQ_MULTI."FACTORY_LOC",
+                                        V_COMPREQ_MULTI."VERSION",
+                                        V_COMPREQ_MULTI."SCENARIO",
+                                        "CP_ASSEMBLY_COMP"."COMP_DESC",
+                                        "CP_COMPONENT_AVAIL"."COMPAVAIL_QTY"
+                        ORDER BY V_COMPREQ_MULTI."LOCATION_ID", V_COMPREQ_MULTI."PRODUCT_ID",  V_COMPREQ_MULTI."FACTORY_LOC",
+                                "CP_ASSEMBLY_COMP"."COMPONENT",
+                                V_COMPREQ_MULTI."WEEK_DATE",
+                                V_COMPREQ_MULTI."VERSION",
+                                V_COMPREQ_MULTI."SCENARIO"

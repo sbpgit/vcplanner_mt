@@ -1,0 +1,652 @@
+
+
+### generate DFS
+POST http://localhost:4004/odata/v4/graph/generateGraphs   
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			# "MODEL_VERSION": "Active",
+			"ALGORITHM": "DFS",
+			"START_VERTEX_ID" : "C1"
+		}
+	]
+}
+
+### generate DFS
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/graph/generateGraphs   
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			# "MODEL_VERSION": "Active",
+			"ALGORITHM": "DFS",
+			"START_VERTEX_ID" : "C1"
+		}
+	]
+}
+
+### generate DFS
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/graph/generateGraphs   
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "29",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "DFS",
+			"START_VERTEX_ID" : "C1"
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "29",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "DFS",
+			"START_VERTEX_ID" : "C2"
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "29",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "DFS",
+			"START_VERTEX_ID" : "C3"
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "29",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "DFS",
+			"START_VERTEX_ID" : "C4"
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "29",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "DFS",
+			"START_VERTEX_ID" : "C5"
+		}
+	]
+}
+
+### generate BFS
+POST http://localhost:4004/odata/v4/graph/generateGraphs   
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "29",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "BFS",
+			"START_VERTEX_ID" : "C4",
+			"DIRECTION" : "INCOMING",
+			"MAX_DEPTH" : 3
+
+
+		}
+	]
+}
+
+### generate BFS
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/graph/generateGraphs   
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "BFS",
+			"START_VERTEX_ID" : "C1",
+			"DIRECTION" : "OUTGOING",
+			"MAX_DEPTH" : 3
+		},
+				{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "BFS",
+			"START_VERTEX_ID" : "C2",
+			"DIRECTION" : "OUTGOING",
+			"MAX_DEPTH" : 3
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "BFS",
+			"START_VERTEX_ID" : "C3",
+			"DIRECTION" : "OUTGOING",
+			"MAX_DEPTH" : 3
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "BFS",
+			"START_VERTEX_ID" : "C4",
+			"DIRECTION" : "OUTGOING",
+			"MAX_DEPTH" : 3
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "BFS",
+			"START_VERTEX_ID" : "C5",
+			"DIRECTION" : "OUTGOING",
+			"MAX_DEPTH" : 3
+		}
+	]
+}
+
+
+
+### generate DFS
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/graph/generateGraphs   
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "DFS",
+			"START_VERTEX_ID" : "C1"
+		},
+				{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "DFS",
+			"START_VERTEX_ID" : "C2"
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "DFS",
+			"START_VERTEX_ID" : "C3"
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "DFS",
+			"START_VERTEX_ID" : "C4"
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "DFS",
+			"START_VERTEX_ID" : "C5"
+		}
+	]
+}
+
+
+### generate SPOA
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/graph/generateGraphs   
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "21",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "12",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "13",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "21",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "22",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "23",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "31",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "32",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "41",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "42",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "43",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "51",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "52",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "53",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "61",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "62",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "63",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "81",
+			"K_SHORTEST_PATHS" : 1000
+		},
+				{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "82",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "83",
+			"K_SHORTEST_PATHS" : 1000
+		},
+				{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "81",
+			"K_SHORTEST_PATHS" : 1000
+		},
+				{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "82",
+			"K_SHORTEST_PATHS" : 1000
+		},
+				{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "83",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "91",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "92",
+			"K_SHORTEST_PATHS" : 1000
+		},
+		{
+			"LOCATION_ID": "DLS",
+			"PRODUCT_ID": "AS_PRODUCT",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "11",
+			"END_VERTEX_ID" : "93",
+			"K_SHORTEST_PATHS" : 1000
+		}
+	]
+}
+
+### generate SPOA
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/graph/generateGraphs   
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "C1",
+			"END_VERTEX_ID" : "C5",
+			"K_SHORTEST_PATHS" : 5
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "C2",
+			"END_VERTEX_ID" : "C5",
+			"K_SHORTEST_PATHS" : 5
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "C3",
+			"END_VERTEX_ID" : "C5",
+			"K_SHORTEST_PATHS" : 5
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "KSPOA",
+			"START_VERTEX_ID" : "C4",
+			"END_VERTEX_ID" : "C5",
+			"K_SHORTEST_PATHS" : 5
+		}
+	]
+}
+
+### generate SPOA
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/graph/generateGraphs   
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "SPOA",
+			"START_VERTEX_ID" : "C1",
+			"DIRECTION" : "OUTGOING",
+			"MAX_DEPTH" : 3
+		},
+				{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "SPOA",
+			"START_VERTEX_ID" : "C2",
+			"DIRECTION" : "OUTGOING",
+			"MAX_DEPTH" : 3
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "SPOA",
+			"START_VERTEX_ID" : "C3",
+			"DIRECTION" : "OUTGOING",
+			"MAX_DEPTH" : 3
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "SPOA",
+			"START_VERTEX_ID" : "C4",
+			"DIRECTION" : "OUTGOING",
+			"MAX_DEPTH" : 3
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "SPOA",
+			"START_VERTEX_ID" : "C5",
+			"DIRECTION" : "OUTGOING",
+			"MAX_DEPTH" : 3
+		}
+	]
+}
+
+
+### generate NEIGHBORS
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/graph/generateGraphs   
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "NEIGHBORS",
+			"START_VERTEX_ID" : "C1",
+			"DIRECTION" : "OUTGOING",
+			"MIN_DEPTH" : 0,
+			"MAX_DEPTH" : 3
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "NEIGHBORS",
+			"START_VERTEX_ID" : "C2",
+			"DIRECTION" : "OUTGOING",
+			"MIN_DEPTH" : 0,
+			"MAX_DEPTH" : 3
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "NEIGHBORS",
+			"START_VERTEX_ID" : "C3",
+			"DIRECTION" : "OUTGOING",
+			"MIN_DEPTH" : 0,
+			"MAX_DEPTH" : 3
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "NEIGHBORS",
+			"START_VERTEX_ID" : "C4",
+			"DIRECTION" : "OUTGOING",
+			"MIN_DEPTH" : 0,
+			"MAX_DEPTH" : 3
+		},
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "21",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "NEIGHBORS",
+			"START_VERTEX_ID" : "C5",
+			"DIRECTION" : "OUTGOING",
+			"MIN_DEPTH" : 0,
+			"MAX_DEPTH" : 3
+		}
+	]
+}
+
+
+### generate TOPOSORT
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/graph/generateGraphs   
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "29",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "TOPOSORT"
+		}
+	]
+}
+
+
+### generate TOPOSORT
+POST http://localhost:4004/odata/v4/graph/generateGraphs   
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"LOCATION_ID": "PLUS",
+			"PRODUCT_ID": "29",
+			"OBJ_TYPE": "CHAR",
+			"ALGORITHM": "TOPOSORT"
+		}
+	]
+}
+
+### generate DFS
+GET http://localhost:4004/odata/v4/graph/VERTICES   
+Content-Type: application/json
+
+{
+	
+}
+
+### generate DFS
+GET https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/graph/VERTICES   
+Content-Type: application/json
+
+{
+
+
+}
+

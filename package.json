@@ -1,0 +1,212 @@
+{
+  "name": "vcplanner_mt",
+  "version": "1.0.0",
+  "description": "VCPlanner multitenancy.",
+  "dependencies": {
+    "@sap/cds": "^8",
+    "@sap/cds-mtxs": "^2",
+    "@sap/cds-odata-v2-adapter-proxy": "^1.9.21",
+    "@sap/xssec": "^4",
+    "cors": "^2.8.6",
+    "express": "^4",
+    "@sap/jobs-client": "^1.6.3",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
+    "@sap/hana-client": "^2.12.22",
+    "await-sleep": "^0.0.1",
+    "mathjs": "^13.0.3",
+    "moment-timezone": "^0.5.45",
+    "@sap-cloud-sdk/core": "^1.54.0",
+    "cf-nodejs-logging-support": "^7.3.0",
+    "sap-cf-axios": "^0.3.6",
+    "sap-hdbext-promisfied": "^2.202306.2",
+    "@sap/hdbext": "^7.7.6",
+    "@sap-cloud-sdk/resilience": "^3.10.0",
+    "@sap-cloud-sdk/util": "^2.9.0",
+    "@sap/approuter": "^11.6.1",
+    "@sap/audit-logging": "^5.7.1",
+    "@sap/cds-dk": "^9",
+    "@sap/xsenv": "^3.4.0",
+    "axios": "^0.21.4",
+    "body-parser": "^1.19.0",
+    "cdse": "^1.1.12",
+    "cfenv": "^1.2.4",
+    "child-process": "^1.0.2",
+    "date-fns": "^4.1.0",
+    "debug": "^4.3.4",
+    "geneticalgorithm": "^1.0.2",
+    "gradient-descent": "^1.0.4",
+    "hana-cli": "3.202307.1",
+    "hdb": "^0.19.0",
+    "https": "^1.0.0",
+    "lp_solve": "^0.2.18",
+    "matjs": "^0.0.5",
+    "node-os-utils": "^1.3.7",
+    "os-utils": "^0.0.14",
+    "passport": "^0.6.0",
+    "passport-http": "^0.3.0",
+    "path": "^0.12.7",
+    "pdfkit": "^0.17.2",
+    "qs": "^6",
+    "sap-cf-mailer": "0.0.5",
+    "sap-hdb-promisfied": "^2.202306.1",
+    "sizeof": "1.0.0",
+    "unpdf": "^1.4.0",
+    "@sap/hdi": "^4.3.1",
+    "@sap-cloud-sdk/http-client": "^2.9.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@sap/hdi-deploy": "^4.9.2",
+    "@sap/ux-specification": "^1.108.14",
+    "rimraf": "^3.0.2"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production cds serve --profile hybrid",
+    "watch-cfgprd_pvsroot": "cds serve --open cfgprd_pvsroot/webapp/index.html#fe-lrop-v4",
+    "undeploy": "cf undeploy config_products --delete-services --delete-service-keys --delete-service-brokers",
+    "watch-project1": "cds serve --open project1/webapp/index.html#fe-lrop-v4",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+  },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "env": {
+      "es2020": true,
+      "node": true,
+      "jest": true,
+      "mocha": true
+    },
+    "globals": {
+      "SELECT": true,
+      "INSERT": true,
+      "UPDATE": true,
+      "DELETE": true,
+      "CREATE": true,
+      "DROP": true,
+      "CDL": true,
+      "CQL": true,
+      "CXL": true,
+      "cds": true
+    }
+  },
+  "private": true,
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "hana",
+        "pool": {
+          "acquireTimeoutMillis": 240000,
+          "evictionRunIntervalMillis": 60000,
+          "min": 0,
+          "max": 500,
+          "numTestsPerEvictionRun": 150,
+          "softIdleTimeoutMillis": 30000,
+          "idleTimeoutMillis": 30000,
+          "testOnBorrow": true
+        }
+      },
+      "auth": {
+        "kind": "xsuaa",
+        "tenant_retrieval_strategy": "token",
+        "restrict_all_services": false
+      },
+      "IBPDemandsrv": {
+        "kind": "odata-v2",
+        "model": "srv/external/IBPDemandsrv",
+        "[development]": {
+          "credentials": {
+            "url": "https://my308633-api.scmibp1.ondemand.com/sap/opu/odata/ibp/PLANNING_DATA_API_SRV",
+            "authentication": "BasicAuthentication",
+            "username": "BTPUSER",
+            "password": "Sbp@btpproductdevelopment01"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "IBPExternal",
+            "path": "/sap/opu/odata/ibp/PLANNING_DATA_API_SRV"
+          }
+        }
+      },
+      "IBPMasterDataAPI": {
+        "kind": "odata-v2",
+        "model": "srv/external/IBPMasterDataAPI",
+        "[development]": {
+          "credentials": {
+            "url": "https://my308633-api.scmibp1.ondemand.com/sap/opu/odata/IBP/MASTER_DATA_API_SRV",
+            "authentication": "BasicAuthentication",
+            "username": "BTPUSER",
+            "password": "Sbp@btpproductdevelopment01"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "IBPExternal",
+            "path": "/sap/opu/odata/IBP/MASTER_DATA_API_SRV"
+          }
+        }
+      },
+      "IBPChangeHistory": {
+        "kind": "odata-v2",
+        "model": "srv/external/IBPChangeHistory",
+        "[development]": {
+          "credentials": {
+            "url": "https://my308633-api.scmibp1.ondemand.com/sap/opu/odata/IBP/API_CHANGEHISTORY_READ_SRV",
+            "authentication": "BasicAuthentication",
+            "username": "BTPUSER",
+            "password": "Sbp@btpproductdevelopment01"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "IBPExternal",
+            "path": "/sap/opu/odata/IBP/API_CHANGEHISTORY_READ_SRV"
+          }
+        }
+      },
+      "S4ODataService": {
+        "kind": "odata-v2",
+        "model": "srv/external/S4ODataService",
+        "[development]": {
+          "credentials": {
+            "url": "http://sbps4d.sbpcorp.com:50000/sap/opu/odata//SBPC/IBP_CIR_SRV",
+            "authentication": "BasicAuthentication",
+            "username": "SBPTECHTEAM",
+            "password": "sbpdev01"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "S4D_HTTP",
+            "path": "/sap/opu/odata//SBPC/IBP_CIR_SRV"
+          }
+        }
+      },
+      "cap_servs": {
+        "kind": "odata-v2",
+        "model": "srv/external/cap_servs",
+        "[development]": {
+          "credentials": {
+            "url": "https://sbpmtt-dev-cap-servs-mt-srv.cfapps.us10-001.hana.ondemand.com/v2/catalog"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "cap_servs",
+            "path": "v2/catalog"
+          }
+        }
+      },
+      "multitenancy": true,
+      "connectivity": true,
+      "destinations": true
+    },
+    "query": {
+      "limit": {
+        "max": 50000
+      }
+    },
+    "profile": "with-mtx-sidecar"
+  }
+}

@@ -1,0 +1,28 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_PRODCLSCHAR
+-- Description:     Get products, location and class  details
+-- Join Details:    A: CP_PRODUCT_CLASS -  Master table for Product class
+--                  B: CP_CLASS - Master table for class 
+--                  C: CP_PRODUCT - Product master table
+--                  D: CP_LOCATION_PRODUCT - Master table for location product
+-----------------------------------------------------------------------------------------
+VIEW "V_PRODCLSCHAR"
+AS SELECT distinct A.PRODUCT_ID,
+          D.LOCATION_ID,
+          A.CLASS_NUM,
+          B.CLASS_NAME,
+          B.CLASS_DESC,
+          C.PROD_DESC,
+          C.PROD_FAMILY,
+          C.PROD_GROUP,
+          C.PROD_MODEL,
+          C.PROD_MDLRANGE,
+          C.PROD_SERIES
+    FROM  CP_PRODUCT_CLASS AS A
+    LEFT OUTER JOIN CP_CLASS AS B
+    ON A.CLASS_NUM = B.CLASS_NUM
+    INNER JOIN CP_PRODUCT AS C
+    on A.PRODUCT_ID = C.PRODUCT_ID
+    INNER JOIN CP_LOCATION_PRODUCT AS D
+    ON A.PRODUCT_ID = D.PRODUCT_ID
+    WHERE B.CLASS_TYPE != '200';

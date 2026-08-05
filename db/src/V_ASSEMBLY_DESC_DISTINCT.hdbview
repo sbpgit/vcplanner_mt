@@ -1,0 +1,3 @@
+/**Distinct assembly & description for Planner dashboard**/
+VIEW "V_ASSEMBLY_DESC_DISTINCT" AS
+    select distinct MAT_CHILD, PROD_DESC from CP_BOM_MAT ORDER BY MAT_CHILD;

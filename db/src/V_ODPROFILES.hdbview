@@ -1,0 +1,35 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_ODPROFILES
+-- Description:     Get Object dependency profiles and structure node for products
+-- Join Details:    A: V_BOMODCOND -  BOM objectdependency rules
+--                  B: CP_PAL_PROFILEOD - Profile object dependency
+--                  C: CP_PVS_BOM - PVS for BOM
+-----------------------------------------------------------------------------------------
+
+VIEW "V_ODPROFILES" AS
+SELECT DISTINCT A.LOCATION_ID,
+  D.LOCATION_DESC,
+  A.PRODUCT_ID,
+  D.PROD_DESC,
+  A.ITEM_NUM,
+  A.COMPONENT,
+  A.COMP_DESC,
+  C.STRUC_NODE,
+  B.PROFILE 
+FROM CP_BOMHEADER AS A
+  LEFT OUTER JOIN CP_PAL_PROFILEOD AS B
+ ON (
+    A.LOCATION_ID = B.LOCATION_ID
+    AND A.PRODUCT_ID = B.PRODUCT_ID
+    AND A.COMPONENT = B.COMPONENT
+  )
+LEFT OUTER JOIN CP_PVS_BOM AS C
+ ON (
+  A.LOCATION_ID = C.LOCATION_ID
+  AND A.PRODUCT_ID = C.PRODUCT_ID
+  AND A.ITEM_NUM = C.ITEM_NUM
+  AND A.COMPONENT = C.COMPONENT
+)
+INNER JOIN V_LOCPROD AS D
+ON  A.LOCATION_ID = D.LOCATION_ID
+AND A.PRODUCT_ID = D.PRODUCT_ID;

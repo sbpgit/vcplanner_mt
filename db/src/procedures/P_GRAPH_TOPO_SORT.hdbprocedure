@@ -1,0 +1,124 @@
+PROCEDURE "P_GRAPH_TOPO_SORT"(
+  OUT ot_sorted_vertices TABLE (
+    "VERTEX_ID"    NVARCHAR(50),
+    "CHAR_KEY"     NVARCHAR(50),
+    "VALUE_CODE"   NVARCHAR(50),
+    "DERIVE_LEVEL" INTEGER,
+    "TOPO_ORDER"   INTEGER
+  )
+)
+LANGUAGE GRAPH
+READS SQL DATA AS
+BEGIN
+    /* 
+       =========================================================================
+       1. WORKSPACE INITIALIZATION
+       Accesses the Graph Workspace defined in the HDI container.
+       =========================================================================
+    */
+    GRAPH g = Graph("DERIVATION_GRAPH");
+
+    /* 
+       =========================================================================
+       2. TEMPORARY ATTRIBUTE DEFINITION (THE FIX)
+       HANA forbids writing to persistent table attributes. We define 
+       'TEMP_LEVEL' as a temporary attribute that exists only in memory 
+       during this procedure's execution.
+       =========================================================================
+    */
+    ALTER g ADD TEMPORARY VERTEX ATTRIBUTE (INTEGER "TEMP_LEVEL" = 0);
+
+    /* 
+       =========================================================================
+       3. DATA CONTAINER DEFINITIONS
+       - topo: Sequence to hold the final sorted vertices.
+       - in_degree: Map to track the count of incoming edges for each node.
+       - queue: Sequence for nodes with no pending dependencies.
+       =========================================================================
+    */
+    SEQUENCE<Vertex> topo         = SEQUENCE<Vertex>(:g);
+    MAP<Vertex, BIGINT> in_degree = MAP<Vertex, BIGINT>(:g, 0L);
+    SEQUENCE<Vertex> queue        = SEQUENCE<Vertex>(:g);
+
+    /* 
+       =========================================================================
+       4. PREREQUISITE CALCULATION (In-Degree)
+       Initialize in-degree for all vertices and then calculate based on edges.
+       =========================================================================
+    */
+    FOREACH v IN Vertices(:g) {
+        in_degree[:v] = 0L;
+    }
+
+    FOREACH e IN Edges(:g) {
+        Vertex tgt = Target(:e);
+        in_degree[:tgt] = :in_degree[:tgt] + 1L;
+    }
+
+    /* 
+       =========================================================================
+       5. SEEDING (FINDING ROOTS)
+       Any node with 0 incoming edges is considered a Root (Input).
+       =========================================================================
+    */
+    FOREACH v IN Vertices(:g) {
+        IF (:in_degree[:v] == 0L) {
+            queue = :queue || :v;
+            -- Roots stay at TEMP_LEVEL 0 (default)
+        }
+    }
+
+    /* 
+       =========================================================================
+       6. KAHN'S ALGORITHM ENGINE (Traversal & Depth Tracking)
+       This loop 'burns' through the graph layer-by-layer.
+       =========================================================================
+    */
+    BIGINT q_idx = 1L;
+    WHILE (:q_idx <= COUNT(:queue)) {
+        -- Extract the next ready node
+        Vertex v_node = :queue[:q_idx];
+        q_idx = :q_idx + 1L;
+
+        -- Append node to the final topological sequence
+        topo = :topo || :v_node;
+
+        -- Process child nodes (neighbours)
+        FOREACH out_edge IN OUT_EDGES(:v_node) {
+            Vertex neighbour = TARGET(:out_edge);
+            
+            -- Decrement dependency count
+            in_degree[:neighbour] = :in_degree[:neighbour] - 1L;
+            
+            /* 
+               DYNAMIC LEVEL CALCULATION
+               We write to our TEMPORARY attribute "TEMP_LEVEL". 
+               This bypasses the 'Write attribute access' error.
+            */
+            IF (:neighbour."TEMP_LEVEL" <= :v_node."TEMP_LEVEL") {
+                neighbour."TEMP_LEVEL" = :v_node."TEMP_LEVEL" + 1;
+            }
+
+            -- If all parents are processed, add child to queue
+            IF (:in_degree[:neighbour] == 0L) {
+                queue = :queue || :neighbour;
+            }
+        }
+    }
+
+    /* 
+       =========================================================================
+       7. STABLE OUTPUT ASSIGNMENT
+       Maps the sorted sequence back to the output table.
+       We project the TEMPORARY "TEMP_LEVEL" into the final "DERIVE_LEVEL" column.
+       =========================================================================
+    */
+    ot_sorted_vertices = SELECT
+        :v."VERTEX_ID",
+        :v."CHAR_KEY",
+        :v."VALUE_CODE",
+        :v."TEMP_LEVEL", -- Projecting the calculated temporary value
+        INTEGER(1)       -- Placeholder for TOPO_ORDER
+    FOREACH v IN :topo;
+
+END;

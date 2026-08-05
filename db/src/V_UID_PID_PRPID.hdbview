@@ -1,0 +1,35 @@
+--------------------------------------------------------------------------------------------------
+-- Name:            V_UID_PID_PRPID
+-- Description:     Get UNIQUE_ID, PRIMARY_ID, PRPID Data
+-- Join Details:    A: CP_SALES_HM -  Unique Id and Primary Ids mapped
+--                  B: CP_CLUSTER_PRPIDS_MAPPED_PIDS - Planning Relevant Primary Ids
+-------------------------------------------------------------------------------------------------
+VIEW "V_UID_PID_PRPID" AS
+SELECT DISTINCT A.LOCATION_ID,
+  A.PRODUCT_ID,
+  A.UNIQUE_ID,
+  A.PRIMARY_ID,
+  CASE
+    WHEN B.PRPID IS NOT NULL THEN B.PRPID
+    ELSE A.PRIMARY_ID
+  END AS PRPID,
+  -- C.UNIQUE_ID AS UID
+  A.UNIQUE_ID AS UID
+FROM CP_SALES_HM AS A
+  LEFT OUTER JOIN CP_CLUSTER_PRPIDS_MAPPED_PIDS AS B
+ ON A.PRIMARY_ID = B.PID
+  AND A.LOCATION_ID = B.LOCATION_ID
+  AND A.PRODUCT_ID = B.PRODUCT_ID
+--   INNER JOIN CP_SALES_HM AS C
+--  ON (
+  --   (
+  --     B.PRPID IS NOT NULL
+  --     AND C.PRIMARY_ID = B.PRPID
+  --   )
+  --   OR (
+  --     B.PRPID IS NULL
+  --     AND C.UNIQUE_ID = A.UNIQUE_ID
+  --   )
+  -- )
+  -- AND C.LOCATION_ID = A.LOCATION_ID
+  -- AND C.PRODUCT_ID = A.PRODUCT_ID;

@@ -1,0 +1,24 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_GETVARCHARPS
+-- Description:     Get Primary and secondary characteristics
+-- Join Details:    CP_PRODUCT_CLASS -  Master data for Product class
+--                  CP_IBPCHAR_PS - Get primary and secondary characteristics for IBP
+--                  V_CLASSCHARVAL - View for class and its characteristics 
+-----------------------------------------------------------------------------------------
+VIEW "V_GETIBPCHARPS"
+AS SELECT DISTINCT CP_IBPCHAR_PS.PRODUCT_ID,
+        --   CP_IBPCHAR_PS.LOCATION_ID,
+          CP_IBPCHAR_PS.CHAR_NUM,
+          V_CLASSCHARVAL.REF_CHAR_NUM,
+          V_CLASSCHARVAL.CHAR_NAME,
+          V_CLASSCHARVAL.CHAR_DESC,          
+          CP_IBPCHAR_PS.CHAR_TYPE,
+          CP_IBPCHAR_PS.SEQUENCE
+    FROM  CP_IBPCHAR_PS
+    
+    INNER JOIN CP_PRODUCT_CLASS
+    ON CP_IBPCHAR_PS.PRODUCT_ID = CP_PRODUCT_CLASS.PRODUCT_ID
+    INNER JOIN V_CLASSCHARVAL
+
+    ON  CP_PRODUCT_CLASS.CLASS_NUM   = V_CLASSCHARVAL.CLASS_NUM
+    AND CP_IBPCHAR_PS.CHAR_NUM    = V_CLASSCHARVAL.CHAR_NUM

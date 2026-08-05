@@ -1,0 +1,13 @@
+COLUMN TABLE "IBP_MASTER_GEN_RESULTS"(
+    "class_rows" INT,
+    "customer_rows" INT,
+    "product_rows" INT,
+    "location_product_rows" INT,
+    "loc_prod_comp_rows" INT,
+    "restriction_rows" INT,
+    "loc_restriction_rows" INT,
+    "timestamp" TIMESTAMP,
+    PRIMARY KEY(
+		"timestamp"
+	)
+);

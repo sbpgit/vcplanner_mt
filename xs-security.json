@@ -1,0 +1,17 @@
+{
+  "xsappname": "vcplanner_mt-sbpmtt-dev",
+  "tenant-mode": "shared",
+  "description": "Security profile of called application",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.mtcallback",
+      "description": "Subscription via SaaS Registry",
+      "grant-as-authority-to-apps": [
+        "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+      ]
+    }
+  ],
+  "attributes": [],
+  "role-templates": [],
+  "authorities-inheritance": false
+}

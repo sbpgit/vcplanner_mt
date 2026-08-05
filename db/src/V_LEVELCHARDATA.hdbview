@@ -1,0 +1,25 @@
+VIEW "V_LEVELCHARDATA"
+             AS SELECT DISTINCT A."PRODUCT_ID",
+                                A."CLASS_NUM",
+                                A.CHAR_NUM, 
+                                A.CHAR_NAME, 
+                                A.CHAR_DESC,
+                                A.CHAR_TYPE,
+                                A.MULTI_CHAR,
+                                A.CHAR_VALUE,
+                                	CASE 
+						            WHEN A.CHAR_TYPE <> 'NUM' and A.MULTI_CHAR <> 'X'  THEN 'X'
+						            ELSE ''
+						        END AS "STANDARD",
+                                D."LEVEL" AS "DERIVELEVEL",
+                            	CASE 
+						            WHEN D."LEVEL" = 0 THEN 'Independent'
+						            ELSE 'Dependent'
+						        END AS "LEVEL",
+                                '' AS "LABEL"
+                        FROM V_LOCPRODCLASSCHAR AS A
+                        INNER JOIN CP_DERIVED_NODES as D 
+                        ON A.PRODUCT_ID = D.PRODUCT_ID
+                        AND A.CHAR_NAME = D.CHAR_NAME
+                        AND A.CHAR_VALUE = D.CHAR_VALUE
+                        AND A.CLASS_NAME = D.CLASS_NAME;

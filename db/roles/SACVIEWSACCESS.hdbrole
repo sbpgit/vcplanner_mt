@@ -1,0 +1,16 @@
+{
+  "role": {
+    "name": "SACVIEWSACCESS",
+    "schema_privileges": [
+      {
+        "reference":"Roleref",
+        "privileges": [
+          "SELECT",
+          "EXECUTE",
+          "SELECT METADATA"
+        ],
+        "privileges_with_grant_option":[ "UPDATE" ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_GETASSEMBLY_NEW
+-- Description:     View to fetch Assembly and component
+-- Join Details:    CP_BOM_MAT -  TABLE for BOM Details
+--                  CP_ASSEMBLY_COMP - Table for Assembly and Components.
+-----------------------------------------------------------------------------------------
+
+VIEW "V_GETASSEMBLY_NEW"
+AS SELECT distinct
+	CP_BOM_MAT.LOCATION_ID,
+	CP_BOM_MAT.MAT_PARENT,
+	CP_BOM_MAT.COUNTER,
+	CP_ASSEMBLY_COMP.ASSEMBLY,
+	CP_BOM_MAT.PROD_DESC  AS ASMB_DESC,
+	CP_ASSEMBLY_COMP.COMPONENT,
+	CP_ASSEMBLY_COMP.COMP_DESC ,
+	CP_ASSEMBLY_COMP.CRITICAL_COMP,
+    CP_ASSEMBLY_COMP.VALID_FROM,
+    CP_ASSEMBLY_COMP.VALID_TO
+FROM 
+	CP_BOM_MAT
+	INNER JOIN
+	CP_ASSEMBLY_COMP
+	ON CP_BOM_MAT.LOCATION_ID = CP_ASSEMBLY_COMP.LOCATION_ID
+		AND CP_BOM_MAT.MAT_CHILD = CP_ASSEMBLY_COMP.ASSEMBLY
+	;

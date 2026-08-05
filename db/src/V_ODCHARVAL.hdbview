@@ -1,0 +1,27 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_ODCHARVAL
+-- Description:     Get Object dependency rule characteristics
+-- Join Details:    A: V_OBDHDR -  BOM objectdependency rules
+--                  B: V_CLASSCHARVAL - View for class, characteristics and values
+-----------------------------------------------------------------------------------------
+VIEW "V_ODCHARVAL"
+AS SELECT DISTINCT
+OBJ_DEP AS OBJDEP,
+CONCAT(A.OBJ_DEP, CONCAT('_',A.OBJ_COUNTER))  AS "OBJ_DEP",
+A.CLASS_NUM,
+B.CLASS_NAME,
+B.CLASS_DESC,
+A.CHAR_NUM,
+B.CHAR_NAME,
+B.CHAR_DESC,
+A.CHARVAL_NUM,
+B.CHAR_VALUE,
+B.CHARVAL_DESC,
+A.OD_CONDITION,
+A.CHAR_COUNTER,
+A.ROW_ID
+FROM "V_OBDHDR" AS A
+ LEFT OUTER JOIN V_CLASSCHARVAL AS B ON ( A.CLASS_NUM = B.CLASS_NUM
+                                AND  A.CHAR_NUM  = B.CHAR_NUM
+                                AND  A.CHARVAL_NUM = B.CHARVAL_NUM)
+ORDER BY CHAR_COUNTER;

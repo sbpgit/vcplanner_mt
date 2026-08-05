@@ -1,0 +1,20 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_LOCPRODACCESNODE
+-- Description:     View to fetch structure node for BOM
+-- Join Details:    A: CP_PROD_ACCNODE -  Table for Produt Access node
+--                  B: CP_PVS_NODE - Table for PVS MASTER DATA.
+-----------------------------------------------------------------------------------------
+VIEW "V_LOCPRODACCESNODE"
+AS SELECT DISTINCT A.LOCATION_ID,
+C.LOCATION_DESC,
+A.PRODUCT_ID,
+C.PROD_DESC,
+A.ACCESS_NODE,
+B.NODE_DESC
+from "CP_PROD_ACCNODE" as A
+INNER JOIN "CP_PVS_NODES" AS B
+ON  A.ACCESS_NODE = B.CHILD_NODE
+AND B.PARENT_NODE = ''
+INNER JOIN "V_LOCPROD" AS C
+ON A.LOCATION_ID = C.LOCATION_ID
+AND A.PRODUCT_ID = C.PRODUCT_ID;

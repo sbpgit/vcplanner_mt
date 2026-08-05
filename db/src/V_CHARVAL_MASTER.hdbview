@@ -1,0 +1,23 @@
+-------------------------------------------------------------------------------------------------
+-- Name:            V_CHARVAL_MASTER
+-- Description:     View to fetch int. number and its values for Characteristics and its values
+-- Join Details:    A: CP_CHARACTERISTICS -  Table for int. number of characteristics and values
+--                  B: CP_CHAR_VALUES - Table for int. number of characteristic values
+--------------------------------------------------------------------------------------------------
+VIEW "V_CHARVAL_MASTER" AS
+SELECT DISTINCT A.CLASS_NUM,
+  A.CHAR_NUM,
+  A.CHAR_NAME,
+  A.CHAR_DESC,
+  A.CHAR_GROUP,
+  A.CHAR_TYPE,
+  A.ENTRY_REQ,
+  A.CHAR_CATGRY,
+  A.MULTI_CHAR,
+  B.CHAR_VALUE,
+  B.CHARVAL_NUM,
+  B.CHARVAL_DESC,
+  B.CATCH_ALL
+FROM CP_CHARACTERISTICS_MASTER AS A
+  INNER JOIN CP_CHAR_VALUES_MASTER AS B
+ ON A.CHAR_NUM = B.CHAR_NUM;

@@ -1,0 +1,121 @@
+-- VIEW V_DEMAND_AND_FORECAST AS (
+--     SELECT a.LOCATION_ID,
+--       a.PRODUCT_ID,
+--       a.REF_PRODID,
+--       a.UNIQUE_ID,
+--       a.CHAR_NUM,
+--       a.CHAR_DESC,
+--       a.CHARVAL_NUM,
+--       a.CHARVAL_DESC,
+--       a.CHAR_VALUE,
+--       a.CHAR_NAME,
+--       a.PERIODDESC,
+--       a.WEEK_DATE,
+--       YEAR(a.WEEK_DATE) AS YEAR,
+--       QUARTER(a.WEEK_DATE) AS QUARTER,
+--       MONTH(a.WEEK_DATE) AS MONTH,
+--       a.RESERVE_FIELD1,
+--       a.RESERVE_FIELD2,
+--       a.RESERVE_FIELD3,
+--       a.RESERVE_FIELD4,
+--       a.RESERVE_FIELD5,
+--       a.CIR_QTY,
+--       NULL AS ORD_QTY,
+--       b.CIR_QTY AS QUANTITY
+--     FROM V_CIRUNIQUECHAR AS a
+--       LEFT OUTER JOIN V_CIRUNIQUECHAR AS b
+--    ON b.LOCATION_ID = a.LOCATION_ID
+--       AND b.PRODUCT_ID = a.PRODUCT_ID
+--       AND b.UNIQUE_ID = a.UNIQUE_ID
+--       AND b.CHAR_NUM = a.CHAR_NUM
+--       AND b.CHAR_VALUE = a.CHAR_VALUE
+--       AND b.WEEK_DATE = a.WEEK_DATE
+--       AND b.WEEK_DATE >= CURDATE()
+--   )
+--   UNION ALL
+--   (
+--     SELECT c.LOCATION_ID,
+--       c.PRODUCT_ID,
+--       c.REF_PRODID,
+--       c.UNIQUE_ID,
+--       c.CHAR_NUM,
+--       c.CHAR_DESC,
+--       c.CHARVAL_NUM,
+--       c.CHARVAL_DESC,
+--       c.CHAR_VALUE,
+--       c.CHAR_NAME,
+--       c.PERIODDESC,
+--       c.WEEK_DATE,
+--       YEAR(c.WEEK_DATE) AS YEAR,
+--       QUARTER(c.WEEK_DATE) AS QUARTER,
+--       MONTH(c.WEEK_DATE) AS MONTH,
+--       c.RESERVE_FIELD1,
+--       c.RESERVE_FIELD2,
+--       c.RESERVE_FIELD3,
+--       c.RESERVE_FIELD4,
+--       c.RESERVE_FIELD5,
+--       NULL AS CIR_QTY,
+--       c.ORD_QTY,
+--       d.ORD_QTY AS QUANTITY
+--     FROM V_SALESUNQ_DATA AS c
+--       LEFT OUTER JOIN V_SALESUNQ_DATA AS d
+--    ON d.LOCATION_ID = c.LOCATION_ID
+--       AND d.PRODUCT_ID = c.PRODUCT_ID
+--       AND d.UNIQUE_ID = c.UNIQUE_ID
+--       AND d.CHAR_NUM = c.CHAR_NUM
+--       AND d.CHAR_VALUE = c.CHAR_VALUE
+--       AND d.WEEK_DATE = c.WEEK_DATE
+--       AND d.WEEK_DATE >= CURDATE()
+--   );
+
+VIEW V_DEMAND_AND_FORECAST AS 
+  SELECT a.LOCATION_ID,
+        a.PRODUCT_ID,
+        a.REF_PRODID,
+        a.UNIQUE_ID,
+        a.CHAR_NUM,
+        a.CHAR_DESC,
+        a.CHARVAL_NUM,
+        a.CHARVAL_DESC,
+        a.CHAR_VALUE,
+        a.CHAR_NAME,
+        a.PERIODDESC,
+        a.WEEK_DATE,
+        YEAR(a.WEEK_DATE) AS YEAR,
+        QUARTER(a.WEEK_DATE) AS QUARTER,
+        MONTH(a.WEEK_DATE) AS MONTH,
+        a.RESERVE_FIELD1,
+        a.RESERVE_FIELD2,
+        a.RESERVE_FIELD3,
+        a.RESERVE_FIELD4,
+        a.RESERVE_FIELD5,
+        a.CIR_QTY,
+        NULL AS ORD_QTY,
+        a.CIR_QTY AS QUANTITY
+      FROM V_CIRUNIQUECHAR AS a
+     WHERE a.WEEK_DATE >= CURDATE()
+        UNION ALL (SELECT c.LOCATION_ID,
+        c.PRODUCT_ID,
+        c.REF_PRODID,
+        c.UNIQUE_ID,
+        c.CHAR_NUM,
+        c.CHAR_DESC,
+        c.CHARVAL_NUM,
+        c.CHARVAL_DESC,
+        c.CHAR_VALUE,
+        c.CHAR_NAME,
+        c.PERIODDESC,
+        c.WEEK_DATE,
+        YEAR(c.WEEK_DATE) AS YEAR,
+        QUARTER(c.WEEK_DATE) AS QUARTER,
+        MONTH(c.WEEK_DATE) AS MONTH,
+        c.RESERVE_FIELD1,
+        c.RESERVE_FIELD2,
+        c.RESERVE_FIELD3,
+        c.RESERVE_FIELD4,
+        c.RESERVE_FIELD5,
+        NULL AS CIR_QTY,
+        c.ORD_QTY,
+        c.ORD_QTY AS QUANTITY
+      FROM V_SALESUNQ_DATA AS c
+    WHERE c.WEEK_DATE >= CURDATE())

@@ -1,0 +1,164 @@
+VIEW "V_PROD_PRPID" AS
+
+--New view with Product Demand consideration
+-- WITH WEEKLY_SALES AS (
+--     -- Step 1: Aggregate sales by week
+--     SELECT 
+--         SALES.LOCATION_ID,
+--         SALES.PRODUCT_ID,
+--         SALES.UNIQUE_ID,
+--         SALES.PRIMARY_ID,
+--         CLUSTER.PRPID,
+--         ADD_DAYS(SALES.MAT_AVAILDATE, WEEKDAY(SALES.MAT_AVAILDATE) * -1) AS WEEK_DATE,
+--         SUM(SALES.ORD_QTY) AS ORD_QTY
+--     FROM "V_SALES_H" AS SALES
+--     INNER JOIN "CP_CLUSTER_PRPIDS_MAPPED_PIDS" AS CLUSTER
+--         ON SALES.LOCATION_ID = CLUSTER.LOCATION_ID  
+--         AND SALES.PRODUCT_ID = CLUSTER.PRODUCT_ID 
+--         AND SALES.PRIMARY_ID = CLUSTER.PID
+--     WHERE SALES.MAT_AVAILDATE >= CURRENT_DATE
+--     GROUP BY 
+--         SALES.LOCATION_ID,
+--         SALES.PRODUCT_ID,
+--         SALES.UNIQUE_ID,
+--         SALES.PRIMARY_ID,
+--         CLUSTER.PRPID,
+--         ADD_DAYS(SALES.MAT_AVAILDATE, WEEKDAY(SALES.MAT_AVAILDATE) * -1)
+-- ),
+-- WEEKLY_TOTALS AS (
+--     -- Step 2: Get total per week
+--     SELECT 
+--         LOCATION_ID,
+--         PRODUCT_ID,
+--         WEEK_DATE,
+--         SUM(ORD_QTY) AS TOTAL_WEEK_QTY
+--     FROM WEEKLY_SALES
+--     GROUP BY LOCATION_ID, PRODUCT_ID, WEEK_DATE
+-- ),
+-- ADJUSTED_WITH_RANK AS (
+--     SELECT 
+--         WS.LOCATION_ID,
+--         WS.PRODUCT_ID,
+--         WS.UNIQUE_ID,
+--         WS.PRIMARY_ID,
+--         WS.PRPID,
+--         WS.WEEK_DATE,
+--         WS.ORD_QTY,
+--         IBP.QUANTITY AS IBP_DEMAND,
+--         WT.TOTAL_WEEK_QTY,
+--         -- Calculate base adjusted quantity
+--         CASE 
+--             WHEN WT.TOTAL_WEEK_QTY > COALESCE(IBP.QUANTITY, WT.TOTAL_WEEK_QTY)
+--             THEN FLOOR(WS.ORD_QTY * (IBP.QUANTITY * 1.0 / NULLIF(WT.TOTAL_WEEK_QTY, 0)))
+--             ELSE WS.ORD_QTY
+--         END AS BASE_ADJUSTED_QTY,
+--         -- Rank by original ORD_QTY descending to distribute remainder
+--         ROW_NUMBER() OVER (
+--             PARTITION BY WS.LOCATION_ID, WS.PRODUCT_ID, WS.WEEK_DATE 
+--             ORDER BY WS.ORD_QTY DESC
+--         ) AS RANK_NUM,
+--         -- Count total records per week
+--         COUNT(*) OVER (
+--             PARTITION BY WS.LOCATION_ID, WS.PRODUCT_ID, WS.WEEK_DATE
+--         ) AS TOTAL_RECORDS
+--     FROM WEEKLY_SALES AS WS
+--     INNER JOIN WEEKLY_TOTALS AS WT
+--         ON WT.LOCATION_ID = WS.LOCATION_ID
+--         AND WT.PRODUCT_ID = WS.PRODUCT_ID
+--         AND WT.WEEK_DATE = WS.WEEK_DATE
+--     LEFT JOIN "CP_IBP_FUTUREDEMAND" AS IBP
+--         ON IBP.LOCATION_ID = WS.LOCATION_ID
+--         AND IBP.PRODUCT_ID = WS.PRODUCT_ID
+--         AND IBP.WEEK_DATE = WS.WEEK_DATE
+-- ),
+-- WEEKLY_BASE_SUM AS (
+--     -- Calculate sum of base adjusted quantities
+--     SELECT 
+--         LOCATION_ID,
+--         PRODUCT_ID,
+--         WEEK_DATE,
+--         SUM(BASE_ADJUSTED_QTY) AS BASE_SUM
+--     FROM ADJUSTED_WITH_RANK
+--     GROUP BY LOCATION_ID, PRODUCT_ID, WEEK_DATE
+-- ),
+-- FINAL_ADJUSTED AS (
+--     SELECT 
+--         A.LOCATION_ID,
+--         A.PRODUCT_ID,
+--         A.UNIQUE_ID,
+--         A.PRIMARY_ID,
+--         A.PRPID,
+--         A.WEEK_DATE AS MAT_AVAILDATE,
+--         -- add 1 to first N records where N = (IBP_DEMAND - BASE_SUM)
+--         CAST(
+--             A.BASE_ADJUSTED_QTY + 
+--             CASE 
+--                 WHEN A.TOTAL_WEEK_QTY > A.IBP_DEMAND 
+--                     AND A.RANK_NUM <= (A.IBP_DEMAND - WBS.BASE_SUM)
+--                 THEN 1
+--                 ELSE 0
+--             END AS INTEGER
+--         ) AS ORD_QTY,
+--         A.ORD_QTY AS ORIGINAL_ORD_QTY,
+--         A.IBP_DEMAND,
+--         A.TOTAL_WEEK_QTY AS WEEK_TOTAL
+--     FROM ADJUSTED_WITH_RANK AS A
+--     LEFT JOIN WEEKLY_BASE_SUM AS WBS
+--         ON WBS.LOCATION_ID = A.LOCATION_ID
+--         AND WBS.PRODUCT_ID = A.PRODUCT_ID
+--         AND WBS.WEEK_DATE = A.WEEK_DATE
+-- ),
+-- -- Add weekly summary
+-- WEEKLY_SUMMARY AS (
+--     SELECT 
+--         LOCATION_ID,
+--         PRODUCT_ID,
+--         MAT_AVAILDATE,
+--         SUM(ORD_QTY) AS TOTAL_ADJUSTED_ORD_QTY,
+--         SUM(ORIGINAL_ORD_QTY) AS TOTAL_ORIGINAL_ORD_QTY,
+--         MAX(IBP_DEMAND) AS IBP_DEMAND
+--     FROM FINAL_ADJUSTED
+--     GROUP BY LOCATION_ID, PRODUCT_ID, MAT_AVAILDATE
+-- )
+-- SELECT 
+--     F.LOCATION_ID,
+--     F.PRODUCT_ID,
+--     F.UNIQUE_ID,
+--     F.PRIMARY_ID,
+--     F.PRPID,
+--     F.MAT_AVAILDATE,
+--     F.ORD_QTY,
+--     F.ORIGINAL_ORD_QTY,
+--     F.IBP_DEMAND,
+--        WS.TOTAL_ADJUSTED_ORD_QTY,
+--     F.WEEK_TOTAL
+-- FROM FINAL_ADJUSTED AS F
+-- LEFT JOIN WEEKLY_SUMMARY AS WS
+--     ON WS.LOCATION_ID = F.LOCATION_ID
+--     AND WS.PRODUCT_ID = F.PRODUCT_ID
+--     AND WS.MAT_AVAILDATE = F.MAT_AVAILDATE
+-- ORDER BY F.MAT_AVAILDATE, F.PRPID, F.UNIQUE_ID
+
+-----
+SELECT SALES.LOCATION_ID,
+            SALES.PRODUCT_ID,
+            SALES.UNIQUE_ID,
+            SALES.PRIMARY_ID,
+            CLUSTER.PRPID,
+            ADD_DAYS(SALES.MAT_AVAILDATE,WEEKDAY(SALES.MAT_AVAILDATE) * -1 ) AS "MAT_AVAILDATE",
+             CAST(NULLIF(SUM(SALES.ORD_QTY), NULL) AS INTEGER) AS ORD_QTY
+        FROM "V_SALES_H" AS SALES
+        INNER JOIN "CP_CLUSTER_PRPIDS_MAPPED_PIDS" AS CLUSTER
+            ON SALES.LOCATION_ID = CLUSTER.LOCATION_ID  AND SALES.PRODUCT_ID = CLUSTER.PRODUCT_ID AND SALES.PRIMARY_ID = CLUSTER.PID
+        WHERE SALES.MAT_AVAILDATE >= (SELECT WEEK_STARTDATE from  CP_IBPCALENDER_WEEK
+                                                            where WEEK_STARTDATE <= CURRENT_DATE 
+                                                            and WEEK_ENDDATE >= CURRENT_DATE
+                                                            and LEVEL = 'W')
+        -- WHERE SALES.MAT_AVAILDATE >= CURRENT_DATE
+        GROUP BY 
+            SALES.LOCATION_ID,
+            SALES.PRODUCT_ID,
+            SALES.UNIQUE_ID,
+            SALES.PRIMARY_ID,
+            CLUSTER.PRPID,
+           ADD_DAYS(SALES.MAT_AVAILDATE,WEEKDAY(SALES.MAT_AVAILDATE) * -1 )

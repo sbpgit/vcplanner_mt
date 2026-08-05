@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_SALES_HF" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="false" analyticViewCompatibilityMode="true">
+<descriptions defaultDescription="CV_SALES_HF.hdbcalculationview"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_CIR_GENERATED">
+    <resourceUri>CP_CIR_GENERATED</resourceUri>
+  </DataSource>
+  <DataSource id="V_SAC_SALESH">
+    <resourceUri>V_SAC_SALESH</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="CIR_QTY"/>
+      <viewAttribute id="UNIQUE_ID"/>
+    
+      <viewAttribute id="CIR_ID"/>
+      <viewAttribute id="MODEL_VERSION"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="Ordered_Qty" datatype="DECIMAL" length="13" scale="3" expressionLanguage="SQL">
+        <formula>&quot;CIR_QTY&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="CP_CIR_GENERATED"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="UNIQUE_ID"/>
+      <viewAttribute id="PRIMARY_ID"/>
+      <viewAttribute id="ORD_QTY"/>
+      <viewAttribute id="WEEK_DATE"/>
+    
+      <viewAttribute id="SALES_ORG"/>
+      <viewAttribute id="DISTR_CHANNEL"/>
+      <viewAttribute id="DIVISION"/>
+      <viewAttribute id="SAL_DOCU_TYPE"/>
+      <viewAttribute id="ITEM_CHANGE_DATE"/>
+      <viewAttribute id="IBP_CUSTOMER"/>
+      <viewAttribute id="RELEVENT_FOR_PLAN"/>
+      <viewAttribute id="ON_HAND_STOCK"/>
+      <viewAttribute id="IN_TRANSIT"/>
+      <viewAttribute id="SHIP_FROM_LOC"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="V_SAC_SALESH"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+    <viewAttributes>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="UNIQUE_ID" aggregationType="sum"/>
+      <viewAttribute id="CIR_QTY" aggregationType="sum"/>
+    
+      <viewAttribute id="PRIMARY_ID" aggregationType="sum"/>
+    
+      <viewAttribute id="SALES_ORG"/>
+      <viewAttribute id="DISTR_CHANNEL"/>
+      <viewAttribute id="DIVISION"/>
+      <viewAttribute id="SAL_DOCU_TYPE"/>
+      <viewAttribute id="IBP_CUSTOMER"/>
+      <viewAttribute id="RELEVENT_FOR_PLAN"/>
+      <viewAttribute id="ON_HAND_STOCK"/>
+      <viewAttribute id="IN_TRANSIT"/>
+      <viewAttribute id="SHIP_FROM_LOC"/>
+    
+      <viewAttribute id="Ordered_Qty" aggregationType="sum"/>
+      <viewAttribute id="ORD_QTY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="Ordered_Qty"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="PRIMARY_ID" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SALES_ORG" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DISTR_CHANNEL" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="DIVISION" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SAL_DOCU_TYPE" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IBP_CUSTOMER" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="RELEVENT_FOR_PLAN" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ON_HAND_STOCK" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="IN_TRANSIT" null="true" value=""/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="SHIP_FROM_LOC" null="true" value=""/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="Ordered_Qty" source="Ordered_Qty"/>
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="ORD_QTY" null="true" value=""/>
+    </input>
+    <input node="Projection_2" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="UNIQUE_ID" source="UNIQUE_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CIR_QTY" source="ORD_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRIMARY_ID" source="PRIMARY_ID"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="SALES_ORG" source="SALES_ORG"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DISTR_CHANNEL" source="DISTR_CHANNEL"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DIVISION" source="DIVISION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SAL_DOCU_TYPE" source="SAL_DOCU_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IBP_CUSTOMER" source="IBP_CUSTOMER"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="RELEVENT_FOR_PLAN" source="RELEVENT_FOR_PLAN"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ON_HAND_STOCK" source="ON_HAND_STOCK"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="IN_TRANSIT" source="IN_TRANSIT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SHIP_FROM_LOC" source="SHIP_FROM_LOC"/>
+    
+      <mapping xsi:type="Calculation:ConstantAttributeMapping" target="Ordered_Qty" null="true" value=""/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ORD_QTY" source="ORD_QTY"/>
+    </input>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Union_1">
+  <attributes>
+    <attribute id="WEEK_DATE" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_DATE"/>
+      <keyMapping columnObjectName="Union_1" columnName="WEEK_DATE"/>
+    </attribute>
+    <attribute id="LOCATION_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Union_1" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Union_1" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="UNIQUE_ID" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="UNIQUE_ID"/>
+      <keyMapping columnObjectName="Union_1" columnName="UNIQUE_ID"/>
+    </attribute>
+    <attribute id="PRIMARY_ID" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRIMARY_ID"/>
+      <keyMapping columnObjectName="Union_1" columnName="PRIMARY_ID"/>
+    </attribute>
+  
+    <attribute id="SALES_ORG" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SALES_ORG"/>
+  
+      <keyMapping columnObjectName="Union_1" columnName="SALES_ORG"/>
+  
+    </attribute>
+    <attribute id="DISTR_CHANNEL" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DISTR_CHANNEL"/>
+      <keyMapping columnObjectName="Union_1" columnName="DISTR_CHANNEL"/>
+    </attribute>
+    <attribute id="DIVISION" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="DIVISION"/>
+      <keyMapping columnObjectName="Union_1" columnName="DIVISION"/>
+    </attribute>
+    <attribute id="SAL_DOCU_TYPE" order="10" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SAL_DOCU_TYPE"/>
+      <keyMapping columnObjectName="Union_1" columnName="SAL_DOCU_TYPE"/>
+    </attribute>
+    <attribute id="IBP_CUSTOMER" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="IBP_CUSTOMER"/>
+      <keyMapping columnObjectName="Union_1" columnName="IBP_CUSTOMER"/>
+    </attribute>
+    <attribute id="RELEVENT_FOR_PLAN" order="12" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="RELEVENT_FOR_PLAN"/>
+      <keyMapping columnObjectName="Union_1" columnName="RELEVENT_FOR_PLAN"/>
+    </attribute>
+    <attribute id="ON_HAND_STOCK" order="13" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ON_HAND_STOCK"/>
+      <keyMapping columnObjectName="Union_1" columnName="ON_HAND_STOCK"/>
+    </attribute>
+    <attribute id="IN_TRANSIT" order="14" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="IN_TRANSIT"/>
+      <keyMapping columnObjectName="Union_1" columnName="IN_TRANSIT"/>
+    </attribute>
+    <attribute id="SHIP_FROM_LOC" order="15" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SHIP_FROM_LOC"/>
+      <keyMapping columnObjectName="Union_1" columnName="SHIP_FROM_LOC"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="CIR_QTY" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="TOTAL_QTY"/>
+      <measureMapping columnObjectName="Union_1" columnName="CIR_QTY"/>
+    </measure>
+  
+    <measure id="Ordered_Qty" order="16" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CIR_QTY"/>
+      <measureMapping columnObjectName="Union_1" columnName="Ordered_Qty"/>
+    </measure>
+    <measure id="ORD_QTY" order="17" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ORDERED_QTY"/>
+      <measureMapping columnObjectName="Union_1" columnName="ORD_QTY"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="-17" y="322"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="224" y="322"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92" y="194"/>
+      <rectangleSize height="30" width="160"/>
+    </shape></shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_CHARACTERISTICS_MASTER" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_CHARACTERISTICS_MASTER"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="CP_CHARACTERISTICS_MASTER">
+    <resourceUri>CP_CHARACTERISTICS_MASTER</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews/>
+<logicalModel id="CP_CHARACTERISTICS_MASTER">
+  <attributes>
+    <attribute id="CLASS_NUM" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CLASS_NUM"/>
+      <keyMapping columnObjectName="CP_CHARACTERISTICS_MASTER" columnName="CLASS_NUM"/>
+    </attribute>
+    <attribute id="CHAR_NUM" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NUM"/>
+      <keyMapping columnObjectName="CP_CHARACTERISTICS_MASTER" columnName="CHAR_NUM"/>
+    </attribute>
+    <attribute id="CHAR_NAME" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_NAME"/>
+      <keyMapping columnObjectName="CP_CHARACTERISTICS_MASTER" columnName="CHAR_NAME"/>
+    </attribute>
+    <attribute id="CHAR_DESC" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_DESC"/>
+      <keyMapping columnObjectName="CP_CHARACTERISTICS_MASTER" columnName="CHAR_DESC"/>
+    </attribute>
+    <attribute id="CHAR_GROUP" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_GROUP"/>
+      <keyMapping columnObjectName="CP_CHARACTERISTICS_MASTER" columnName="CHAR_GROUP"/>
+    </attribute>
+    <attribute id="CHAR_TYPE" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_TYPE"/>
+      <keyMapping columnObjectName="CP_CHARACTERISTICS_MASTER" columnName="CHAR_TYPE"/>
+    </attribute>
+    <attribute id="ENTRY_REQ" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENTRY_REQ"/>
+      <keyMapping columnObjectName="CP_CHARACTERISTICS_MASTER" columnName="ENTRY_REQ"/>
+    </attribute>
+    <attribute id="CHAR_CATGRY" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="CHAR_CATGRY"/>
+      <keyMapping columnObjectName="CP_CHARACTERISTICS_MASTER" columnName="CHAR_CATGRY"/>
+    </attribute>
+    <attribute id="MULTI_CHAR" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MULTI_CHAR"/>
+      <keyMapping columnObjectName="CP_CHARACTERISTICS_MASTER" columnName="MULTI_CHAR"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures>
+    <measure id="COUNT" order="10" aggregationType="sum" measureType="simple" datatype="INTEGER" expressionLanguage="SQL">
+      <descriptions defaultDescription="COUNT"/>
+      <formula>1</formula>
+      
+      <exceptionAggregationMetadata/>
+    </measure>
+  </calculatedMeasures>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

@@ -1,0 +1,38 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_BOM_TSPREDICTIONV2_M (Multi-Level BOM)
+-- Description:     View to fetch predictions for BOM components  
+-- Join Details:    A: F_BOM_CONFIG_PARTIAL_M -  Function for Multilevel BOM object dependency
+--                  B: CP_TS_PREDICTIONS  - Table for object dependency timeseries 
+-----------------------------------------------------------------------------------------
+VIEW "V_BOM_TSPREDICTIONV2_M"
+ AS SELECT
+ A.LOCATION_ID,
+ A.PRODUCT_ID,
+ A.REF_PRODID,
+ A.ITEM_NUM,
+ A.MAT_PARENT,
+ A.COMPONENT,
+ B.MODEL_VERSION,
+ B.VERSION,
+ B.SCENARIO,
+ B.CAL_DATE,
+ SUM(B.PREDICTED) as PREDICTED
+FROM 
+ F_BOM_CONFIG_PARTIAL_M() AS A
+ INNER JOIN
+ CP_TS_PREDICTIONS AS B
+ ON A.LOCATION_ID = B.LOCATION_ID
+AND A.PRODUCT_ID = B.PRODUCT_ID
+AND A.OBJ_DEP = B.OBJ_DEP
+WHERE B.OBJ_TYPE = 'OD'
+GROUP BY 
+ A.LOCATION_ID,
+ A.PRODUCT_ID,
+ A.REF_PRODID,
+ A.ITEM_NUM,
+ A.MAT_PARENT,
+ A.COMPONENT,
+ B.MODEL_VERSION,
+ B.VERSION,
+ B.SCENARIO,
+ B.CAL_DATE

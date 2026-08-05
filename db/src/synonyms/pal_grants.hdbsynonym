@@ -1,0 +1,20 @@
+{
+  "AUTO_EXPSMOOTH": {
+    "target": {
+      "object": "PAL_AUTO_EXPSMOOTH",
+      "schema": "_SYS_AFL"
+    }
+  },
+  "HIERARCHICAL_CLUSTERING": {
+    "target": {
+      "object": "PAL_HIERARCHICAL_CLUSTERING",
+      "schema": "_SYS_AFL"
+    }
+  },
+"CATPCA": {
+    "target" : {
+      "object": "PAL_CATPCA",
+      "schema": "_SYS_AFL"
+    }
+  }
+}

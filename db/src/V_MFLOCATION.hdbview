@@ -1,0 +1,25 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_MFLOCATION
+-- Description:     Fetch Factory Location and location description master table
+-- Join Details:    A: CP_FACTORY_SALESLOC-  Master table for factorylocation
+--                  B: CP_LOCATION- Master table for location description
+-----------------------------------------------------------------------------------------
+VIEW "V_MFLOCATION"
+AS SELECT DISTINCT
+A.FACTORY_LOC,
+B.LOCATION_DESC,
+A.PLAN_LOC,
+D.LOCATION_DESC AS PLANLOC_DESC,
+A.LOCATION_ID as DEMAND_LOC,
+C.LOCATION_DESC AS DEMAND_DESC
+FROM "CP_FACTORY_SALESLOC" AS A
+Inner JOIN "CP_LOCATION" AS B
+ON A."FACTORY_LOC" = B."LOCATION_ID"
+INNER JOIN "CP_LOCATION" AS C
+ON A."LOCATION_ID" = C."LOCATION_ID"
+INNER JOIN "CP_LOCATION" AS D
+ON A."PLAN_LOC" = D."LOCATION_ID"
+INNER JOIN "CP_PARTIALPROD_INTRO" AS E
+ON A."PRODUCT_ID" = E."PRODUCT_ID"
+AND A."LOCATION_ID" = E."LOCATION_ID"
+where A.FACTORY_LOC <> A.LOCATION_ID;

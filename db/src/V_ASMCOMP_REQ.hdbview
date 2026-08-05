@@ -1,0 +1,37 @@
+-- Name: V_ASMCOMP_REQ
+-- Description: View to fetch Subcomponent quantity based on Assembly Component Quantity
+
+VIEW "V_ASMCOMP_REQ"
+AS  
+SELECT 
+	B.WEEK_DATE,
+-- added
+	B.FACTORY_LOC,
+-- end
+	A.LOCATION_ID,
+	B.PRODUCT_ID,
+	A.ASSEMBLY,
+	A.COMPONENT,
+	CASE
+		WHEN ( A.COMP_QTY * B.COMP_QTY ) > 0 THEN ROUND( ( A.COMP_QTY * B.COMP_QTY ), 0 )
+		ELSE 0
+	END AS COMP_QTY,
+	B.VERSION,
+	B.SCENARIO,
+	B.MODEL_VERSION
+FROM 
+	"V_COMP_DEMDFACLOC" AS A
+	INNER JOIN
+	"V_ASSEMBLYREQ" AS B
+-- added 
+	ON A."LOCATION_ID" = B."LOCATION_ID"
+	-- ON A."LOCATION_ID" = B."FACTORY_LOC"
+-- end
+		AND A."ASSEMBLY" = B."COMPONENT";
+--    WHERE A."LOCATION_ID" = 'RX01'
+--    AND B."PRODUCT_ID" = '8150RW'
+--    AND A."ASSEMBLY" = 'AR205031'
+--    AND B."CAL_DATE" = '2022-03-20'
+--    AND B."VERSION" = 'BASELINE'
+--    AND B."SCENARIO" = 'BSL_SCENARIO'
+--    AND B."MODEL_VERSION" = 'Active'

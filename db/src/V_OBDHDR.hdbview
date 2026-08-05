@@ -1,0 +1,28 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_ODCHARVAL
+-- Description:     Get BOM objectdependency rules and its characteristics
+-- Join Details:    A: CP_OBJDEP_HEADER -  object dependency rules
+--                  B: V_BOMOD_DEMDFACLOC - BOM object dependency
+-----------------------------------------------------------------------------------------
+VIEW "V_OBDHDR"
+AS SELECT B.LOCATION_ID,
+        B.PRODUCT_ID,
+        B.ITEM_NUM,
+        B.COMPONENT,
+        B.COMP_QTY,
+        A.OBJ_DEP,
+        B.OBJDEP_DESC,
+        A.CLASS_NUM,
+        A.CHAR_NUM,
+        A.CHARVAL_NUM,
+        A.CHAR_VALUE,
+        A.OD_CONDITION,
+        A.OBJ_COUNTER,
+        A.CHAR_COUNTER,
+        A.ROW_ID,
+        B.OD_VALID_FROM,
+        B.OD_VALID_TO,
+        B.VALID_FROM,
+        B.VALID_TO
+ FROM CP_OBJDEP_HEADER  AS A
+ inner JOIN V_BOMOD_DEMDFACLOC AS B ON ( A.OBJ_DEP = B.OBJ_DEP );

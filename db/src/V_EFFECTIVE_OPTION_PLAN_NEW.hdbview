@@ -1,0 +1,197 @@
+VIEW V_EFFECTIVE_OPTION_PLAN_NEW AS
+
+WITH 
+    "FINALOPTION" AS
+    (
+        SELECT DISTINCT 
+            V."LOCATION_ID",
+            V."PRODUCT_ID",
+            COALESCE( PL.OPTION_PERCENT, L.OPTION_PERCENT, 'METHOD_3' ) AS OPTION_PERCENT
+        FROM 
+            "V_OPT_PER_CAL_NEW" AS V
+            LEFT OUTER JOIN CP_PROFILE_LOC_PROD AS PL
+               ON V."LOCATION_ID" = PL."LOCATION_ID"
+              AND V."PRODUCT_ID"  = PL.PRODUCT_ID
+            LEFT OUTER JOIN CP_PROFILE_LOC_PROD AS L
+               ON V."LOCATION_ID" = L."LOCATION_ID"
+              AND (L."PRODUCT_ID" IS NULL OR L."PRODUCT_ID" = 'NA')
+    ), 
+    
+    "PRODEMAND" AS
+    (
+        SELECT 
+            FD."LOCATION_ID",
+            FD."PRODUCT_ID",
+            FD."CUSTOMER_GROUP",
+            FD.MODEL_VERSION,
+            FD.VERSION,
+            FD."SCENARIO",
+            FD."WEEK_DATE",
+            FD."CHAR_NUM",
+            SUM(FD."OPT_QTY") AS OPT_QTY
+        FROM "CP_PAL_FCHARPLAN" AS FD
+        GROUP BY 
+            FD."LOCATION_ID",
+            FD."PRODUCT_ID",
+            FD."CUSTOMER_GROUP",
+            FD.MODEL_VERSION,
+            FD."VERSION",
+            FD."SCENARIO",
+            FD."WEEK_DATE",
+            FD."CHAR_NUM"
+    ),
+
+    "OPTION_PERCENTAGE" AS
+    (
+        SELECT 
+            OP.LOCATION_ID,
+            OP.PRODUCT_ID,
+            OP.WEEK_DATE,
+            OP.VERSION,
+            OP.SCENARIO,
+            OP.MODEL_VERSION,
+            OP.CHAR_NUM,
+            OP.CHARVAL_NUM,
+            SUM(OP.CIR_QTY) AS CIR_QTY
+        FROM "V_CIRUNIQUECHAR" AS OP
+        GROUP BY 
+            OP.LOCATION_ID,
+            OP.PRODUCT_ID,
+            OP.WEEK_DATE,
+            OP.VERSION,
+            OP.SCENARIO,
+            OP.MODEL_VERSION,
+            OP.CHAR_NUM,
+            OP.CHARVAL_NUM
+    )
+
+SELECT 
+    V."LOCATION_ID",
+    V."PRODUCT_ID",
+    V."CUSTOMER_GROUP",
+    V."MODEL_VERSION",
+    V."CHAR_NUM",
+    V."CHARVAL_NUM",
+    V."VERSION",
+    V."SCENARIO",
+    V."WEEK_DATE",
+    V."CHAR_DESC",
+    V."CHAR_NAME",
+    V."CHARVAL_DESC",
+    V."VERSION_NAME",
+    V."SCENARIO_NAME",
+    V."LOCATION_DESC",
+    V."PROD_DESC",
+    V."OPT_PERCENT",
+
+    CASE
+        WHEN V."PROD_DEMAND" = FD.OPT_QTY THEN V.OPT_QTY
+        ELSE ( V."PROD_DEMAND" * V.OPT_PERCENT / 100 )
+    END AS OPT_QTY,
+
+    V."PROD_DEMAND",
+    V."ACT_DEM_VC",
+    V."ACT_DEM",
+
+    (COALESCE(OP.CIR_QTY,0) - COALESCE(V.ACT_DEM_VC,0)) AS UNCONSUMED_QTY,
+
+    CASE 
+        WHEN OP."CIR_QTY" IS NULL OR OP."CIR_QTY" = 0 THEN 0
+        ELSE ( (OP."CIR_QTY" - COALESCE(V.ACT_DEM_VC,0)) / OP."CIR_QTY" ) * 100
+    END AS UNCONSUMED_PERCENT,
+
+    F.OPTION_PERCENT,
+    FD.OPT_QTY AS Tot,
+
+    CASE
+        WHEN F.OPTION_PERCENT = 'METHOD_1' THEN 
+            CASE
+                WHEN V."PROD_DEMAND" = FD.OPT_QTY THEN V.OPT_QTY
+                ELSE V."PROD_DEMAND" * V.OPT_PERCENT / 100
+            END
+
+        WHEN F.OPTION_PERCENT = 'METHOD_2' THEN 
+            CASE
+                WHEN V."ACT_DEM" <= V."PROD_DEMAND" 
+                     AND V."ACT_DEM_VC" > V.OPT_QTY
+                     THEN ( V."ACT_DEM_VC" 
+                          + ( ( V."PROD_DEMAND" - V."ACT_DEM" ) * ( V.OPT_PERCENT / 100 ) ) )
+                ELSE 
+                    CASE
+                        WHEN V."PROD_DEMAND" = FD.OPT_QTY THEN V.OPT_QTY
+                        ELSE V."PROD_DEMAND" * V.OPT_PERCENT / 100
+                    END
+            END
+
+        WHEN F.OPTION_PERCENT = 'METHOD_3' THEN 
+            CASE
+                WHEN V."ACT_DEM_VC" > 0 
+                     AND V."ACT_DEM" <= V."PROD_DEMAND"
+                     THEN ( V."ACT_DEM_VC" 
+                          + ( ( V."PROD_DEMAND" - V."ACT_DEM" ) * ( V.OPT_PERCENT / 100 ) ) )
+                ELSE 
+                    CASE
+                        WHEN V."PROD_DEMAND" = FD.OPT_QTY THEN V.OPT_QTY
+                        ELSE V."PROD_DEMAND" * V.OPT_PERCENT / 100
+                    END
+            END
+
+        ELSE 
+            CASE
+                WHEN V."PROD_DEMAND" = FD.OPT_QTY THEN V.OPT_QTY
+                ELSE V."PROD_DEMAND" * V.OPT_PERCENT / 100
+            END
+    END AS EFFECTIVE_QTY,
+
+    CASE
+        WHEN F.OPTION_PERCENT = 'METHOD_1' THEN V.OPT_PERCENT
+
+        WHEN F.OPTION_PERCENT = 'METHOD_2' THEN 
+            CASE
+                WHEN V."ACT_DEM" <= V."PROD_DEMAND"
+                     AND V."ACT_DEM_VC" > ( V."PROD_DEMAND" * ( V.OPT_PERCENT / 100 ) )
+                     THEN ( ( V."ACT_DEM_VC" 
+                            + ( ( V."PROD_DEMAND" - V."ACT_DEM" ) * ( V.OPT_PERCENT / 100 ) ) )
+                          / V."PROD_DEMAND" ) * 100
+                ELSE V.OPT_PERCENT
+            END
+
+        WHEN F.OPTION_PERCENT = 'METHOD_3' THEN
+            CASE
+                WHEN V."ACT_DEM_VC" > 0 
+                     AND V."ACT_DEM" <= V."PROD_DEMAND"
+                     THEN ( ( V."ACT_DEM_VC" 
+                            + ( ( V."PROD_DEMAND" - V."ACT_DEM" ) * ( V.OPT_PERCENT / 100 ) ) )
+                          / V."PROD_DEMAND" ) * 100
+                ELSE V.OPT_PERCENT
+            END
+
+        ELSE V.OPT_PERCENT
+    END AS EFFECTIVE_PER
+
+FROM 
+    "V_OPT_PER_CAL_NEW" AS V
+
+    INNER JOIN PRODEMAND AS FD
+           ON FD."LOCATION_ID"    = V.LOCATION_ID
+          AND FD."PRODUCT_ID"     = V.PRODUCT_ID
+          AND FD."CUSTOMER_GROUP" = V.CUSTOMER_GROUP
+          AND FD.MODEL_VERSION    = V.MODEL_VERSION
+          AND FD.VERSION          = V.VERSION
+          AND FD."SCENARIO"       = V.SCENARIO
+          AND FD."WEEK_DATE"      = V.WEEK_DATE
+          AND FD."CHAR_NUM"       = V."CHAR_NUM"
+
+    LEFT OUTER JOIN FINALOPTION AS F
+           ON V."LOCATION_ID" = F."LOCATION_ID"
+          AND V."PRODUCT_ID"  = F."PRODUCT_ID"
+
+    LEFT OUTER JOIN OPTION_PERCENTAGE AS OP
+           ON OP.LOCATION_ID   = V.LOCATION_ID 
+          AND OP.PRODUCT_ID    = V.PRODUCT_ID
+          AND OP.WEEK_DATE     = V.WEEK_DATE
+          AND OP.VERSION       = V.VERSION
+          AND OP.SCENARIO      = V.SCENARIO
+          AND OP.MODEL_VERSION = V.MODEL_VERSION
+          AND OP.CHAR_NUM      = V."CHAR_NUM"
+          AND OP.CHARVAL_NUM   = V.CHARVAL_NUM;

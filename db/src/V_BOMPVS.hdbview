@@ -1,0 +1,22 @@
+----------------------------------------------------------------------------------------
+-- Name:            V_BOMPVS
+-- Description:     View to fetch structure node for BOM
+-- Join Details:    A: V_BOM_DEMDFACLOC -  Table for BOM Header
+--                  B: CP_PVS_BOM - Table for PVS BOM.
+-----------------------------------------------------------------------------------------
+VIEW "V_BOMPVS"
+AS SELECT DISTINCT A.LOCATION_ID,
+A.PRODUCT_ID,
+A.ITEM_NUM,
+A.COMPONENT,
+A.COMP_QTY,
+A.COMP_DESC,
+A.VALID_FROM,
+A.VALID_TO,
+B.STRUC_NODE
+from "CP_BOMHEADER" as A
+LEFT OUTER JOIN "CP_PVS_BOM" as B
+on  A.LOCATION_ID = B.LOCATION_ID AND
+	A.PRODUCT_ID  = B.PRODUCT_ID AND
+	A.ITEM_NUM  = B.ITEM_NUM AND 
+	A.COMPONENT   = B.COMPONENT;

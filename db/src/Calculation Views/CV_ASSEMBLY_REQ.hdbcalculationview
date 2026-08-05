@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_ASSEMBLY_REQ" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Projection" cacheInvalidationPeriod="NONE" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_ASSEMBLY_REQ.hdbcalculationview"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="V_ASSEMBLYREQ">
+    <resourceUri>V_ASSEMBLYREQ</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews/>
+<logicalModel id="V_ASSEMBLYREQ">
+  <attributes>
+    <attribute id="LOCATION_ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="V_ASSEMBLYREQ" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="V_ASSEMBLYREQ" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="ITEM_NUM" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ITEM_NUM"/>
+      <keyMapping columnObjectName="V_ASSEMBLYREQ" columnName="ITEM_NUM"/>
+    </attribute>
+    <attribute id="COMPONENT" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COMPONENT"/>
+      <keyMapping columnObjectName="V_ASSEMBLYREQ" columnName="COMPONENT"/>
+    </attribute>
+    <attribute id="STRUC_NODE" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="STRUC_NODE"/>
+      <keyMapping columnObjectName="V_ASSEMBLYREQ" columnName="STRUC_NODE"/>
+    </attribute>
+    <attribute id="VERSION" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="VERSION"/>
+      <keyMapping columnObjectName="V_ASSEMBLYREQ" columnName="VERSION"/>
+    </attribute>
+    <attribute id="SCENARIO" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="SCENARIO"/>
+      <keyMapping columnObjectName="V_ASSEMBLYREQ" columnName="SCENARIO"/>
+    </attribute>
+    <attribute id="WEEK_DATE" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="WEEK_DATE"/>
+      <keyMapping columnObjectName="V_ASSEMBLYREQ" columnName="WEEK_DATE"/>
+    </attribute>
+    <attribute id="MODEL_VERSION" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MODEL_VERSION"/>
+      <keyMapping columnObjectName="V_ASSEMBLYREQ" columnName="MODEL_VERSION"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="QUANTITY" order="9" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUANTITY"/>
+      <measureMapping columnObjectName="V_ASSEMBLYREQ" columnName="QUANTITY"/>
+    </measure>
+    <measure id="COMPONENT_QTY" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="COMPONENT_QTY"/>
+      <measureMapping columnObjectName="V_ASSEMBLYREQ" columnName="COMPONENT_QTY"/>
+    </measure>
+    <measure id="ACT_COMP_QTY" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ACT_COMP_QTY"/>
+      <measureMapping columnObjectName="V_ASSEMBLYREQ" columnName="ACT_COMP_QTY"/>
+    </measure>
+    <measure id="STRUC_QTY" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="STRUC_QTY"/>
+      <measureMapping columnObjectName="V_ASSEMBLYREQ" columnName="STRUC_QTY"/>
+    </measure>
+    <measure id="UPPER_LIMIT" order="14" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="UPPER_LIMIT"/>
+      <measureMapping columnObjectName="V_ASSEMBLYREQ" columnName="UPPER_LIMIT"/>
+    </measure>
+    <measure id="LOWER_LIMIT" order="15" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="LOWER_LIMIT"/>
+      <measureMapping columnObjectName="V_ASSEMBLYREQ" columnName="LOWER_LIMIT"/>
+    </measure>
+    <measure id="COMP_QTY" order="16" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="COMP_QTY"/>
+      <measureMapping columnObjectName="V_ASSEMBLYREQ" columnName="COMP_QTY"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>

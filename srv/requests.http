@@ -1,0 +1,4248 @@
+### Get Products
+Send Request
+GET http://localhost:4004/sap/opu/odata/sap/catalog/$metadata HTTP/1.1
+
+
+### POST Regressions
+POST https://sbp-btp-sbpconsulting-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/generateRegModels
+Content-Type: application/json
+
+{
+    "vcRulesList": [
+      {
+        "Location": "FR10",
+        "Product": "KM_M219VBVS_BVS",
+        "GroupID": "M219VV00105NN_1"
+      }
+    ]
+}
+
+### generate Future Primary and Unique IDS
+GET http://localhost:4004/plstr-data/fgenPrimeAndUqiue()
+
+### generate Future Primary ID Timeseries Data
+GET http://localhost:4004/plstr-data/fgenFutureTsForPrimary()
+
+### generate Primary ID Timeseries Data
+GET http://localhost:4004/plstr-data/fgenTsForPrimary()
+
+### generate Timeseries Data
+GET http://localhost:4004/plstr-data/fgenTimeSeries()
+
+### generate Master Data
+GET http://localhost:4004/plstr-data/fgenMasterData()
+
+
+
+### generate Partial Products Data
+GET http://localhost:4004/plstr-data/fgenPartialProducts()
+
+### UPDATE APP STATS
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/res/updateAppStats
+Content-Type: application/json
+
+{
+
+}
+
+### UPDATE SYS STATS 
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/res/updateSysStats
+Content-Type: application/json
+
+{
+
+}
+
+
+### purge Resource Stats
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/res/purgeResStats
+Content-Type: application/json
+
+{
+}
+
+### UPDATE SYS STATS 
+POST http://localhost:4004/res/updateSysStats
+Content-Type: application/json
+
+{
+
+}
+
+### UPDATE NODE STATS 
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/res/updateNodeStats
+Content-Type: application/json
+
+{
+
+}
+
+
+
+### UPDATE SYS STATS 
+POST http://localhost:4004/res/updateNodeStats
+Content-Type: application/json
+
+{
+
+}
+
+
+### UPDATE JOBS LOCALLY
+GET http://localhost:4004/jobs/fUpdateJobs()
+
+
+
+### UPDATE JOBS LOCALLY
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/jobs/updateJobs
+{
+
+}
+
+### update Job Logs
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/jobs/syncJobs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIklaWXVMSitHM3ZRdVlxaVpzS2pmQWxlbzU0VC9ub1hWTTc1YkpabU12T3M9In0.eyJqdGkiOiI4MmY1NzUwMjRhZmE0NDIyYWJjYjNkNjllMTQ4ZDM1YSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxODA4MTg0LCJleHAiOjE3MjE4MTE3ODQsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.jy40bpVA7MAfc9tWxMUTHJl1gdCl_OP9pSmnFGeMSj4htAaWRO2d2Oiju37_GXO0LzmR2cgAJlRzx3rP1Wcgp1O0yNR_PGLHb1ahsB60wrLzeW8PI2h7_6pAwE8gB1mmDoNZLSgMFAbxJ3GqKlwFffCQ6szbB4ryb_ddDVMjr_dvbIh4CePhMpq9AUz4SBUZ5uV_QYiGCVeiEN1Zr4zJNOIcZwRjwnSl1CH8Nb-ZOr80ZvEJrn65wnD3qJAhVOY0Bw5CYVWbUb7Jl9J6vYQD4Rpo6ZnaC8spBb9ZZKOkJlddILylUQSg4v4MVNRaP6LaC92zoEn6J2stDI7oxgqdyA
+
+{
+	"timer" : 60000
+}
+
+### update Job Logs
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/jobs/syncJobs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogInBXYnU0MytUTCt0N1ZyK2xBY1BPbkRva0NWdDBMMkxLdUh4ZUo1YkM0NEk9In0.eyJqdGkiOiJmNmJkYzI0MmUyNTE0MGNmOGRhMDE5Zjc1NjE3ZTZlMyIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxODc1NDU5LCJleHAiOjE3MjE4NzkwNTksImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.PwaTKkduyC2CpDJo1rjj4g4C9Jgd6UdlEeD5dg0ZerDel-jlmapE7DRMB24h6zrzjZD5Ok-GXioGjje3-44faLrLgI1S02VOyjD71l5Grwdw-xMV-E12EJtyjw0ECQ55d3yy8y2337C5Et3qYTUmVyPr7hhKCoZwQNsDrMugieQcAXf8h5vo5rS9DTaajEFQzA7wiKV9oXlJYTf8g1bWPpAX18RW7fLAU6trpag3nUqg6AaRyQvMYdVUKZ27l9rQtD8OMFOAHpp4n74-0IiRpl0AjaV1IZfWngPJGnn_GC5mPqKqkpiE8EpMci8UprFqZqY952kX8lnexPseSzU9Fw
+
+{
+	"timer" : 0
+}
+
+
+### update Job Logs
+POST http://localhost:4004/jobs/syncJobs
+Content-Type: application/json
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogImdyT2JGVy9PMGxZM2M5L05tYm5EWDFrY3RhdWJ1d2VmODZnaWVQU2RZWEU9In0.eyJqdGkiOiJlMmE1OTgzYTY3YWI0ZjY5OWQ4ZWUwZDFkYzVkZDgxZiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIzMDcwMzUyLCJleHAiOjE3MjMwNzM5NTIsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.KXxUZC7x9ZBI-y7CufY_XFKie2oMEq9XGezpiGUuYP1LFgh2V-eBh-PueUwtP_qvb76kTTM4GTyDDPmsp0sb4sM_DUqfJ6mEjYrD5hkiwKiGR1QQB1lpyBOT5C7SSXQsW3cuc1DlSaGy596ZPglV2sLKEhFi74V8YrtkA7P6Uu7NNai6VAFxWOd7uVykkMk3E0Xk551C8qti5NyJXHqvWkatHagoEfahBxiYRoF5Dqvdlz4TexdaXfLQH3kenVvADbXIOAFTlosZbXdPU11JIiMqDyFr4TR77g67033lrFKAHNIrqyHl6eZwC-7qg9iXpumVM3SAAtgsT1Z5N-lZ9w'
+
+{
+	"timer" : 0
+}
+
+### READ JOB SCHEDULES LOCALLY
+GET http://localhost:4004/jobs/lreadJobSchedules(jobId=1950440)
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIjkyakMxN0t1VFlnNEx6R3FFNWNUZVNWNlErL1BDRFcxZmNWeEVaZ2xGOWs9In0.eyJqdGkiOiI2NWMwMzkzZmQ4ZTY0OGQ0YmYyN2JhNzBjZTMxMWIxNCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxODEwNTE1LCJleHAiOjE3MjE4MTQxMTUsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.HcWqHM8Nb9RmjyWS_oc5F5qJu3JFavKbv8gxZXuYdPVLLNLeLpNFeIvPbuqAGq4lBWMvG5UYFyb3RY6tnHfj8xAZAbG_Yrp_iu5RNN-pt6iyzpmh-8vG5vMtDzTFwdq5Br4eKdzoYb2CxNRJ6VIgbyX4G2Z68yVB-e4pASuaxBK6vGr7zsKPTuILWwS0X32nV_I9s1xDN2IN5v-MKiL8xzb3jA7WYb2c-uiJOmycs1Ss7TuxcmawBKNaL8ZE-i-iNrvTZvp7rttmeLDZ17agIsNIaLKiObPgSdREwdeDSwvt6IRgAty0fseG5yXZ4gwddD8Scd1DNrKqTNDvMRgr1w'
+
+
+### READ JOBS LOCALLY
+GET http://localhost:4004/jobs/lreadJobs()
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIjkyakMxN0t1VFlnNEx6R3FFNWNUZVNWNlErL1BDRFcxZmNWeEVaZ2xGOWs9In0.eyJqdGkiOiI2NWMwMzkzZmQ4ZTY0OGQ0YmYyN2JhNzBjZTMxMWIxNCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxODEwNTE1LCJleHAiOjE3MjE4MTQxMTUsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.HcWqHM8Nb9RmjyWS_oc5F5qJu3JFavKbv8gxZXuYdPVLLNLeLpNFeIvPbuqAGq4lBWMvG5UYFyb3RY6tnHfj8xAZAbG_Yrp_iu5RNN-pt6iyzpmh-8vG5vMtDzTFwdq5Br4eKdzoYb2CxNRJ6VIgbyX4G2Z68yVB-e4pASuaxBK6vGr7zsKPTuILWwS0X32nV_I9s1xDN2IN5v-MKiL8xzb3jA7WYb2c-uiJOmycs1Ss7TuxcmawBKNaL8ZE-i-iNrvTZvp7rttmeLDZ17agIsNIaLKiObPgSdREwdeDSwvt6IRgAty0fseG5yXZ4gwddD8Scd1DNrKqTNDvMRgr1w'
+
+### update Job Logs
+POST http://localhost:4004/jobs/syncJobsOneTime
+Content-Type: application/json
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIjkyakMxN0t1VFlnNEx6R3FFNWNUZVNWNlErL1BDRFcxZmNWeEVaZ2xGOWs9In0.eyJqdGkiOiI2NWMwMzkzZmQ4ZTY0OGQ0YmYyN2JhNzBjZTMxMWIxNCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxODEwNTE1LCJleHAiOjE3MjE4MTQxMTUsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.HcWqHM8Nb9RmjyWS_oc5F5qJu3JFavKbv8gxZXuYdPVLLNLeLpNFeIvPbuqAGq4lBWMvG5UYFyb3RY6tnHfj8xAZAbG_Yrp_iu5RNN-pt6iyzpmh-8vG5vMtDzTFwdq5Br4eKdzoYb2CxNRJ6VIgbyX4G2Z68yVB-e4pASuaxBK6vGr7zsKPTuILWwS0X32nV_I9s1xDN2IN5v-MKiL8xzb3jA7WYb2c-uiJOmycs1Ss7TuxcmawBKNaL8ZE-i-iNrvTZvp7rttmeLDZ17agIsNIaLKiObPgSdREwdeDSwvt6IRgAty0fseG5yXZ4gwddD8Scd1DNrKqTNDvMRgr1w'
+
+{
+}
+
+
+### update Job Logs
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/jobs/syncJobsOneTime
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogInBEVUVZVi9oaExycG9VNUJxakRkd21WWU9QS0RwdWxWVml6eUtFUkJVaVk9In0.eyJqdGkiOiI5ZWU1YzI5NzA3ZDI0MzJiOWY2YWQ0MWEyZTcyNGE4NCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIzMDkzMDkwLCJleHAiOjE3MjMwOTY2OTAsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.iNbjSzsMrADKPtWm-X5lGASMI0AGa6AJEpdhxkkG2TeGM90gF02GTMlPO7dNFYapfysLw2ES0kxJ6wnLYOe1fXlgwKGstb4TEmbPizC2NW-XTeY0jaVx4O_JHXNTPmeT3rpiuyGb6tbZyNexwQOBDxpZpT6QRQsVyZGy5gspnDB1ofbGfxWMhSx1MIWtE8JetCTNBrz04aVXWyKGQZPkZrV8XoHfuyu8XSbuCpZJMo1XMFHDsYCV8Rxxgj94InsTnpigpAtBbu1CBPwRYi2DFlGVK7goPdYegWY0GeYvYikkdVoFRB1DBSXnkFYTSWryKBlCqya-kyRk4GyIROr7GA
+
+{
+}
+
+### update Job Logs
+POST http://localhost:4004/sdi/ImportECCLoc
+Content-Type: application/json
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIjkyakMxN0t1VFlnNEx6R3FFNWNUZVNWNlErL1BDRFcxZmNWeEVaZ2xGOWs9In0.eyJqdGkiOiI2NWMwMzkzZmQ4ZTY0OGQ0YmYyN2JhNzBjZTMxMWIxNCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxODEwNTE1LCJleHAiOjE3MjE4MTQxMTUsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.HcWqHM8Nb9RmjyWS_oc5F5qJu3JFavKbv8gxZXuYdPVLLNLeLpNFeIvPbuqAGq4lBWMvG5UYFyb3RY6tnHfj8xAZAbG_Yrp_iu5RNN-pt6iyzpmh-8vG5vMtDzTFwdq5Br4eKdzoYb2CxNRJ6VIgbyX4G2Z68yVB-e4pASuaxBK6vGr7zsKPTuILWwS0X32nV_I9s1xDN2IN5v-MKiL8xzb3jA7WYb2c-uiJOmycs1Ss7TuxcmawBKNaL8ZE-i-iNrvTZvp7rttmeLDZ17agIsNIaLKiObPgSdREwdeDSwvt6IRgAty0fseG5yXZ4gwddD8Scd1DNrKqTNDvMRgr1w'
+
+{
+	
+}
+
+
+### update Job Logs
+POST http://localhost:4004/jobs/purgeJobLogs
+Content-Type: application/json
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIktHSGg0WC94Z0hvYitUOUVJMFRMRU9wSk80Qi9BQkR5eEVpNEdXeEJwd0k9In0.eyJqdGkiOiI5MjJhMGZjODNkOWQ0YjhmYTEyNjFmYjYyMmYyNTY0ZiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxNzk2NTY3LCJleHAiOjE3MjE4MDAxNjcsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.HAMmIIOfVdBVPdgc3TEGZGBlCBjdfFcEgnrcj7NytXj9po73Lq2G6_Pxb5-MXd_fRSvCzMIOmccDtsxwA38x0pSrvIl6yiahy0z0_k67YmGAx7HU4PnB-1KQPs_TqTQBfjPu_FosnCLPPPNGF9Abb5IKa_Q3c3-d4nvm4lN3VlHMQM2FiT8n2oPri5Sdudw-St-csSD3fv4VE6y_J4k5nwtYITid_j9y6RBysFJBl8ExCp98PtBbWeqVAhMtag5uxIPoMKGqXER8C15LubzX3N4tAHZXF2wTsld9csk0Ds8ovxkGhFTC1m6wd4A_hR47pkC9NWwAqEb7rxD5eBA9Eg'
+
+{
+	
+}
+
+### update Job Logs
+POST http://localhost:4004/jobs/updateJobs
+Content-Type: application/json
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIkNkeGlmQzN5SzRTVHhHeEtRcVhEV1BtdE9xV1pSRFFaSGZSQkd6THVNVGM9In0.eyJqdGkiOiI5ZDc0Mjk2ZTY5YzU0YjFhOTBlZWJhNTE1ZGY3ZGYyNiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxNjczMzExLCJleHAiOjE3MjE2NzY5MTEsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.MkpcdGiT-y2yRzAUyxf-l79IGNnSfaJ5ymX_ignlFlWLMOjcfAztBjQresXmaAaMJW-0_DDz1haZMc4fRDQY-v_W_ddciPdYzxGox-9RJWpfW6qWJQFw1KlLODU0xlGGKVjtPBvf6D7kdfUnmmOZdtpkdZHh9gCbMcEKvd7n2_Tn_ElptwFFXRjogDLOJfZ6arJ7t1yc0F8XOFZ3XirQ1YszQVirVjHcgkE_ytD0fmecvJIwiU0PSpK9ndnfZ5KLkKdUUAduu3a0qDIjRKUnlaV_wo2Q3zdtgVJTuEDsFXNfhY-cWXHqe85KayE65APeOz-pl_eL9hrAzdjqoA4lYw'
+
+{
+}
+
+
+
+### purge Job Logs
+POST http://localhost:4004/jobs/purgeJobLogs
+Content-Type: application/json
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIktHSGg0WC94Z0hvYitUOUVJMFRMRU9wSk80Qi9BQkR5eEVpNEdXeEJwd0k9In0.eyJqdGkiOiI5MjJhMGZjODNkOWQ0YjhmYTEyNjFmYjYyMmYyNTY0ZiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxNzk2NTY3LCJleHAiOjE3MjE4MDAxNjcsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.HAMmIIOfVdBVPdgc3TEGZGBlCBjdfFcEgnrcj7NytXj9po73Lq2G6_Pxb5-MXd_fRSvCzMIOmccDtsxwA38x0pSrvIl6yiahy0z0_k67YmGAx7HU4PnB-1KQPs_TqTQBfjPu_FosnCLPPPNGF9Abb5IKa_Q3c3-d4nvm4lN3VlHMQM2FiT8n2oPri5Sdudw-St-csSD3fv4VE6y_J4k5nwtYITid_j9y6RBysFJBl8ExCp98PtBbWeqVAhMtag5uxIPoMKGqXER8C15LubzX3N4tAHZXF2wTsld9csk0Ds8ovxkGhFTC1m6wd4A_hR47pkC9NWwAqEb7rxD5eBA9Eg'
+{
+}
+
+### purge Job Logs
+POST http://localhost:4004/jobs/purgeJobLogsNew
+Content-Type: application/json
+Authorization: 'eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIm5tMUg0NmFoSk9BY3JpaEE4V08xN2dtcmJ5YXZKY3h6dDFZS3d4cHFCVm89In0.eyJqdGkiOiJlNTQ5NWIyNDMxOGE0N2RkOGFkOWI3NTk4MDlhYWY0MiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIwNjEzOTUzLCJleHAiOjE3MjA2MTc1NTMsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.KcOzugu7A2IQEz9QWHBs6NmmOo1-EUY55olqYObPqSY9GoJkSBS2apYDwnhjKo1nJsF-RvNj3VfCBNOSm5Xpaiq63aIWfhyflU5_jzpgqqQalP043R_tIjsNGdriBypaomTmzCLnv6dPxa_KCbuk2ajXXYHUQDItVXbaazT6acg7jAG9knXBe9ugWo9ZUYROFQErS8MNpJr7X-i_LI_dDAjEaadO_1P6bGpFfC44So8u_RIilmA8hLG4ctUzs6S4OEp9m1iZ27FQUV_NC25jc69fnZRZxdcQqpGmnrBsd4j62CPAwzXiD6harxCflL5NLlUYSx9Ap6yobiV3y0LSpA'
+
+{
+}
+
+### purge Job Logs
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/jobs/purgeJobLogs
+Content-Type: application/json
+
+{
+}
+
+### purge Job Logs
+POST http://localhost:4004/jobs/purgeJobLogs
+Content-Type: application/json
+
+{
+}
+
+
+### purge Job Logs
+POST http://localhost:4004/jobs/purgeJobLogs
+Content-Type: application/json
+
+{
+	"purgeDays" : 5
+}
+
+
+### PURGE JOB LOGS
+GET http://localhost:4004/jobs/fpurgeJobLogs(purgeDays=3)
+
+
+
+
+### READ JOBS LOCALLY
+GET http://localhost:4004/jobs/lreadJobs()
+
+### READ JOB DETAILS LOCALLY
+GET http://localhost:4004/jobs/lreadJobDetails(jobId=618946,displaySchedules=true)
+
+### READ JOB SCHEDULES LOCALLY
+GET http://localhost:4004/jobs/lreadJobSchedules(jobId=613878)
+
+### READ JOB SCHEDULE LOCALLY
+GET http://localhost:4004/jobs/lreadJobSchedule(jobId=530818,scheduleId='fb51db58-73f9-4695-80ab-b30fa9825d94',displayLogs=true)
+
+
+### READ JOB ACTION LOGS LOCALLY
+GET http://localhost:4004/jobs/lreadJobActionLogs(jobId=570765)
+
+### READ JOB RUN LOGS LOCALLY
+GET http://localhost:4004/jobs/lreadJobRunLogs(jobId=570765,scheduleId='f4b12dca-84e3-4cf3-a2cd-58aed4970377',page_size=55,offset=0)
+
+### ADD ML JOB LOCALLY
+GET http://localhost:4004/jobs/laddMLJob(jobDetails='{"name": "generateModelsz","description" : "Generate Machine Learning Models","action" :"%2Fpal%2FgenerateModels","active" : true,"active" : true,"httpMethod" : "POST","startTime" : "2022-04-22 14:00 +0000","endTime" : "2022-05-22 14:00+0000","schedules" : [{"data" : {"vcRulesList":[{"profile" : "SBP_HGBT_0","override" : true,"Location":"RX01","Product":"8150RW","GroupID": "1973254_1","Type" : "OD","modelVersion" : "Simulation"}]},"cron": "* * * * * *%2F60 0","active": true,"startTime": "2022-04-22 14:00 +0000"}]}')
+
+### ADD ML JOB LOCALLY
+GET http://localhost:4004/jobs/laddMLJob(jobDetails='{"name": "generateJobActionLogs","description" : "Generate Job Action Logs","action" :"%2Fjobs%2FupdateJobs","active" : true,"active" : true,"httpMethod" : "POST","startTime" : "2022-06-06 14:00 +0000","endTime" : "2022-06-07 14:00+0000","schedules" : [{"data" : {},"cron": "* * * * * *%2F15 0","active": true,"startTime": "2022-06-06 14:00 +0000"}]}')
+
+### Add IBP locally
+GET http://localhost:4004/jobs/laddMLJob(jobDetails='{"name": "generateIBPsz1","description" : "Generate IBP","action" :"%2Fibpimport-srv%2FgenerateFDemandQty","active" : true,"active" : true,"httpMethod" : "POST","startTime" : "2022-05-11 14:00 +0000","endTime" : "2022-05-22 14:00+0000","schedules" : [{"data" : {"LOCATION_ID":"RX01","PRODUCT_ID":"8150RW","VERSION":"__BASELINE","SCENARIO":""},"cron": "","time":"2022-05-02 14:32 +0000",active": true,"startTime": "2022-05-02 14:00 +0000"}]}')
+
+### UPDATE JOB LOCALLY
+GET http://localhost:4004/jobs/lupdateJob(jobDetails='{"jobId" : 513493,"active": true,"startTime" : "2022-04-29 00:00 +0000","endTime" : "2022-06-22 00:00 +0000"}')
+
+### DELETE JOB LOCALLY
+GET http://localhost:4004/jobs/ldeleteJob(jobId=505387)
+
+
+### ADD  JOB SCHEDULE LOCALLY
+GET http://localhost:4004/jobs/laddJobSchedule(schedule='{"jobId":499941, "data" : {"vcRulesList":[{"profile" : "SBP_HGBT_0","override" : true,"Location":"RX01","Product":"8150RW","GroupID": "1973253_1","Type" : "OD","modelVersion" : "Simulation"}]},"description" : "Recurring Cron Generate Model for OD 1973253_1","active" : true,"cron": "* * * * * *%2F5 0","startTime": "2022-04-25 23:00 +0000","endTime" : "2022-04-26 15:00 +0000" }')
+
+
+### UPDATE JOB SCHEDULE LOCALLY
+GET http://localhost:4004/jobs/lupdateMLJobSchedule(schedule='{"jobId":499941, "scheduleId" : "633977c8-09d6-4a57-b03e-b12d03c3d9e8", "data" : {"vcRulesList":[{"profile" : "SBP_HGBT_0","override" : true,"Location":"RX01","Product":"8150RW","GroupID": "1973253_1","Type" : "OD","modelVersion" : "Simulation"}]},"description" : "Recurring Cron (Every Hour) Generate Model for OD 1973253_1","active" : true,"cron": "* * * * * *%2F60 0","startTime": "2022-04-25 23:00 +0000","endTime" : "2022-04-26 15:00 +0000" }')
+
+
+### DELETE  JOB SCHEDULE LOCALLY
+GET http://localhost:4004/jobs/ldeleteMLJobSchedule(scheduleDetails='{"jobId":499941,"scheduleId":"ba7035b2-d6d1-4525-b176-2066aa95f07a"}')
+
+### Dummy request
+GET http://localhost:4004/odata/v4/catalog/dummyFunctionForTesting()
+
+### CREATE ML JOB
+POST http://localhost:4004/jobs/createMLJob
+Content-Type: application/json
+
+{
+    "jobDetails" : {
+    "name": "generateModels",
+    "description" : "Generate Machine Learning Models",
+    "action" : "https://sbpprovider-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/generateRegModels",
+    "active" : true,
+    "httpMethod" : "POST",
+    "startTime" : "2022-03-31 09:00 +0000",
+    "endTime" : "2022-03-31 10:00 +0000",
+    "schedules" : [
+        {
+            "data" : {"vcRulesList":[
+                            {
+                                "profile" : "SBP_VARMA_0",
+                                "override" : true,
+                                "Location":"RX01",
+                                "Product":"8150RW",
+                                "GroupID": "1973254_1",
+                                "Type" : "OD",
+                                "modelVersion" : "Simulation"
+                            }
+                ]}
+        
+        }
+    ]
+    }
+}
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": false,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false
+		}
+	]
+}
+
+# ### generate Predictions
+# POST http://localhost:4004/pal/genPredictions
+# Content-Type: application/json
+
+# {
+# 	"vcRulesList": [
+# 		{
+# 			"override": false,
+# 			"Location": "PLUS",
+# 			"Product": "000000000000000011",
+# 			"GroupID": "ALL",
+# 			"Type": "PI",
+# 			"modelVersion": "Simulation",
+# 			"version": "__BASELINE",
+# 			"scenario": "_PLAN",
+# 			"impactAnalysis" : true,
+# 			"OptAlgorithm" : "LINEAR",
+# 			"OptFactor" : 0.9,
+# 			"DsAlgorithm" : "NONE",
+# 			"Optimization":true,
+# 			"OptProfile":"PLUS_LINEAR"
+# 		}
+# 	]
+# }
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": false,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"Optimization":true,
+			"OptProfile":"PLUS_LINEAR"
+		}
+	]
+}
+
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": false,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"Optimization":true,
+			"OptProfile":"PLUS_GD_NW"
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1520",
+			"Product": "S_44A230",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false,
+			"OptAlgorithm" : "GD",
+			"OptFactor" : 0.9,
+			"DsAlgorithm" : "NONE",
+			"startDate": "2023-10-20",
+            "endDate": "2023-10-27"
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": false,
+			"Location": "PLUS",
+			"Product": "000000000000000029",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false,
+			"OptAlgorithm" : "SLSQP",
+			"OptFactor" : 0.9,
+			"DsAlgorithm" : "NONE"
+		},
+		{
+			"override": false,
+			"Location": "PLUS",
+			"Product": "000000000000000028",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false,
+			"OptAlgorithm" : "SLSQP",
+			"OptFactor" : 0.9,
+			"DsAlgorithm" : "NONE"
+		},
+		{
+			"override": false,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false,
+			"OptAlgorithm" : "SLSQP",
+			"OptFactor" : 0.9,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": false,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false,
+			"Optimization" : true,
+			"OptProfile" : "None"
+		}
+	]
+}
+### generate Optimizations
+POST http://localhost:4004/pal/genOptimizations
+Content-Type: application/json
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogImRXNDZRMGk2RFd5Q1VQaTlMaFdJYStpN1V4ZmQ4RitXQ2YwOWFBajA4eGs9In0.eyJqdGkiOiJkMjAxZDFkZmQxN2M0ZThlOTNiMmIyNmVkYzVhZGE5YyIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxMDMxNjEzLCJleHAiOjE3MjEwMzUyMTMsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.UDJNGVI-q2fvWs9veTTfLz_FM6BPic-0osDUNWG5uM6fjfg3JsQZF7T3-XoUT4eK1sBgEb0CuVpzRNuxr9rv4A3yfPBZAxFGPw-TSg6KklVSwJMA4DtqPXGzSwvISO2eeikCQ3hhlSWfbnr0C-SeS3cW-V5R2H0DTt9xfoBMY9GgtZQBplvVNCL22MJHasQ49AohfHSeb_sY34YBCgIhTqXtVVRXzFR9WUmObGJ9UTotSFAIp7kLJpWmTgsaDfU8wbZL70VaE0dEFq-uFmnEjpwGynxVB0J2PZngPOCPaLXbQNc0Bfv4-Nb88Za8dM__P4eFENsKtwWug3tsGzWMHA'
+
+{
+	"optimizationsList": [
+		{
+			"Location": "PLUS",
+			"Product": "000000000000000029",
+			"Type": "PI",
+			"modelVersion" : "Active",
+ 			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"OptAlgorithm": "GD",
+			"OptFactor" : 0.9,
+			"startDate": "2024-08-01",
+            "endDate": "2024-08-10"
+		}
+	]
+}
+
+
+### generate Optimizations
+POST http://localhost:4004/pal/genOptimizations
+Content-Type: application/json
+
+{
+	"optimizationsList": [
+		{
+			"Location": "PLUS",
+			"Product": "000000000000000029",
+			"Type": "PI",
+			"modelVersion" : "Active",
+ 			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"OptAlgorithm": "GD",
+			"OptFactor" : 0.99,
+			"Optimization":true,
+			"OptProfile":"PLUS_GD_NW",
+			"startDate": "2025-06-23",
+            "endDate": "2025-06-23",
+			"override":false
+		},
+		{
+			"Location": "PLUS",
+			"Product": "000000000000000029",
+			"Type": "PI",
+			"modelVersion" : "Active",
+ 			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"OptAlgorithm": "GD",
+			"OptFactor" : 0.99,
+			"Optimization":true,
+			"OptProfile":"PLUS_GD",
+			"startDate": "2025-07-01",
+            "endDate": "2025-07-31",
+			"override":false
+		}
+	]
+}
+
+
+
+### generate Optimizations
+POST http://localhost:4004/pal/genOptimizations
+Content-Type: application/json
+
+{
+	"optimizationsList": [
+				{
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"Type": "PI",
+			"modelVersion" : "Active",
+ 			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"Optimization":true,
+			"OptProfile":"PLUS_GD_NW",
+			"startDate": "2025-12-01",
+            "endDate": "2025-12-01",
+			"override":true
+		}
+	]
+}
+
+
+### generate Optimizations
+POST http://localhost:4004/pal/genOptimizations
+Content-Type: application/json
+
+{
+	"optimizationsList": [
+		{
+			"Location": "PLUS",
+			"Product": "000000000000000029",
+			"Type": "PI",
+			"modelVersion" : "Active",
+ 			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"Optimization":true,
+			"OptProfile":"PLUS_LN_NW",
+			"startDate": "2025-08-18",
+            "endDate": "2025-08-31",
+			"override":true
+		}
+	]
+}
+
+
+### generate Optimizations
+POST http://localhost:4004/pal/genOptimizations
+Content-Type: application/json
+
+{
+	"optimizationsList": [
+		{
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"Type": "PI",
+			"modelVersion" : "Active",
+ 			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"OptAlgorithm": "GD",
+			"OptFactor" : 0.9,
+			"Optimization":true,
+			"OptProfile":"PLUS_LN_NW",
+			"startDate": "2025-06-23",
+            "endDate": "2025-06-23",
+			"override":false
+		}
+	]
+}
+
+### generate Optimizations
+POST http://localhost:4004/pal/genOptimizations
+Content-Type: application/json
+
+{
+	"optimizationsList": [
+		{
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"Type": "PI",
+			"modelVersion" : "Active",
+ 			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"OptAlgorithm": "GD",
+			"OptFactor" : 0.9,
+			"OptProfile":false,
+			"startDate": "2025-06-23",
+            "endDate": "2025-06-23"
+		}
+	]
+}
+
+### generate Optimizations
+POST http://localhost:4004/pal/genOptimizations
+Content-Type: application/json
+
+{
+	"optimizationsList": [
+		{
+			"Location": "1520",
+			"Product": "S_44A230",
+			"Type": "PI",
+			"modelVersion" : "Active",
+ 			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"OptAlgorithm": "GD",
+			"OptFactor" : 0.9,
+			"startDate": "2023-12-18",
+            "endDate": "2023-12-18"
+		}
+	]
+}
+
+
+
+### generate Models
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genFutureOptions
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIlR4Y1NTM29QNlo5UE9OU29VMzVLM1JkQW5rdnZtQ3l0L0FGeCtGRkR0Mkk9In0.eyJqdGkiOiI0YmE0ODE5MGE4ZmQ0YzI5YjU0ZjFmNWMxOGU0MjRmMCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzM2MjQ4MDk1LCJleHAiOjE3MzYyNTE2OTUsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.iBe6J4vnCy18n6cb3mioEK4br7pQz6Ih3eJKvLb5aOe_0x3mrG4AtNb7EUUVK283Yn74nNYfgrTa_E5QtQhigkQiJs57-XhNfZkiaR18JkMlNX7eeR1mmKilRdzoyHzeFmN2OibUxPdiuGSB9x5BOiq2D8pw7r-kSI0wdmTOJ2hGkB9vwdETEg2fP9YiZS6t2jP8Za0Offoa2RqMSkueJAHN1hVhLjZMqMlNjnnZi7-LwMgT8xs37ES2Dnh6q_bcCmlDelcqYG7k3N0dASVtcR4GnlFBN3eyU9JBE6op4mRzH6LioCEXwDEze2_lTC4UJDktSj0RzbqpWnxeBkhozA
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_TESM_AUTO",
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"Customer": "01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+### generate Models
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genFutureOptions
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIk9QcCtTbGRvV21xL3laUm5XUHZBM0RuTVdjZi8yYmRrdUVHK050YVUrU1U9In0.eyJqdGkiOiI3YTJlOTM3NTA0YTY0ZjczOGRhMTQ4ZjAxNWE4OTFhNyIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzM2MjM4MDM0LCJleHAiOjE3MzYyNDE2MzQsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.Dy5-w2CNuNB-h1kTqORDSzwaxo-21eHMpB6-kL_yFMEvMaEN0KtewvO81MpIMuGY0t4R2eyLGahUfyMv1pD-5o8HVQ_-thgoGInx5OfhIAF2FRr7-Hpz3qwc2RHKzlxgphV3v_8Hln_6Ntfw15aau8zKaznKkI05_2p0nl2jL0amYGI6wBwfgvs3phPqAoxBGJiuDLYGg1Tutb1cBXqYXsVRio1RJfSAXrd8ec3Ce8BBl3b8_L6PQ0T9auic-1Cr-eGIzHxCWqv9qK_oi8MzW8_zUCZe58-fpnwZTj1KOFMXwLS3J7EMrv6zPuVKnPjlKAPL7zYS18DD4SVYshf-sA
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"Customer": "01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogImdyT2JGVy9PMGxZM2M5L05tYm5EWDFrY3RhdWJ1d2VmODZnaWVQU2RZWEU9In0.eyJqdGkiOiJlMmE1OTgzYTY3YWI0ZjY5OWQ4ZWUwZDFkYzVkZDgxZiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIzMDcwMzUyLCJleHAiOjE3MjMwNzM5NTIsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.KXxUZC7x9ZBI-y7CufY_XFKie2oMEq9XGezpiGUuYP1LFgh2V-eBh-PueUwtP_qvb76kTTM4GTyDDPmsp0sb4sM_DUqfJ6mEjYrD5hkiwKiGR1QQB1lpyBOT5C7SSXQsW3cuc1DlSaGy596ZPglV2sLKEhFi74V8YrtkA7P6Uu7NNai6VAFxWOd7uVykkMk3E0Xk551C8qti5NyJXHqvWkatHagoEfahBxiYRoF5Dqvdlz4TexdaXfLQH3kenVvADbXIOAFTlosZbXdPU11JIiMqDyFr4TR77g67033lrFKAHNIrqyHl6eZwC-7qg9iXpumVM3SAAtgsT1Z5N-lZ9w'
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_VARMA_0",
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_VARMA_1",
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIm5vRDIyZVZTSEtIV21sWVFTek9VMlNaUExSS3FGcnJ1N093eG1NOHI3N1E9In0.eyJqdGkiOiI4OGNhYzY1MThiNTE0N2FhYmIwNzZmMTA5YjUzZmQ5ZiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxNzMyNTEwLCJleHAiOjE3MjE3MzYxMTAsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.bxnTNL4_-tcpd7kTgthKxRupGq1OqIiHLhA5107wd1apP8wIJA165xrXEVjkgR8UFq20h4ksDkniLG7oxslsMPa7DwjeuGCM48J_QisRHfCb6ZO39eZBkh4H5-6q92hPhKNqGm1WxEZj_7tjnZIlIjMRd0AKv4pa7VUodJsFNl3jFuEtMJUhARsx2uC4zvrWtD4i7YSY2M5HI2qQqPcLqyf5jaPqUCzPllxOMDUJllzdn7-yYjmljnnv3YdR9862P9297onuaXN2tPOPzZ2famFoOd4SiIsfz6ByB8z9ecO5V-e3Vgp_RT8Gok1hpthVZzqYw6vKz5o_LXF0wdE5qA'
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000&&!!$#(0000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false,
+			"OptAlgorithm" : "None",
+			"OptFactor" : 0.9,
+			"OptProfile":false,
+			"DsAlgorithm" : "None",
+			"startDate": "2025-06-23",
+            "endDate": "2025-06-23"
+		}
+	]
+}
+
+
+### generate Models
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/generateModels
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIkkwM2huaFVXOWx3cFZYRWp5OGpQN1pidUtCQmx3eE5yYkxSRDRrU3lpRUU9In0.eyJqdGkiOiIwNThlZWZhYzFmMzk0ZGM3YTBlOGNkOWE0YTQ1NzcwYSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxMjY5NTg1LCJleHAiOjE3MjEyNzMxODUsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.FgO_fa9_JWq-JIt0rwExHOUuNMzg7dTasc1sClHGZfRtiwtoH6nYLTe64SiAIF3a05HznUa_BSLfRsgQQUtSh32oYRG3VPMmf2v95oaynpjOnt6jEvN18HR1EV-ahy-sXy0dNG4ozuZLU9HHpOfiRmrBwTWdlGkYYiW-ePMWsn6xDH6cTAkxvIuaVXGrrQFE4tFnM_aAnPkOBWiRIo7fZli3KOqaVAgFXc_sB6cumYRoLMPhfaLPZIOUbTj01C3a0tKP1R8TDIrma8OoZJae8e__831xhsNB4NtokQcPzh-_1PbwB7eX02mYNCjOCwxeOVlE0WBW0dbNwSFObIFevw
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000&&!!$#(0000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genPredictions
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIkkwM2huaFVXOWx3cFZYRWp5OGpQN1pidUtCQmx3eE5yYkxSRDRrU3lpRUU9In0.eyJqdGkiOiIwNThlZWZhYzFmMzk0ZGM3YTBlOGNkOWE0YTQ1NzcwYSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxMjY5NTg1LCJleHAiOjE3MjEyNzMxODUsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.FgO_fa9_JWq-JIt0rwExHOUuNMzg7dTasc1sClHGZfRtiwtoH6nYLTe64SiAIF3a05HznUa_BSLfRsgQQUtSh32oYRG3VPMmf2v95oaynpjOnt6jEvN18HR1EV-ahy-sXy0dNG4ozuZLU9HHpOfiRmrBwTWdlGkYYiW-ePMWsn6xDH6cTAkxvIuaVXGrrQFE4tFnM_aAnPkOBWiRIo7fZli3KOqaVAgFXc_sB6cumYRoLMPhfaLPZIOUbTj01C3a0tKP1R8TDIrma8OoZJae8e__831xhsNB4NtokQcPzh-_1PbwB7eX02mYNCjOCwxeOVlE0WBW0dbNwSFObIFevw
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000&&!!$#(0000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false,
+			"OptAlgorithm" : "NONE",
+			"OptFactor" : 0.9,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+
+### generate Optimizations
+POST http://localhost:4004/pal/genOptimizations
+Content-Type: application/json
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogImRXNDZRMGk2RFd5Q1VQaTlMaFdJYStpN1V4ZmQ4RitXQ2YwOWFBajA4eGs9In0.eyJqdGkiOiJkMjAxZDFkZmQxN2M0ZThlOTNiMmIyNmVkYzVhZGE5YyIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxMDMxNjEzLCJleHAiOjE3MjEwMzUyMTMsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.UDJNGVI-q2fvWs9veTTfLz_FM6BPic-0osDUNWG5uM6fjfg3JsQZF7T3-XoUT4eK1sBgEb0CuVpzRNuxr9rv4A3yfPBZAxFGPw-TSg6KklVSwJMA4DtqPXGzSwvISO2eeikCQ3hhlSWfbnr0C-SeS3cW-V5R2H0DTt9xfoBMY9GgtZQBplvVNCL22MJHasQ49AohfHSeb_sY34YBCgIhTqXtVVRXzFR9WUmObGJ9UTotSFAIp7kLJpWmTgsaDfU8wbZL70VaE0dEFq-uFmnEjpwGynxVB0J2PZngPOCPaLXbQNc0Bfv4-Nb88Za8dM__P4eFENsKtwWug3tsGzWMHA'
+
+{
+	"optimizationsList": [
+		{
+			"Location": "PUS1",
+			"Product": "000000000000003041",
+			"Type": "PI",
+			"modelVersion" : "Active",
+ 			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"OptAlgorithm": "GD",
+			"OptFactor" : 0.9,
+			"startDate": "2024-07-15",
+            "endDate": "2025-01-15"
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogImRXNDZRMGk2RFd5Q1VQaTlMaFdJYStpN1V4ZmQ4RitXQ2YwOWFBajA4eGs9In0.eyJqdGkiOiJkMjAxZDFkZmQxN2M0ZThlOTNiMmIyNmVkYzVhZGE5YyIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzIxMDMxNjEzLCJleHAiOjE3MjEwMzUyMTMsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.UDJNGVI-q2fvWs9veTTfLz_FM6BPic-0osDUNWG5uM6fjfg3JsQZF7T3-XoUT4eK1sBgEb0CuVpzRNuxr9rv4A3yfPBZAxFGPw-TSg6KklVSwJMA4DtqPXGzSwvISO2eeikCQ3hhlSWfbnr0C-SeS3cW-V5R2H0DTt9xfoBMY9GgtZQBplvVNCL22MJHasQ49AohfHSeb_sY34YBCgIhTqXtVVRXzFR9WUmObGJ9UTotSFAIp7kLJpWmTgsaDfU8wbZL70VaE0dEFq-uFmnEjpwGynxVB0J2PZngPOCPaLXbQNc0Bfv4-Nb88Za8dM__P4eFENsKtwWug3tsGzWMHA'
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PUS1",
+			"Product": "000000000000003041",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "NONE",
+			"OptFactor" : 0.9,
+			"startDate": "2024-07-15",
+            "endDate": "2024-07-15"
+		}
+	]
+}
+
+
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "GD",
+			"OptFactor" : 0.9,
+			"startDate": "2024-05-06",
+            "endDate": "2024-09-20"
+		}
+	]
+}
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000029",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "GD",
+			"OptFactor" : 0.9,
+			"startDate": "2024-05-06",
+            "endDate": "2024-05-06"
+		}
+	]
+}
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1710",
+			"Product": "ALL",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "SLSQP",
+			"OptFactor" : 1,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+
+
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genPredictions
+Content-Type: application/json
+
+{
+		"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000029",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "LINEAR_GD",
+			"OptFactor" : 0.9,
+			"startDate": "2024-06-11",
+            "endDate": "2024-06-20"
+		}
+	]
+}
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genPredictions
+Content-Type: application/json
+
+{
+		"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000029",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "LINEAR_GD",
+			"OptFactor" : 0.9
+		},
+		{
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "LINEAR_GD",
+			"OptFactor" : 0.9
+		}
+	]
+}
+
+
+
+### generate Predictions
+POST http://localhost:4004/Odata/v4/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "LINEAR",
+			"OptFactor" : 0.9,
+			"startDate": "2024-06-11",
+            "endDate": "2024-06-20"
+		}
+	]
+}
+
+### generate Models
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_TESM",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_TESM",
+			"override": true,
+			"Location": "US15",
+			"Product": "MGBBSS",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002250",
+			"Customer": "01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active"
+		}
+	]
+}
+
+### generate Models
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_TESM",
+			"override": true,
+			"Location": "1520",
+			"Product": "VCP_200",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active"
+		}
+	]
+}
+
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002250",
+			"Customer": "01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "UPSIDE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+			{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1010",
+			"Product": "VCP_VEHICLE",
+			"Customer":"(01)",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+			{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002250",
+			"Customer":"01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+
+
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_SESM",
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000029",
+			"Customer":"01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}	
+
+### generate Future Options
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genFutureOptions
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIk9vU1h5TThTb3N0TnJEaXFKWnFJWHBFVis1U2k4YjFxL0xOZ0htUXZmMzQ9In0.eyJqdGkiOiI4YTYyN2Y5NDhiMzQ0MjI4ODFhMDZmN2M4ZWY1NTUwZSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzI5NzczMzQyLCJleHAiOjE3Mjk3NzY5NDIsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.ODQVUYmkkATViItGFZ6Cb2SnGlvC6ciwoGP1CvVP1RM6vXZKZBLj-FoI3sA-tX7fqIxgv7s4ULDQahSCHxjjJ4OKnlw1Y1d1pkbit7b-DNW-fe262cl5kG67WoJRBgk1HCiyqr4DujRH2FZmx2065ScCgTey-rHefZUOx1nQdUA5Tt3Jqkr9TjnHCz4zAhhZ_jddnzh3Id5ekEafVMBjCKfqLSaUXXYIpL_IEdGVWC-Mi_VnkSPO0L0scbI33wemyTt8-D8FXKVYTmt7AbLgDBuZ4LfgZPke6Fk74xVNsvvC7AndqzzErNvwovG7dNNrKdPhRzYx-lptPGqwcKWoZQ
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1600",
+			"Product": "VCP_1600",
+			"Customer":"01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}	
+
+
+### generate Future Options
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genFutureOptions
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIjNHb3J6WTZiNFpZQkk4Tmp2cC9zSjZ4bTJCRzE3dTd5UDhJZERHajIxTUU9In0.eyJqdGkiOiJhMDczNzI4NDBiZjA0NjllOTJhMzZlOTUzMWUzN2U4YSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzI5Njg3MDA2LCJleHAiOjE3Mjk2OTA2MDYsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.JfeiOLp7qimAlTF_VTCOUjAmZx40HzCwK8m0DTjmqTNlyRNvp5u8MvK8CCDiOybat6s9hVj_V0OVqBXIgRehiT_CS451vyYbLBaWXMQXTT9AACyQOQXWxOicOpxNc67Oeu-SPFB2t_Q60eTAJ8GONg8lmBq-GyxdUkA1V_rMf5Q3wKoOSFBLREzuF5jJw_XB_rs_G73w-dlOyA_lX9EFgFMdgYc9K33odvBalRCIRQ21IrR11P_PjJsoei1Ol6poBc-7Z_Q6vgy_x6DJ5k4pJAe4PIUGjNGz2rvNEfYA8tWHIU6easCEdeMovJU5rvEhJ-ll3LPotV0ioNdEktetOA
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1600",
+			"Product": "VCP_1600",
+			"Customer":"01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}	
+
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "US15",
+			"Product": "MGBBSS",
+			"Customer":"OTHERS",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_TESM",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002250",
+			"Customer":"01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		},
+		{
+			"profile": "SBP_AES_TESM",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002251",
+			"Customer":"01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		},
+		{
+			"profile": "SBP_AES_TESM",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002250",
+			"Customer":"02",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		},
+		{
+			"profile": "SBP_AES_TESM",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002251",
+			"Customer":"02",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+
+
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+			{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002250",
+			"Customer":"01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		},
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002251",
+			"Customer":"01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		},
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002250",
+			"Customer":"02",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		},
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002251",
+			"Customer":"02",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+
+	]
+}
+
+
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002250",
+			"Customer":"01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+
+	]
+}
+
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+			{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002250",
+			"Customer":"01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		},
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002251",
+			"Customer":"01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+
+	]
+}
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002251",
+			"Customer": "01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+
+### generate Models
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002250",
+			"Customer": "01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+
+### generate Models
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002251",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+### generate Future Options
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_TESM",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002251",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Models
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002251",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002250",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_VARMA_0",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_VARMA_0",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002262",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1520",
+			"Product": "VCP_200",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "NONE",
+			"OptFactor" : 1,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1710",
+			"Product": "0000000000000000000000000000000000002250",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "LINEAR",
+			"OptFactor" : 0.9,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002262",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "NONE",
+			"OptFactor" : 1,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1520",
+			"Product": "VCP_200",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false,
+			"OptAlgorithm" : "NONE",
+			"OptFactor" : 1,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false,
+			"OptAlgorithm" : "NONE",
+			"OptFactor" : 1,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002262",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false,
+			"OptAlgorithm" : "NONE",
+			"OptFactor" : 1,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "NONE",
+			"OptFactor" : 1,
+			"DsAlgorithm" : "NONE",
+			"startDate": "2025-07-14",
+            "endDate": "2025-07-14"
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "SLSQP",
+			"OptFactor" : 0.8,
+			"DsAlgorithm" : "NONE",
+			"startDate": "2023-11-10",
+            "endDate": "2023-11-17"
+		}
+	]
+}
+
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "SLSQP",
+			"OptFactor" : 0.8,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+### generate Predictions
+
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"impactAnalysis": true,
+			"Location": "1710",
+			"Product": "000000000000002242",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN"
+		}
+	]
+}
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"impactAnalysis": true,
+			"Location": "1710",
+			"Product": "000000000000002242",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN"
+		}
+	]
+}
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": false,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN"
+
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "AS01",
+			"Product": "000000000000000059",
+			"GroupID": "33_1",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN"
+
+		}
+	]
+}
+
+### generate Optimizations
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genOptimizations
+Content-Type: application/json
+
+{
+	"optimizationsList": [
+		{
+			"Location": "1710",
+			"Product": "000000000000002262",
+			"Type": "PI",
+			"ModelVersion" : "Active",
+ 			"Version": "__BASELINE",
+			"Scenario": "_PLAN",
+			"Algorithm": "GD",
+            "StartDate": "2023-12-20",
+            "EndDate": "2023-12-31"
+		}
+	]
+}
+
+### generate Optimizations
+POST http://localhost:4004/pal/genOptimizations
+Content-Type: application/json
+
+{
+	"optimizationsList": [
+		{
+			"Location": "1520",
+			"Product": "S_44A230",
+			"Type": "PI",
+			"modelVersion" : "Active",
+ 			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"OptAlgorithm": "LINEAR",
+			"OptFactor" : 0.9,
+            "startDate": "2023-10-09",
+            "endDate": "2023-10-09",
+			"initPredictions": false,
+			"minFactor": 0.4
+		}
+	]
+}
+
+
+### generate Optimizations
+POST http://localhost:4004/pal/genOptimizations
+Content-Type: application/json
+
+{
+	"optimizationsList": [
+		{
+			"Location": "1520",
+			"Product": "VCP_210",
+			"Type": "PI",
+			"modelVersion" : "Active",
+ 			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"OptAlgorithm": "LINEAR",
+			"OptFactor" : 0.9,
+            "startDate": "2023-10-09",
+            "endDate": "2023-10-09",
+			"initPredictions": false,
+			"minFactor": 0.7
+		}
+	]
+}
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1520",
+			"Product": "VCP_210",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "GD",
+			"OptFactor" : 0.6,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1520",
+			"Product": "S_44A230",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "GD",
+			"OptFactor" : 0.9,
+			"DsAlgorithm" : "NONE",
+			"startDate": "2023-10-09",
+            "endDate": "2023-10-09"
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_0",
+			"override": false,
+			"Location": "PL20",
+			"Product": "534EDPI0E131",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "1520",
+			"Product": "S_44A230",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "PLBE",
+			"Product": "000000000000000062",
+			"GroupID": "3471_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002262",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active"
+		},
+		{
+			"profile": "SBP_MLR_1",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002262",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_RDT_0",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active"
+
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": false,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true
+
+		},
+				{
+			"override": false,
+			"Location": "1710",
+			"Product": "000000000000002262",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true
+
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/purgePredictionModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI"
+		},
+		{
+			"Location": "1710",
+			"Product": "000000000000002262",
+			"GroupID": "ALL",
+			"Type": "PI"
+		}
+	]
+}
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": false,
+			"Location": "1710",
+			"Product": "000000000000002242",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN"
+		}
+	]
+}
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002262",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true
+		}
+	]
+}
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "LINEAR",
+			"OptFactor" : 0.8,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_MLR_0",
+			"override": true,
+			"Location": "1710",
+			"Product": "000000000000002261",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active"
+		}
+	]
+}
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "3511_1",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "_PLAN"
+		}
+	]
+}
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "13_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "15_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "13_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "15_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "17_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "19_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "21_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "23_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "25_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "27_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "29_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "31_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "33_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "35_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "37_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "39_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "42_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "44_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "46_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "48_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "50_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "56_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "58_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "60_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "63_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+		{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "65_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "67_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "69_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "73_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "75_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "79_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "82_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "84_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "87_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "91_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "94_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "96_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "98_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "101_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "104_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "106_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "109_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "117_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		},
+				{
+			"profile": "SBP_AUTOML_1",
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000055",
+			"GroupID": "120_1",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+		
+	]
+}
+
+
+### generate Models
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_MLR_1",
+			"override": true,
+			"Location": "1520",
+			"Product": "VCP_200",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_MLR_1",
+			"override": true,
+			"Location": "ALL",
+			"Product": "ALL",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": false,
+			"Location": "PL20",
+			"Product": "534EDPI0E131",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "BSL_SCENARIO",
+            "startDate": "2022-11-21",
+            "endDate": "2022-12-28"
+
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PL20",
+			"Product": "534EDPI0E119",
+			"GroupID": "534EDPI0E119_2741",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "BSL_SCENARIO",
+            "startDate" : "2022-10-24"
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PL20",
+			"Product": "534EDPI0E119",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "BSL_SCENARIO",
+            "startDate" : "2022-10-24"
+		}
+	]
+}
+
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "AS01",
+			"Product": "000000000000000059",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"startDate" : "2023-05-15",
+			"endDate": "2023-07-31"
+
+		},
+		{
+			"override": true,
+			"Location": "AS01",
+			"Product": "000000000000000069",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"startDate" : "2023-05-15",
+			"endDate": "2023-07-31"
+
+		}
+	]
+}
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000074",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"startDate" : "2023-07-01",
+			"endDate": "2024-01-22"
+
+		}
+	]
+}
+
+
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000077",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"startDate" : "2023-07-01",
+			"endDate": "2024-01-22"
+
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "3710",
+			"Product": "IBP-100",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN"
+        }
+	]
+}
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLDE",
+			"Product": "000000000000000078",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"startDate" : "2023-07-03",
+			"endDate": "2024-01-31"
+
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLDE",
+			"Product": "000000000000000078",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"startDate" : "2023-01-30",
+			"endDate": "2023-06-30"
+
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000074",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN"
+
+		}
+	]
+}
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLSE",
+			"Product": "000000000000000077",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN"
+
+		}
+	]
+}
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "PLDE",
+			"Product": "000000000000000078",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN"
+
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "ALL",
+			"Product": "ALL",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "_PLAN"
+
+		}
+	]
+}
+
+### generate Clusters Input Data
+POST http://localhost:4004/pal/genClusterUniqueIDS
+Content-Type: application/json
+
+{
+	"Location" : "PL20",
+	"Product" : "ALL",
+	"ProdType": true
+}
+
+### generate Clusters Input Data
+POST http://localhost:4004/pal/genClusterUniqueIDS
+Content-Type: application/json
+
+{
+	"Location" : "PL20",
+	"Product" : "534EDPI"
+}
+
+### generate Clusters Input Data
+POST http://localhost:4004/pal/getClusterUniqueIDs
+Content-Type: application/json
+
+{
+	"Location" : "PFC1",
+	"Product" : "A61A_P",
+	"Profile" : "SBP_AHC_PI",
+	"UniqueId" : "3605"
+}
+
+### generate Clusters Input Data
+POST http://localhost:4004/pal/getClusterUniqueIDs
+Content-Type: application/json
+
+{
+	"Location" : "PL20",
+	"Product" : "534EDPI",
+	"Profile" : "SBP_AHC_0",
+	"UniqueId" : "212"
+}
+
+### generate UniqueId CharVals  Input Data
+POST http://localhost:4004/pal/genUniqueIdCharVals
+Content-Type: application/json
+
+{
+	"Location" : "PL20",
+	"Product" : "534EDPI"
+}
+
+### generate Clusters Input Data
+POST http://localhost:4004/pal/genClusterUniqueIDS
+Content-Type: application/json
+
+{
+	"Location" : "1520",
+	"Product" : "VCP_200"
+}
+
+### generate Clusters Input Data
+POST http://localhost:4004/pal/getClusterUniqueIDs
+Content-Type: application/json
+
+{
+	"Location" : "PLUS",
+	"Product" : "000000000000000011",
+	"Profile" : "SBP_AHC_PI",
+	"UniqueId" : "11398"
+}
+
+
+### generate PrpIds 
+POST http://localhost:4004/pal/genPcaCat
+Content-Type: application/json
+
+{ "vcRulesList": [
+
+		{
+			"profile" : "SBP_PCA_CAT",
+			"Location" : "PLUS",
+			"Product" : "000000000000000029"
+		}
+	]
+}
+
+### generate PrpIds 
+POST http://localhost:4004/pal/generatePrpids
+Content-Type: application/json
+
+{ "vcRulesList": [
+
+		{
+			"Location" : "PLUS",
+			"Product" : "000000000000000011"
+		}
+	]
+}
+
+
+### generate PrpIds 
+POST http://localhost:4004/pal/generatePrpids
+Content-Type: application/json
+
+{ "vcRulesList": [
+
+		{
+			"Location" : "1600",
+			"Product" : "VCP_1600"
+		}
+	]
+}
+
+### generate PrpIds 
+POST http://localhost:4004/pal/generatePrpids
+Content-Type: application/json
+
+{ "vcRulesList": [
+
+		{
+			"Location" : "1600",
+			"Product" : "VEH_1600"
+		}
+	]
+}
+
+### generate PrpIds 
+POST http://localhost:4004/pal/generatePrpids
+Content-Type: application/json
+
+{ "vcRulesList": [
+
+		{
+			"Location" : "PFC1",
+			"Product" : "A61A_P"
+		}
+	]
+}
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "1600",
+			"Product": "VEH_1600",
+			"GroupID": "ALL",
+			"Type": "OD",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": false,
+			"Location": "UF74",
+			"Product": "NKGWCAXJFRGJL",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"Optimization":false,
+			"OptProfile":"NONE"
+		}
+	]
+}
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "UF74",
+			"Product": "NKGWCAXJFRGJL",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "UF74",
+			"Product": "NXKXKNMHRE",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Simulation"
+		}
+	]
+}
+
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "1600",
+			"Product": "VEH_1600",
+			"GroupID": "ALL",
+			"Type": "OD",
+			"modelVersion": "Active"
+		}
+	]
+}
+
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_RDT_0",
+			"override": true,
+			"Location": "1010",
+			"Product": "000000000000004426",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active"
+		}
+	]
+}
+
+### generate Models
+POST http://localhost:4004/pal/generateModels
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AUTOML_6",
+			"override": true,
+			"Location": "1010",
+			"Product": "000000000000004426",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active"
+		}
+	]
+}
+
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1010",
+			"Product": "000000000000004426",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false,
+			"Optimization":false,
+			"OptProfile":"NONE"
+		}
+	]
+}
+
+
+
+### generate Predictions
+POST http://localhost:4004/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": true,
+			"Location": "1600",
+			"Product": "VEH_1600",
+			"GroupID": "0000002018",
+			"Type": "OD",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : false,
+			"Optimization":false,
+			"OptProfile":"NONE"
+		}
+	]
+}
+
+
+### generate PrpIds 
+POST http://localhost:4004/pal/generatePrpids
+Content-Type: application/json
+
+{ "vcRulesList": [
+
+		{
+			"Location" : "1010",
+			"Product" : "000000000000004426"
+		}
+	]
+}
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_SESM_1",
+			"override": true,
+			"Location": "1010",
+			"Product": "000000000000004426",
+			"Customer":"('01')",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+
+	]
+}
+
+
+### get Clusters Input Data
+POST http://localhost:4004/pal/getClusterUniqueIDs
+Content-Type: application/json
+
+{
+	"Location" : "PLUS",
+	"Product" : "000000000000000011",
+	"Profile" : "SBP_AHC_PI",
+	"UniqueId" : "7226"
+}
+
+### get Clusters Input Data
+POST http://localhost:4004/pal/getClusterUniqueIDs
+Content-Type: application/json
+
+{
+	"Location" : "PLUS",
+	"Product" : "000000000000000011",
+	"Profile" : "SBP_AHC_PI",
+	"UniqueId" : "7226"
+}
+
+
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000029",
+			"Customer": "01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_AUTO",
+			"override": true,
+			"Location": "PFC1",
+			"Product": "A61A_P",
+			"Customer": "01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+
+### generate Future Options
+POST http://localhost:4004/pal/genFutureOptions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AES_SESM",
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"Customer": "01",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"Version": "__BASELINE",
+			"Scenario": "_PLAN"
+		}
+	]
+}
+
+
+### generate PrpIds 
+POST http://localhost:4004/pal/generatePrpids
+Content-Type: application/json
+
+{ "vcRulesList": [
+
+		{
+			"Location" : "PLUS",
+			"Product" : "000000000000000011"
+		},
+		{
+			"Location" : "PLUS",
+			"Product" : "AS_A61A"
+		}
+	]
+}
+
+### generate PrpIds 
+POST http://localhost:4004/pal/generatePrpids
+Content-Type: application/json
+
+{ "vcRulesList": [
+		{
+			"Location" : "PLUS",
+			"Product" : "000000000000000011"
+		},
+		{
+			"Location" : "PLUS",
+			"Product" : "000000000000000029"
+		}
+	]
+}
+
+
+### generate PrpIds 
+POST http://localhost:4004/pal/generatePrpids
+Content-Type: application/json
+
+{ "vcRulesList": [
+		
+		{
+			"Location" : "PLUS",
+			"Product" : "000000000000000029"
+		}
+	]
+}
+
+
+
+### generate PrpIds Input Data
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/generatePrpids
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogImhrN2VlNGxqMjNxdUNoUEZyRUgzb1FlcXF2VzlqbDdTbVpxRnczY2xZd2c9In0.eyJqdGkiOiJiM2RkZGIwODg1NWI0ODNhYTY4Yzk5NGEwNTcyMTVkOCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzM2MTY5NTQ3LCJleHAiOjE3MzYxNzMxNDcsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.gcooFs5Bf_cP83BrXevdjic4lhlwEtpSGRtUZM8lurO7LMYqVtxnVjO16f6UEfhGiv6ov4wdKaRm_EDm5ggmVQ7C1HyLCnkEhTlqWgUYHS39OhKZlMDrRpU8spP-EChmxRfSZNlCIdG-Ly9XtTWV08Dozbuy5-ogWwuax0G9ou-jne62u3iQRHGu8pZRff3r7qLr7p9eocjAtWIJCDhUB4DtPKw1j55ptpeoXZg6EkSqv78D4QFL0pk1NDqN8FUxeKJ7fw50xYzmqTX3jOsIWt_PALwNWDUxdNjGICChQNAga4MVQJViJLb_c6Cq1wOzn_MZ_41XR05xXPsnenGhRw
+
+{ 
+	"vcRulesList": [
+		{
+			"Location" : "PLUS",
+			"Product" : "000000000000000011"
+		}
+	]
+}
+
+### generate PrpIds Input Data
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/generatePrpids
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogImhrN2VlNGxqMjNxdUNoUEZyRUgzb1FlcXF2VzlqbDdTbVpxRnczY2xZd2c9In0.eyJqdGkiOiJiM2RkZGIwODg1NWI0ODNhYTY4Yzk5NGEwNTcyMTVkOCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzM2MTY5NTQ3LCJleHAiOjE3MzYxNzMxNDcsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.gcooFs5Bf_cP83BrXevdjic4lhlwEtpSGRtUZM8lurO7LMYqVtxnVjO16f6UEfhGiv6ov4wdKaRm_EDm5ggmVQ7C1HyLCnkEhTlqWgUYHS39OhKZlMDrRpU8spP-EChmxRfSZNlCIdG-Ly9XtTWV08Dozbuy5-ogWwuax0G9ou-jne62u3iQRHGu8pZRff3r7qLr7p9eocjAtWIJCDhUB4DtPKw1j55ptpeoXZg6EkSqv78D4QFL0pk1NDqN8FUxeKJ7fw50xYzmqTX3jOsIWt_PALwNWDUxdNjGICChQNAga4MVQJViJLb_c6Cq1wOzn_MZ_41XR05xXPsnenGhRw
+
+{ 
+	"vcRulesList": [
+		{
+			"Location" : "PLUS",
+			"Product" : "000000000000000011"
+		},
+		{
+			"Location" : "PLUS",
+			"Product" : "000000000000000029"
+		}
+	]
+}
+
+### GET CLUSTERS QTY
+GET http://localhost:4004/pal/fgetClustersQty(LOCATION_ID='PLUS',PRODUCT_ID='000000000000000011',CLUSTER_ID='',MODEL_PROFILE='',START_DATE='',END_DATE='',QTY_TYPE=1)
+
+
+### GET CLUSTERS QTY
+GET http://localhost:4004/pal/fgetClustersQty(LOCATION_ID='',PRODUCT_ID='',CLUSTER_ID='',MODEL_PROFILE='',START_DATE='',END_DATE='',QTY_TYPE=1)
+
+
+### GET CLUSTERS QTY
+GET http://localhost:4004/pal/fgetClustersQty(LOCATION_ID='PLUS',PRODUCT_ID='000000000000000011',CLUSTER_ID='1',MODEL_PROFILE='',START_DATE='2023-01-01',END_DATE='2023-01-31',QTY_TYPE=1)
+
+
+### GET CLUSTERS SEQUENCE
+GET http://localhost:4004/pal/fgetClustersSequence(LOCATION_ID='PLUS',PRODUCT_ID='000000000000000011',MODEL_PROFILE='SBP_AHC_PI',CLUSTER_ID=1)
+
+### GET CLUSTERS SEQUENCE
+GET http://localhost:4004/pal/fgetClustersSequence(LOCATION_ID='PLUS',PRODUCT_ID='000000000000000011',MODEL_PROFILE='',CLUSTER_ID=1)
+
+### generate Clusters Input Data
+POST http://localhost:4004/pal/genClusterUniqueIDS
+Content-Type: application/json
+
+{
+	"Location" : "PLUS",
+	"Product" : "000000000000000029"
+}
+
+### generate Clusters Input Data
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genClusterUniqueIDS
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIllzU1hmTy8rdk5ScGgxMmNmVUlMRERlT0FPa05FdFJPaWxaWmRZbCtKa2M9In0.eyJqdGkiOiI4OWRlNDgxNTJlNjM0M2JhYjU5OTFhNTkwMTcwNmQ0YiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzM1ODQ3MzM2LCJleHAiOjE3MzU4NTA5MzYsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.evgt7fGoFmTWs2UCdHsLXbKNnwRc0IgC8pvGwrwMjSX9neye49epC1AIbFUmsCatIXVD8fyqMbndfrUgArblhuZxoOkK-DBXeQw4KNq2GZhfy2F9W3OVWydo6oFThKazU_7bm__omkuwYDgIOfcplFyM5tSVHx5oATLXmkZz9FkryZs06dkLkLqatjAJr-zKnMJSumswPsoT6v3aObCNpE7mga1clyE4Bg70HaixMT3KqoBBK3ZszV7zREZ3a0EBHJ1d6I_btvIN3Z-JoyOe4TpyjgGxbzIk4d5MZr_pElrJvUDjW2Sfak1U65QwoDDlmvJEDi_qmIt2kJruZjySqg
+{
+	"Location" : "PLUS",
+	"Product" : "000000000000000011"
+}
+
+### generate Clusters Input Data
+POST http://localhost:4004/pal/genClusterUniqueIDS
+Content-Type: application/json
+
+{
+	"Location" : "PLNO",
+	"Product" : "000000000000000021"
+}
+
+### generate Clusters Input Data
+POST http://localhost:4004/pal/genClusterUniqueIDS
+Content-Type: application/json
+
+{
+	"Location" : "PUS1",
+	"Product" : "000000000000003041"
+}
+
+### generate Clusters
+POST http://localhost:4004/pal/genClusters
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AHC_13",
+			"override": false,
+			"Location": "PLUS",
+			"Product": "000000000000000011"
+		}
+	]
+}
+
+### generate UniqueId CharVals  Input Data
+POST http://localhost:4004/pal/genUidCharValsForClusterResults
+Content-Type: application/json
+
+{
+	"Location" : "PL20",
+	"Product" : "534EDPI",
+	"Profile" : "SBP_AHC_0"
+
+}
+
+### generate UniqueId CharVals  Input Data
+GET http://localhost:4004/pal/fgenUniqueIdCharVals(Location='PL20',Product='534EDPI0E119')
+
+### generate Clusters Input Data
+GET http://localhost:4004/pal/fgenClusterUniqueIDS(Location='PL20',Product='ALL')
+
+
+### generate Clusters
+POST http://localhost:4004/pal/genClusters
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AHC_0",
+			"override": false,
+			"Location": "PL20",
+			"Product": "534EDPI"
+		}
+	]
+}
+
+
+### generate Clusters
+POST http://localhost:4004/pal/genClusters
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AHC_0",
+			"override": false,
+			"Location": "PLCN",
+			"Product": "000000000000000057"
+		}
+	]
+}
+
+### generate Clusters
+POST http://localhost:4004/pal/genClusters
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AHC_0",
+			"override": false,
+			"Location": "PL20",
+			"Product": "534EDPI0E119"
+		},
+		{
+			"profile": "SBP_AHC_0",
+			"override": false,
+			"Location": "PL20",
+			"Product": "534EDPI0E131"
+		},
+		{
+			"profile": "SBP_AHC_0",
+			"override": false,
+			"Location": "PL20",
+			"Product": "534EDPI0E139"
+		},
+		{
+			"profile": "SBP_AHC_0",
+			"override": false,
+			"Location": "PL20",
+			"Product": "534EDPI0E161"
+		},
+		{
+			"profile": "SBP_AHC_0",
+			"override": false,
+			"Location": "PL20",
+			"Product": "534EDPI0E215"
+		}
+	]
+}
+
+### generate Clusters
+POST http://localhost:4004/pal/genClusters
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AHC_0",
+			"override": false,
+			"Location": "PL20",
+			"Product": "534EDPI"
+		},
+		{
+			"profile": "SBP_AHC_0",
+			"override": false,
+			"Location": "PL20",
+			"Product": "534ECPP"
+		}
+	]
+}
+
+
+
+### generate Clusters
+POST http://localhost:4004/pal/genClusters
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AHC_1",
+			"override": false,
+			"Location": "PL20",
+			"Product": "ALL"
+		}
+	]
+}
+
+### generate Clusters
+POST http://localhost:4004/pal/genClusters
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_AHC_0",
+			"override": true,
+			"Location": "PLCN",
+			"Product": "000000000000000057"
+		}
+	]
+}
+
+
+
+### generate Clusters Input Data
+POST http://localhost:4004/pal/handlePlanningProfiles
+Content-Type: application/json
+
+{
+	"cudType" : "CREATE",
+	"profilesList": [
+		{
+			"PLANNING_PROFILE": "PRPID_1",
+			"MIMIMUM_PRIMARY_IDS": 10,
+			"MINIMUM_CLUSTERS": 10,
+			"MAXIMUM_CLUSTERS": 100,
+			"PERCENTAGE": 10,
+			"PAST_PERIODS": 104,
+			"FUTURE_PERIODS":26,
+			"THRESHOLD_DMD": 50,
+			"CLUSTERING_PROFILE":"SBP_AHC_PI"
+		},
+		{
+			"PLANNING_PROFILE": "PRPID_2",
+			"MIMIMUM_PRIMARY_IDS": 5,
+			"MINIMUM_CLUSTERS": 10,
+			"MAXIMUM_CLUSTERS": 100,
+			"PERCENTAGE": 10,
+			"PAST_PERIODS": 104,
+			"FUTURE_PERIODS":26,
+			"THRESHOLD_DMD": 50,
+			"CLUSTERING_PROFILE":"SBP_AHC_PI"
+		},
+		{
+			"PLANNING_PROFILE": "PRPID_3",
+			"MIMIMUM_PRIMARY_IDS": 15,
+			"MINIMUM_CLUSTERS": 20,
+			"MAXIMUM_CLUSTERS": 100,
+			"PERCENTAGE": 10,
+			"PAST_PERIODS": 104,
+			"FUTURE_PERIODS":26,
+			"THRESHOLD_DMD": 50,
+			"CLUSTERING_PROFILE":"SBP_AHC_PI"
+		}
+	]
+}
+
+
+### generate Clusters Input Data
+POST http://localhost:4004/pal/handlePlanningProfiles
+Content-Type: application/json
+
+{
+	"cudType" : "DELETE",
+	"profilesList": [
+		{
+			"PLANNING_PROFILE": "PRPID_1",
+			"MIMIMUM_PRIMARY_IDS": 10,
+			"MINIMUM_CLUSTERS": 10,
+			"MAXIMUM_CLUSTERS": 100,
+			"PERCENTAGE": 10,
+			"PAST_PERIODS": 104,
+			"FUTURE_PERIODS":26,
+			"THRESHOLD_DMD": 50,
+			"CLUSTERING_PROFILE":"SBP_AHC_PI"
+		},
+		{
+			"PLANNING_PROFILE": "PRPID_3",
+			"MIMIMUM_PRIMARY_IDS": 15,
+			"MINIMUM_CLUSTERS": 20,
+			"MAXIMUM_CLUSTERS": 100,
+			"PERCENTAGE": 10,
+			"PAST_PERIODS": 104,
+			"FUTURE_PERIODS":26,
+			"THRESHOLD_DMD": 50,
+			"CLUSTERING_PROFILE":"SBP_AHC_PI"
+		}
+
+	]
+}
+
+// Assign Profiles at LOCATION-PRODUCT
+
+### Assign Profiles at LOCPROD
+POST http://localhost:4004/pal/assignProfilesAtLocProd
+Content-Type: application/json
+
+{
+	"cudType" : "CREATE",
+	"profilesList": [
+		{
+			"LOCATION_ID": "PLS1",
+			"PRODUCT_ID": "123456",
+			"PREDICTIVE_PROFILE": "SBP_HGBT_1",
+			"FORECASTING_PROFILE": "SBP_AES_1",
+			"PLANNING_PROFILE": "SBP_AHC_PI"
+		},
+		{
+			"LOCATION_ID": "PLS2",
+			"PRODUCT_ID": "123456",
+			"PREDICTIVE_PROFILE": "SBP_HGBT_2",
+			"FORECASTING_PROFILE": "SBP_AES_1",
+			"PLANNING_PROFILE": "SBP_AHC_PI"
+		}
+	]
+}
+
+
+### Assign Profiles at LOCPROD
+POST http://localhost:4004/pal/assignProfilesAtLocProd
+Content-Type: application/json
+
+{
+	"cudType" : "DELETE",
+	"profilesList": [
+	
+		{
+			"LOCATION_ID": "PLS2",
+			"PRODUCT_ID": "123456",
+			"PREDICTIVE_PROFILE": "SBP_HGBT_2",
+			"FORECASTING_PROFILE": "SBP_AES_1",
+			"PLANNING_PROFILE": "SBP_AHC_PI"
+		}
+	]
+}
+
+
+### Assign Profiles at LOC
+POST http://localhost:4004/pal/assignProfilesAtLoc
+Content-Type: application/json
+
+{
+	"cudType" : "CREATE",
+	"profilesList": [
+		{
+			"LOCATION_ID": "PLS1",
+			"PREDICTIVE_PROFILE": "SBP_HGBT_1",
+			"FORECASTING_PROFILE": "SBP_AES_1",
+			"PLANNING_PROFILE": "SBP_AHC_PI"
+		},
+		{
+			"LOCATION_ID": "PLS2",
+			"PREDICTIVE_PROFILE": "SBP_HGBT_2",
+			"FORECASTING_PROFILE": "SBP_AES_1",
+			"PLANNING_PROFILE": "SBP_AHC_PI"
+		}
+	]
+}
+
+
+### Assign Profiles at LOC
+POST http://localhost:4004/pal/assignProfilesAtLoc
+Content-Type: application/json
+
+{
+	"cudType" : "DELETE",
+	"profilesList": [
+	
+		{
+			"LOCATION_ID": "PLS2",
+			"PREDICTIVE_PROFILE": "SBP_HGBT_2",
+			"FORECASTING_PROFILE": "SBP_AES_1",
+			"PLANNING_PROFILE": "SBP_AHC_PI"
+		}
+	]
+}
+
+
+### Assign Profiles at LOC
+POST http://localhost:4004/pal/assignPrimaryIds
+Content-Type: application/json
+
+{
+	"cudType" : "CREATE",
+	"primaryIdsList": [
+		{
+			"LOCATION_ID": "PLS2",
+			"PRODUCT_ID": "123456",
+			"PRIMARY_ID": 12
+		},
+		{
+			"LOCATION_ID": "PLS2",
+			"PRODUCT_ID": "123456",
+			"PRIMARY_ID": 13
+		}
+	]
+}
+
+
+### Assign Primary IDs at LOC
+POST http://localhost:4004/pal/assignPrimaryIds
+Content-Type: application/json
+
+{
+	"cudType" : "DELETE",
+	"primaryIdsList": [
+	
+		{
+			"LOCATION_ID": "PLS2",
+			"PRODUCT_ID": "123456",
+			"PRIMARY_ID": 10
+		},
+		{
+			"LOCATION_ID": "PLS2",
+			"PRODUCT_ID": "123456",
+			"PRIMARY_ID": 11
+		}
+	]
+}
+
+### Get Products
+GET http://localhost:4004/catalog/generateTempUID(PROJECT_ID='PROJ000004',PRODUCT_ID='',PROJ_ACTIVE='')
+
+### get Resource Details
+GET http://localhost:4004/oData/v4/catalog/maintainRestrDetail
+
+
+
+
+
+
+
+
+### post temp UID
+GET http://localhost:4004/catalog/getRestrictionUID(LOCATION_ID='1600',PRODUCT_ID='VCP_1600',RULE_TYPE='RT',RESTRICTION='RTR_RULE',WEEK_DATE=2024-09-30,VERSION='__BASELINE',SCENARIO='_PLAN',MODEL_VERSION='Active')
+
+
+
+### post temp UID
+GET http://localhost:4004/catalog/getRestrLikelihood(LOCATION_ID='1600',VERSION='__BASELINE',SCENARIO='_PLAN',FROMDATE=2024-09-09,TODATE=2024-12-08,MODEL_VERSION='Active')
+
+
+
+### post temp UID
+GET http://localhost:4004/catalog/getAsmbCompReqFWeekly(LOCATION_ID='1600',FROMDATE=2024-09-06,TODATE=2024-12-20,VERSION='__BASELINE',SCENARIO='_PLAN',MODEL_VERSION='Active')
+
+### post temp UID
+GET http://localhost:4004/catalog/getAsmbCompReqFWeeklyPP(LOCATION_ID='1600',FROMDATE=2024-09-06,TODATE=2024-12-20,VERSION='__BASELINE',SCENARIO='_PLAN',MODEL_VERSION='Active',SEL='',pageStart=0,pageEnd=500,searchText='',type='REQ_QTY')
+
+### post temp UID
+GET http://localhost:4004/catalog/getAssemblyUIDNEW(LOCATION_ID='1600',COMPONENT='VCP_1634',WEEK_DATE=2024-09-30,VERSION='__BASELINE',SCENARIO='_PLAN')
+
+###
+
+GET http://localhost:4004/jobs/createJobFeed(jobFeedName='Job Feed for Testing')
+
+####
+GET http://localhost:4004/catalog/maintainRestrHdr(LOCATION_ID='1010',LINE_ID='Plant100',RESTRICTION='TestRest',RTR_DESC='TestRestriction',RTR_QTY=1,VALID_FROM=2024-10-15,VALID_TO=2024-11-05,Flag='C',User='')
+
+####
+GET http://localhost:4004/catalog/getPlannedOptionPercentage(LOCATION_ID='1600',PRODUCT_ID='VCP_1600',FROM_DATE=2025-01-01,TO_DATE=2025-12-31)
+
+
+
+####
+GET http://localhost:4004/catalog/getPlannedOptionPercentage(LOCATION_ID='1600',PRODUCT_ID='VCP_1600',FROM_DATE=2025-01-01,TO_DATE=2025-12-31)
+
+###
+ 
+GET http://localhost:4004/Job-scheduler/genTemplateDetails(FLAG='',VARIANT='',TEMPDATA='',PARAMDATA='')
+
+// Initialization Process
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/catalog/initialProcess
+Content-Type: application/json
+Authorization : Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIms1bkFWMXNhQjlrSXU5RG41U0tNK2JueTExN08vRFQwaTlWRStqUmk3UkU9In0.eyJqdGkiOiI4MmE2MDIxN2NkMjM0YjJmOGM3NGY3ZDJkNzE3ZmIxOCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzM2MzI3ODAwLCJleHAiOjE3MzYzMzE0MDAsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.fUtKy_63clW5JBeKgzKq7IN-oRuOM_0mUYnv0l1fMJrzl6lj4Z4OlwOdEMhdcCRmhEWUYFwGixo-t184_Mthxo4d0j7KqXqAPsi2dFkU82JQ_bABH2jb5zVnAoS8zlcOsgfnRkMMb_s5eLOoW_rxgeKS9Q9rzKBvsyAQwj3UFFUbpjiOx0pxsLYdr_7qH0c7_PH-25OAO95FpcDsMm1Ksnr_h32BAn31xUox0JffA34u52QUty7PvgjYYI42SpqcquJ9N5Yjdi-BK4haEv2D8ot3HelCyxwsNevkcsr6njoa-9t9w5u0Ze82BAK4QDyJsCP0oHzG9wpEzKFBB_UMjQ
+ 
+{
+    "LocProdWeeksData":"TEST"
+}
+
+### generate Models
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/generateModels
+Content-Type: application/json
+Authorization : Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoiZGVmYXVsdC1qd3Qta2V5LS0xMzEwMjc2Njc2IiwidHlwIjoiSldUIiwiamlkIjogIms1bkFWMXNhQjlrSXU5RG41U0tNK2JueTExN08vRFQwaTlWRStqUmk3UkU9In0.eyJqdGkiOiI4MmE2MDIxN2NkMjM0YjJmOGM3NGY3ZDJkNzE3ZmIxOCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI5ZDEyZjZmZC1iZGZkLTRiMjAtOThhNi01OTkzZmJhMzg1MzQiLCJ6ZG4iOiJ2Y3Bwcm92aWRlci1zYzBqZW9qcSJ9LCJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSJdLCJjbGllbnRfaWQiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjdhODhmNzI0IiwiaWF0IjoxNzM2MzI3ODAwLCJleHAiOjE3MzYzMzE0MDAsImlzcyI6Imh0dHBzOi8vdmNwcHJvdmlkZXItc2MwamVvanEuYXV0aGVudGljYXRpb24udXMxMC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjlkMTJmNmZkLWJkZmQtNGIyMC05OGE2LTU5OTNmYmEzODUzNCIsImF1ZCI6WyJ1YWEiLCJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3Il19.fUtKy_63clW5JBeKgzKq7IN-oRuOM_0mUYnv0l1fMJrzl6lj4Z4OlwOdEMhdcCRmhEWUYFwGixo-t184_Mthxo4d0j7KqXqAPsi2dFkU82JQ_bABH2jb5zVnAoS8zlcOsgfnRkMMb_s5eLOoW_rxgeKS9Q9rzKBvsyAQwj3UFFUbpjiOx0pxsLYdr_7qH0c7_PH-25OAO95FpcDsMm1Ksnr_h32BAn31xUox0JffA34u52QUty7PvgjYYI42SpqcquJ9N5Yjdi-BK4haEv2D8ot3HelCyxwsNevkcsr6njoa-9t9w5u0Ze82BAK4QDyJsCP0oHzG9wpEzKFBB_UMjQ
+
+{
+	"vcRulesList": [
+		{
+			"profile": "SBP_HGBT_1",
+			"override": true,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active"
+		}
+	]
+}
+
+
+### generate Predictions
+POST https://sbpbtp-vcpprovider-sc0jeojq-dev-config-products-srv.cfapps.us10.hana.ondemand.com/pal/genPredictions
+Content-Type: application/json
+
+{
+	"vcRulesList": [
+		{
+			"override": false,
+			"Location": "PLUS",
+			"Product": "000000000000000011",
+			"GroupID": "ALL",
+			"Type": "PI",
+			"modelVersion": "Active",
+			"version": "__BASELINE",
+			"scenario": "_PLAN",
+			"impactAnalysis" : true,
+			"OptAlgorithm" : "LINEAR",
+			"OptFactor" : 0.9,
+			"DsAlgorithm" : "NONE"
+		}
+	]
+}
+
+
+####
+GET http://localhost:4004/catalog/InsertIntoTempSO(SODATA='[{"PRODUCT_ID":"A61A_NEW","SEED_ORDER":"6000000110","CONFIRMED_QTY":"1","MAT_AVAILDATE":"2025-06-25","CUSTOMER_GROUP":"01","LOCATION_ID":"PFC1","UNIQUE_ID":"736"},{"PRODUCT_ID":"A61A_NEW","SEED_ORDER":"6000000111","CONFIRMED_QTY":"5","MAT_AVAILDATE":"2025-06-26","CUSTOMER_GROUP":"01","LOCATION_ID":"PFC1","UNIQUE_ID":"736"},{"PRODUCT_ID":"A61A_NEW","SEED_ORDER":"6000000112","CONFIRMED_QTY":"8","MAT_AVAILDATE":"2025-06-27","CUSTOMER_GROUP":"01","LOCATION_ID":"PFC1","UNIQUE_ID":"736"}]')
+
+
+###
+GET http://localhost:4004/catalog/getTimeSeriesData(TSDATA='[{"LOCATION_ID":"1600","CHAR_NUM":"0000001411","CAL_DATE":"2024-09-16","FLAG":"H","PRODUCT_ID":"VCP_1600"}]')
+
+###
+GET http://localhost:4004/oData/v4/catalog/getForecastCharAnalysis(LOCATION_ID='1010',PRODUCT_ID='VCP_VEHICLE',FROM_DATE=2025-08-01,TO_DATE=2025-11-20,VERSION='__BASELINE',SCENARIO='_PLAN',MODEL_VERSION='Active',CHAR_VALUE='GRAY','FWD')
+
+// Initialization Process
+###
+POST http://localhost:4004/oData/v4/catalog/genFullConfigDemand
+Content-Type: application/json
+ 
+{
+    "LocProdData":"TEST"
+}
+
+###
+GET http://localhost:4004/oData/v4/catalog/getProdAsmbComp()
+
+
+# ### testing Forecast orders 
+# GET http://localhost:4004/odata/v4/catalog/getForecastCIRWeekly(LOCATION_ID='test',PLANNING_LOC='test',PRODUCT_ID='VCP_220',VERSION='__BASELINE',SCENARIO='_PLAN',FROMDATE=2025-04-04,TODATE=2025-07-04,MODEL_VERSION='Active',UNIQUE_ID='test')
+
+###test planned option percentages
+GET http://localhost:4004/odata/v4/catalog/getPlannedOptionPercentage(LOCATION_ID='1600',PRODUCT_ID='["VCP_1600"]',FROM_DATE=2026-06-27,TO_DATE=2028-07-29,MODEL_VERSION='Active',VERSION='__BASELINE',SCENARIO='_PLAN')
+
+###
+GET http://localhost:4004/odata/v4/planner/getRestrictionLagFun(FACTORY_LOACATION='1600',LOCATION='1600',LINE='1600',RESTRICTION_ID='RTR_NEW',MONTH='FY26 P07')
+
+###
+GET http://localhost:4004/odata/v4/planner/getPrdDmdLagFun(FACTORY_LOACATION='1600', LOCATION='1600',MONTH='FY26 P07',PRODUCT='VCP_1600')
+
+###
+GET http://localhost:4004/odata/v4/planner/createVariantPlanner(Flag='X',USER='pradeepkumardaka@sbpcorp.in',VARDATA='[{"Field":"Location","FieldCenter":"1","Value":"1600","Default":"Y","IDNAME":"Standard1","App_Name":"vcp.vcplannerdashboard","SCOPE":"Public"},{"Field":"Product","FieldCenter":"1","Value":"VCP_1600","IDNAME":"Standard1","App_Name":"vcp.vcplannerdashboard","SCOPE":"Public"}]')
+
+###
+GET http://localhost:4004/odata/v4/catalog/getForecastCIRTel(LOCATION_ID='', PLANNING_LOC='', PRODUCT_ID='', VERSION='', SCENARIO='', FROMDATE='2025-11-11', TODATE='2025-12-12', MODEL_VERSION='', UNIQUE_ID='', weekType='')
+
+
+### generate PrpIds 
+POST http://localhost:4004/dag/rebuildGraph
+Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJqaWQiOiIwOVU4TjZadWlFcXR0UVliY1hmWU5maGEvOHlPdE5WbnFFemFlU2JnbWlRPSIsImFsZyI6IlJTMjU2Iiwiamt1IjoiaHR0cHM6Ly92Y3Bwcm92aWRlci1zYzBqZW9qcS5hdXRoZW50aWNhdGlvbi51czEwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEzMTAyNzY2NzYifQ.eyJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiaXNzIjoiaHR0cHM6Ly92Y3Bwcm92aWRlci1zYzBqZW9qcS5hdXRoZW50aWNhdGlvbi51czEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sImNsaWVudF9pZCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJhdWQiOlsidWFhIiwic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyJdLCJleHRfYXR0ciI6eyJlbmhhbmNlciI6IlhTVUFBIiwic3ViYWNjb3VudGlkIjoiOWQxMmY2ZmQtYmRmZC00YjIwLTk4YTYtNTk5M2ZiYTM4NTM0IiwiemRuIjoidmNwcHJvdmlkZXItc2MwamVvanEifSwiemlkIjoiOWQxMmY2ZmQtYmRmZC00YjIwLTk4YTYtNTk5M2ZiYTM4NTM0IiwiZ3JhbnRfdHlwZSI6ImNsaWVudF9jcmVkZW50aWFscyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJzY29wZSI6WyJ1YWEucmVzb3VyY2UiXSwiZXhwIjoxNzc1NjUxODk2LCJpYXQiOjE3NzU2NDgyOTYsImp0aSI6IjNlMGFmODM4ZDkzODQxNDU4ZjM5NTQ0YjE5ZDE4Zjg1IiwicmV2X3NpZyI6Ijc4MGFlMzNmIiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyJ9.CM7CLAcY4dvKvOxXqc2ofFruwSwYKlB_eCbKeT_NZjpq5qUNx_Ts-hZankOF1RyNdlX3KXNw6OYLFmjyvqNZ-k5nNBpJogmaGtxDF7mB3WHLsr0pwjrzxDCmp53tNsly96F21IPVuXyuUKKmnGS5EZnUVby3yLIiNSGQB4OqH47-5yGelNjpIFHVterMAJk_vWfDpxo71OPHVOrQR4JcJGSNo-nM1H9xSaMKfwTfkJRrqXDeunnMKVsP9OSSw-Ck8gwtm_E5djE7yNhkVqbmeCTC8OF7yzEfoTgLnaO0PK0sIdUIJBlmv1X0IJ14kfAuxnF8L4-T5XxN8C3zFUXHaw' 
+
+Content-Type: application/json
+{ 
+}
+
+
+### Rebuild Graph 
+POST http://localhost:4004/dag/rebuildGraph
+Content-Type: application/json
+Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJqaWQiOiJxbmhEMXdMWW96L0EyTWU0MW1MbEZIcGtBM3ZqQ0Uya2lJQ2kvYkU1Yk1JPSIsImFsZyI6IlJTMjU2Iiwiamt1IjoiaHR0cHM6Ly92Y3Bwcm92aWRlci1zYzBqZW9qcS5hdXRoZW50aWNhdGlvbi51czEwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEzMTAyNzY2NzYifQ.eyJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiaXNzIjoiaHR0cHM6Ly92Y3Bwcm92aWRlci1zYzBqZW9qcS5hdXRoZW50aWNhdGlvbi51czEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sImNsaWVudF9pZCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJhdWQiOlsidWFhIiwic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyJdLCJleHRfYXR0ciI6eyJlbmhhbmNlciI6IlhTVUFBIiwic3ViYWNjb3VudGlkIjoiOWQxMmY2ZmQtYmRmZC00YjIwLTk4YTYtNTk5M2ZiYTM4NTM0IiwiemRuIjoidmNwcHJvdmlkZXItc2MwamVvanEifSwiemlkIjoiOWQxMmY2ZmQtYmRmZC00YjIwLTk4YTYtNTk5M2ZiYTM4NTM0IiwiZ3JhbnRfdHlwZSI6ImNsaWVudF9jcmVkZW50aWFscyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJzY29wZSI6WyJ1YWEucmVzb3VyY2UiXSwiZXhwIjoxNzc2MTYxMTgwLCJpYXQiOjE3NzYxNTc1ODAsImp0aSI6ImM1N2RmZmI0ZjIxODQ4ZGY5NTkzZmMxZjc3YzVkNTNjIiwicmV2X3NpZyI6Ijc4MGFlMzNmIiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyJ9.FVQZpadWo_oZXjU72v6QQ0ygtK8_gvMcZu9XIEikFqWkd0omakx8rbA78iXIgikCctIbz3GGikLiIcEz7idmog-xxdEWGSZA7wH1QEgbV-MHhddsKkefnzM0yvihrk4kv1g6uTBu-Zqa3qMO9h3ms4Pg0S3pTn1E618CGO6EmtCY5U1mReqoZsJo0RRDsJWzRkHEtpAFKUGMGIsMqbQimOyJXTlkQal2r1ZB2_z3vErMzKOrTMEAI0xVrT63hHUBIJ7c2GFi_NP35adgd3nASO5O0jcrQTexncqil42wrNTc3TuCp5yycraBnaMJG_fPJl1_cS0x4-W-zoKbSyahyA'
+
+{ 
+}
+
+
+### Rebuild Graph 
+POST http://localhost:4004/dag/runDerivation
+Content-Type: application/json
+Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJqaWQiOiJneFBIZUNFdDNoQ2ovOGdFcjZXOEFxYmNHV0hSZWJ5dmt4eGxPQzlKRXY4PSIsImFsZyI6IlJTMjU2Iiwiamt1IjoiaHR0cHM6Ly92Y3Bwcm92aWRlci1zYzBqZW9qcS5hdXRoZW50aWNhdGlvbi51czEwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEzMTAyNzY2NzYifQ.eyJzdWIiOiJzYi1jb25maWdwcm9kdWN0c29hdXRoLVNCUEJUUF92Y3Bwcm92aWRlci1zYzBqZW9qcS1kZXYhdDk0NDI3IiwiaXNzIjoiaHR0cHM6Ly92Y3Bwcm92aWRlci1zYzBqZW9qcS5hdXRoZW50aWNhdGlvbi51czEwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIl0sImNsaWVudF9pZCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJhdWQiOlsidWFhIiwic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyJdLCJleHRfYXR0ciI6eyJlbmhhbmNlciI6IlhTVUFBIiwic3ViYWNjb3VudGlkIjoiOWQxMmY2ZmQtYmRmZC00YjIwLTk4YTYtNTk5M2ZiYTM4NTM0IiwiemRuIjoidmNwcHJvdmlkZXItc2MwamVvanEifSwiemlkIjoiOWQxMmY2ZmQtYmRmZC00YjIwLTk4YTYtNTk5M2ZiYTM4NTM0IiwiZ3JhbnRfdHlwZSI6ImNsaWVudF9jcmVkZW50aWFscyIsImF6cCI6InNiLWNvbmZpZ3Byb2R1Y3Rzb2F1dGgtU0JQQlRQX3ZjcHByb3ZpZGVyLXNjMGplb2pxLWRldiF0OTQ0MjciLCJzY29wZSI6WyJ1YWEucmVzb3VyY2UiXSwiZXhwIjoxNzc2MTYxNzIyLCJpYXQiOjE3NzYxNTgxMjIsImp0aSI6IjM4ZjFiMTJiNDRkZDQxZTk4NGMxMWVjNzMzM2JkMGJkIiwicmV2X3NpZyI6Ijc4MGFlMzNmIiwiY2lkIjoic2ItY29uZmlncHJvZHVjdHNvYXV0aC1TQlBCVFBfdmNwcHJvdmlkZXItc2MwamVvanEtZGV2IXQ5NDQyNyJ9.bYXjVtcbp2M1ogiBBmzR8dbmEA0JyW0_qHwygosl7d4jGOZEcEnMnojIbtzXN8ynRlvmyG43ZLXAY65aux9-mk-s5COnaUOR0iVOPdH9OlrYZ2QoR98g4znsig-fD195CO66shKyQ4bFTIHiKyikvgGdfQd2nqD-p6tEdQgWZJ8gqRsO-jkjCaGf55ykjCODUQHk94IEeVCj8zHTv9Zbqybm2Nullo9aEEwDHah7jibU9eOrkEo1bywfKGP1AfWr2I-ei-k9ruZlfzirbvXDs-tS09D64N4Ya_fnsyRvH4XSa56ATrdrCS9ulrlcLB4BF-sjSMTU0JYx9X0FnXnG9g'
+
+{ 
+	"sessionId":"99a2945e-3b1c-46fd-83b5-90b5614879b0"
+}
+
+
+### Rebuild Graph 
+POST http://localhost:4004/dag/runDerivation
+Content-Type: application/json
+
+{ 
+	"sessionId":"99a2945e-3b1c-46fd-83b5-90b5614879b0"
+}

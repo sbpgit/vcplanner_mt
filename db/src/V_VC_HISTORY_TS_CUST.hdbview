@@ -1,0 +1,31 @@
+VIEW "V_VC_HISTORY_TS_CUST"
+AS SELECT
+"PERIOD_NUM",
+ADD_DAYS(
+        ADD_DAYS(
+            TO_DATE( '01/01/' || substr( "PERIOD_NUM", 1, 4 ), 'DD/MM/YYYY' ),
+            - (WEEKDAY(TO_DATE( '01/01/' || substr( "PERIOD_NUM", 1, 4 ), 'DD/MM/YYYY' )))
+        ),
+        (substr( "PERIOD_NUM", 5, 2 ) - 1 ) * 7
+    ) AS CAL_DATE,
+"LOCATION_ID",
+"PRODUCT_ID" ,
+"TYPE" ,
+"GROUP_ID" ,
+"ROW" ,
+"ATTRIBUTE",
+"CHAR_NUM" ,
+"CHAR_COUNT" ,
+"CHAR_COUNT_RATE" ,
+"GROUP_COUNT" ,
+"GROUP_COUNT_RATE" ,
+"CUSTOMER_GROUP"
+FROM "CP_VC_HISTORY_TS_CUST"
+WHERE ADD_DAYS(
+        ADD_DAYS(
+          TO_DATE('01/01/' || SUBSTR("PERIOD_NUM", 1, 4), 'DD/MM/YYYY'),
+          -WEEKDAY(TO_DATE('01/01/' || SUBSTR("PERIOD_NUM", 1, 4), 'DD/MM/YYYY'))
+        ),
+        (SUBSTR("PERIOD_NUM", 5, 2) - 1) * 7
+      ) < CURRENT_DATE
+ORDER BY CAL_DATE, LOCATION_ID, PRODUCT_ID, GROUP_ID;

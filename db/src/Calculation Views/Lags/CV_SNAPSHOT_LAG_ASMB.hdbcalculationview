@@ -1,0 +1,857 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_SNAPSHOT_LAG_ASMB" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="CV_SNAPSHOT_LAG_ASMB"/>
+<localVariables>
+  <variable id="FACTORY_LOCATION" parameter="true">
+    <descriptions defaultDescription="Factory Location"/>
+    <variableProperties datatype="NVARCHAR" length="4" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <externalLikeStructureName>CP_SNAPSHOT_LAG_ASMB</externalLikeStructureName>
+        <externalLikeElementName>FACTORY_LOC</externalLikeElementName>
+      </valueDomain>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="LOCATION" parameter="true">
+    <descriptions defaultDescription="Location ID"/>
+    <variableProperties datatype="NVARCHAR" length="4" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <externalLikeStructureName>CP_SNAPSHOT_LAG_ASMB</externalLikeStructureName>
+        <externalLikeElementName>LOCATION_ID</externalLikeElementName>
+      </valueDomain>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="PRODUCT" parameter="true">
+    <descriptions defaultDescription="Product ID"/>
+    <variableProperties datatype="NVARCHAR" length="40" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <externalLikeStructureName>CP_SNAPSHOT_LAG_ASMB</externalLikeStructureName>
+        <externalLikeElementName>PRODUCT_ID</externalLikeElementName>
+      </valueDomain>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="START_MONTH" parameter="true">
+    <descriptions defaultDescription="Start Month"/>
+    <variableProperties datatype="NVARCHAR" length="20" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <externalLikeStructureName>CP_SNAPSHOT_LAG_ASMB</externalLikeStructureName>
+        <externalLikeElementName>MONTH</externalLikeElementName>
+      </valueDomain>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="END_MONTH" parameter="true">
+    <descriptions defaultDescription="End Month"/>
+    <variableProperties datatype="NVARCHAR" length="20" mandatory="true">
+      <valueDomain type="AttributeValue">
+        <externalLikeStructureName>CP_SNAPSHOT_LAG_ASMB</externalLikeStructureName>
+        <externalLikeElementName>MONTH</externalLikeElementName>
+      </valueDomain>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="V_FACTORYLOC">
+    <resourceUri>V_FACTORYLOC</resourceUri>
+  </DataSource>
+  <DataSource id="CP_SNAPSHOT_LAG_ASMB">
+    <resourceUri>CP_SNAPSHOT_LAG_ASMB</resourceUri>
+  </DataSource>
+  <DataSource id="V_CALENDER_DESCRIPTOR">
+    <resourceUri>V_CALENDER_DESCRIPTOR</resourceUri>
+  </DataSource>
+  <DataSource id="Aggregation_5$$$$CP_SNAPSHOT_LAG_ASMB$$">
+    <resourceUri>CP_SNAPSHOT_LAG_ASMB</resourceUri>
+  </DataSource>
+  <DataSource id="CP_BOM_MAT">
+    <resourceUri>CP_BOM_MAT</resourceUri>
+  </DataSource>
+  <DataSource id="CP_LOCATION_PRODUCT">
+    <resourceUri>CP_LOCATION_PRODUCT</resourceUri>
+  </DataSource>
+  <DataSource id="CP_ASSEMBLY_REQ">
+    <resourceUri>CP_ASSEMBLY_REQ</resourceUri>
+  </DataSource>
+  <DataSource id="Join_1_2$$$$V_CALENDER_DESCRIPTOR$$">
+    <resourceUri>V_CALENDER_DESCRIPTOR</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOCATIONS"/>
+      <viewAttribute id="DEMAND_LOCATION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="V_FACTORYLOC">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOCATIONS" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="DEMAND_LOCATION" source="DEMAND_LOC"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Projection_2" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="max"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="JOIN_CONDITION" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="CP_SNAPSHOT_LAG_ASMB"/>
+    <filter>&quot;FACTORY_LOC&quot; = '$$FACTORY_LOCATION$$'
+AND &quot;LOCATION_ID&quot; = '$$LOCATION$$'
+AND &quot;PRODUCT_ID&quot; = '$$PRODUCT$$'
+AND &quot;ACTUAL_MONTH&quot; &gt;= '$$START_MONTH$$'
+AND &quot;ACTUAL_MONTH&quot; &lt;= '$$END_MONTH$$'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_3" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="WEEK_STARTDATE"/>
+      <viewAttribute id="CURRENT_MONTH"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="JOIN_CONDITION" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="V_CALENDER_DESCRIPTOR">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_MONTH" source="MONTH"/>
+    </input>
+    <filter>&quot;WEEK_STARTDATE&quot; = (ADD_DAYS(CURRENT_DATE, -WEEKDAY(CURRENT_DATE)))</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_5" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="LAG_MONTH"/>
+      <viewAttribute id="LAG_QTY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Aggregation_5$$$$CP_SNAPSHOT_LAG_ASMB$$"/>
+    <filter>&quot;FACTORY_LOC&quot; = '$$FACTORY_LOCATION$$'
+AND &quot;LOCATION_ID&quot; = '$$LOCATION$$'
+AND &quot;PRODUCT_ID&quot; = '$$PRODUCT$$'
+AND &quot;MONTH&quot; &gt;= '$$START_MONTH$$'
+AND &quot;MONTH&quot; &lt;= '$$END_MONTH$$'</filter>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_9">
+    <viewAttributes>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="ASSEMBLY_DESC"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="CP_BOM_MAT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="MAT_CHILD"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY_DESC" source="PROD_DESC"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOCATIONS"/>
+      <viewAttribute id="DEMAND_LOCATION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Projection_1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" cardinality="CN_N" joinType="inner" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="CURRENT_MONTH"/>
+      <viewAttribute hidden="true" id="JOIN$JOIN_CONDITION$JOIN_CONDITION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_MONTH" source="ACTUAL_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_CONDITION$JOIN_CONDITION" source="JOIN_CONDITION"/>
+    </input>
+    <input node="Projection_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_MONTH" source="CURRENT_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_CONDITION$JOIN_CONDITION" source="JOIN_CONDITION"/>
+    </input>
+    <filter> &quot;ACTUAL_MONTH&quot; &lt; &quot;CURRENT_MONTH&quot;</filter>
+    <joinAttribute name="JOIN$JOIN_CONDITION$JOIN_CONDITION"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3_1" cardinality="CN_N" joinType="inner" multiJoinNode="Join_3" multiJoinCentralTable="Aggregation_5" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MRP_GROUP"/>
+      <viewAttribute id="MRP_TYPE"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="LAG_MONTH" aggregationType="sum"/>
+      <viewAttribute id="LAG_QTY" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$FACTORY_LOC$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$ASSEMBLY$PRODUCT_ID"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_5">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAG_MONTH" source="LAG_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAG_QTY" source="LAG_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FACTORY_LOC$LOCATION_ID" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ASSEMBLY$PRODUCT_ID" source="ASSEMBLY"/>
+    </input>
+    <input node="CP_LOCATION_PRODUCT">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MRP_GROUP" source="MRP_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MRP_TYPE" source="MRP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FACTORY_LOC$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ASSEMBLY$PRODUCT_ID" source="PRODUCT_ID"/>
+    </input>
+    <joinAttribute name="JOIN$FACTORY_LOC$LOCATION_ID"/>
+    <joinAttribute name="JOIN$ASSEMBLY$PRODUCT_ID"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_1" cardinality="CN_N" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="CP_ASSEMBLY_REQ" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="FACTORY_LOCATIONS"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$DEMAND_LOCATION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="CP_ASSEMBLY_REQ">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="COMPONENT"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="COMPCIR_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$DEMAND_LOCATION" source="LOCATION_ID"/>
+    </input>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOCATIONS" source="FACTORY_LOCATIONS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$DEMAND_LOCATION" source="DEMAND_LOCATION"/>
+    </input>
+    <joinAttribute name="JOIN$LOCATION_ID$DEMAND_LOCATION"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_7">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="max"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_4"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_2" cardinality="CN_N" joinType="inner" filterExpressionLanguage="SQL" multiJoinNode="Join_1" multiJoinCentralTable="CP_ASSEMBLY_REQ" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="VERSION"/>
+      <viewAttribute id="SCENARIO"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="FACTORY_LOCATIONS"/>
+      <viewAttribute id="WEEK_DATE"/>
+      <viewAttribute hidden="true" id="JOIN$WEEK_DATE$WEEK_STARTDATE"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FACTORY_LOCATION_CALCULATED" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>CASE  
+	 WHEN &quot;FACTORY_LOC&quot; = 'NA' 
+	 then  &quot;FACTORY_LOCATIONS&quot;
+	 ELSE &quot;FACTORY_LOC&quot; 
+ END</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="ACTUAL_QTY_INT" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>TO_INT(&quot;ACTUAL_QTY&quot;)</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="JOIN_CONDITION" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>1</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_1_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="VERSION" source="VERSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="SCENARIO" source="SCENARIO"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOCATIONS" source="FACTORY_LOCATIONS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="WEEK_DATE" source="WEEK_DATE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_STARTDATE" source="WEEK_DATE"/>
+    </input>
+    <input node="Join_1_2$$$$V_CALENDER_DESCRIPTOR$$">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$WEEK_DATE$WEEK_STARTDATE" source="WEEK_STARTDATE"/>
+    </input>
+    <filter>&quot;VERSION&quot; = '__BASELINE'
+AND &quot;SCENARIO&quot; = '_PLAN'
+AND &quot;FACTORY_LOC&quot; = '$$FACTORY_LOCATION$$'
+AND &quot;LOCATION_ID&quot; = '$$LOCATION$$'
+AND &quot;PRODUCT_ID&quot; = '$$PRODUCT$$'
+AND &quot;ACTUAL_MONTH&quot; &gt;= '$$START_MONTH$$'
+AND &quot;ACTUAL_MONTH&quot; &lt;= '$$END_MONTH$$'</filter>
+    <joinAttribute name="JOIN$WEEK_DATE$WEEK_STARTDATE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_3">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="JOIN_CONDITION"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_1_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOCATION_CALCULATED"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY_INT"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="inner" filterExpressionLanguage="SQL">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="CURRENT_MONTH"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$JOIN_CONDITION$JOIN_CONDITION"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_MONTH" source="ACTUAL_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_CONDITION$JOIN_CONDITION" source="JOIN_CONDITION"/>
+    </input>
+    <input node="Projection_3">
+      <mapping xsi:type="Calculation:AttributeMapping" target="CURRENT_MONTH" source="CURRENT_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$JOIN_CONDITION$JOIN_CONDITION" source="JOIN_CONDITION"/>
+    </input>
+    <filter>&quot;ACTUAL_MONTH&quot; &gt;= &quot;CURRENT_MONTH&quot;</filter>
+    <joinAttribute name="JOIN$JOIN_CONDITION$JOIN_CONDITION"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_4">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Join_2"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="Union_1">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="max"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_4" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_MONTH" source="ACTUAL_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+    </input>
+  
+    <input node="Aggregation_7" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_MONTH" source="ACTUAL_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+    </input>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_6">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Union_1"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3_2" cardinality="CN_N" joinType="inner" multiJoinNode="Join_3" multiJoinCentralTable="Aggregation_5" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MRP_GROUP"/>
+      <viewAttribute id="MRP_TYPE"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="max"/>
+      <viewAttribute id="LAG_MONTH" aggregationType="sum"/>
+      <viewAttribute id="LAG_QTY" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$FACTORY_LOC$FACTORY_LOC"/>
+      <viewAttribute hidden="true" id="JOIN$LOCATION_ID$LOCATION_ID"/>
+      <viewAttribute hidden="true" id="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+      <viewAttribute hidden="true" id="JOIN$ASSEMBLY$ASSEMBLY"/>
+      <viewAttribute hidden="true" id="JOIN$MONTH$ACTUAL_MONTH"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="MAPE" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>CASE  
+	 WHEN &quot;LAG_QTY&quot; &gt; 0 
+	 then ROUND((ABS(((&quot;LAG_QTY&quot; - &quot;ACTUAL_QTY&quot; ) / &quot;LAG_QTY&quot; ) * 100 )))
+	 ELSE 0
+ END
+
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MAPE_QTY_ABS" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>ROUND((ABS(&quot;LAG_QTY&quot; - &quot;ACTUAL_QTY&quot; )))</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MAPE_QTY" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>&quot;LAG_QTY&quot; - &quot;ACTUAL_QTY&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_3_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MRP_GROUP" source="MRP_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MRP_TYPE" source="MRP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAG_MONTH" source="LAG_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAG_QTY" source="LAG_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FACTORY_LOC$FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ASSEMBLY$ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MONTH$ACTUAL_MONTH" source="MONTH"/>
+    </input>
+    <input node="Aggregation_6">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_MONTH" source="ACTUAL_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$FACTORY_LOC$FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$LOCATION_ID$LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$PRODUCT_ID$PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ASSEMBLY$ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MONTH$ACTUAL_MONTH" source="ACTUAL_MONTH"/>
+    </input>
+    <joinAttribute name="JOIN$FACTORY_LOC$FACTORY_LOC"/>
+    <joinAttribute name="JOIN$LOCATION_ID$LOCATION_ID"/>
+    <joinAttribute name="JOIN$PRODUCT_ID$PRODUCT_ID"/>
+    <joinAttribute name="JOIN$ASSEMBLY$ASSEMBLY"/>
+    <joinAttribute name="JOIN$MONTH$ACTUAL_MONTH"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_8">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MRP_GROUP"/>
+      <viewAttribute id="MRP_TYPE"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="max"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="LAG_MONTH" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>0</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="LAG_QTY" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>&quot;ACTUAL_QTY&quot;</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MAPE" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>&quot;ACTUAL_QTY&quot;
+</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MAPE_QTY_ABS" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>&quot;ACTUAL_QTY&quot;</formula>
+      </calculatedViewAttribute>
+      <calculatedViewAttribute id="MAPE_QTY" datatype="INTEGER" expressionLanguage="SQL">
+        <formula>&quot;ACTUAL_QTY&quot;</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes/>
+    <input node="Join_3_2"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:UnionView" id="Union_2">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MRP_GROUP"/>
+      <viewAttribute id="MRP_TYPE"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="LAG_MONTH" aggregationType="sum"/>
+      <viewAttribute id="LAG_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="max"/>
+      <viewAttribute id="MAPE" aggregationType="sum"/>
+      <viewAttribute id="MAPE_QTY_ABS" aggregationType="sum"/>
+      <viewAttribute id="MAPE_QTY" aggregationType="sum"/></viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Join_3_2" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MRP_GROUP" source="MRP_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MRP_TYPE" source="MRP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAG_MONTH" source="LAG_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAG_QTY" source="LAG_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_MONTH" source="ACTUAL_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAPE" source="MAPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAPE_QTY_ABS" source="MAPE_QTY_ABS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAPE_QTY" source="MAPE_QTY"/></input>
+    <input node="Aggregation_8" emptyUnionBehavior="NO_ROW">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MRP_GROUP" source="MRP_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MRP_TYPE" source="MRP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAG_MONTH" source="LAG_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAG_QTY" source="LAG_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_MONTH" source="ACTUAL_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAPE" source="MAPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAPE_QTY_ABS" source="MAPE_QTY_ABS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAPE_QTY" source="MAPE_QTY"/></input></calculationView>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_10">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="MRP_GROUP"/>
+      <viewAttribute id="MRP_TYPE"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="LAG_MONTH"/>
+      <viewAttribute id="LAG_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="MAPE" aggregationType="sum"/>
+      <viewAttribute id="MAPE_QTY_ABS" aggregationType="sum"/>
+      <viewAttribute id="MAPE_QTY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <restrictedViewAttributes/>
+    <input node="Union_2"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" cardinality="CN_N" joinType="leftOuter">
+    <viewAttributes>
+      <viewAttribute id="FACTORY_LOC"/>
+      <viewAttribute id="LOCATION_ID"/>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="ASSEMBLY"/>
+      <viewAttribute id="ASSEMBLY_DESC"/>
+      <viewAttribute id="MRP_GROUP"/>
+      <viewAttribute id="MRP_TYPE"/>
+      <viewAttribute id="MONTH"/>
+      <viewAttribute id="LAG_MONTH" aggregationType="sum"/>
+      <viewAttribute id="LAG_QTY" aggregationType="sum"/>
+      <viewAttribute id="ACTUAL_MONTH"/>
+      <viewAttribute id="ACTUAL_QTY" aggregationType="sum"/>
+      <viewAttribute id="MAPE" aggregationType="sum"/>
+      <viewAttribute id="MAPE_QTY_ABS" aggregationType="sum"/>
+      <viewAttribute id="MAPE_QTY" aggregationType="sum"/>
+      <viewAttribute hidden="true" id="JOIN$ASSEMBLY$ASSEMBLY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Aggregation_10">
+      <mapping xsi:type="Calculation:AttributeMapping" target="FACTORY_LOC" source="FACTORY_LOC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LOCATION_ID" source="LOCATION_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="PRODUCT_ID" source="PRODUCT_ID"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY" source="ASSEMBLY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MRP_GROUP" source="MRP_GROUP"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MRP_TYPE" source="MRP_TYPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MONTH" source="MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAG_MONTH" source="LAG_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="LAG_QTY" source="LAG_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_MONTH" source="ACTUAL_MONTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="ACTUAL_QTY" source="ACTUAL_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAPE" source="MAPE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAPE_QTY_ABS" source="MAPE_QTY_ABS"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAPE_QTY" source="MAPE_QTY"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ASSEMBLY$ASSEMBLY" source="ASSEMBLY"/>
+    </input>
+    <input node="Aggregation_9">
+      <mapping xsi:type="Calculation:AttributeMapping" target="ASSEMBLY_DESC" source="ASSEMBLY_DESC"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$ASSEMBLY$ASSEMBLY" source="ASSEMBLY"/>
+    </input>
+    <joinAttribute name="JOIN$ASSEMBLY$ASSEMBLY"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_5">
+  <attributes>
+    <attribute id="FACTORY_LOC" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FACTORY_LOC"/>
+      <keyMapping columnObjectName="Join_5" columnName="FACTORY_LOC"/>
+    </attribute>
+    <attribute id="LOCATION_ID" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LOCATION_ID"/>
+      <keyMapping columnObjectName="Join_5" columnName="LOCATION_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID"/>
+      <keyMapping columnObjectName="Join_5" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="ASSEMBLY" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ASSEMBLY"/>
+      <keyMapping columnObjectName="Join_5" columnName="ASSEMBLY"/>
+    </attribute>
+    <attribute id="ASSEMBLY_DESC" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ASSEMBLY_DESC"/>
+      <keyMapping columnObjectName="Join_5" columnName="ASSEMBLY_DESC"/>
+    </attribute>
+    <attribute id="MRP_GROUP" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MRP_GROUP"/>
+      <keyMapping columnObjectName="Join_5" columnName="MRP_GROUP"/>
+    </attribute>
+    <attribute id="MRP_TYPE" order="7" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MRP_TYPE"/>
+      <keyMapping columnObjectName="Join_5" columnName="MRP_TYPE"/>
+    </attribute>
+    <attribute id="SELECTED_MONTH" order="8" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MONTH"/>
+      <keyMapping columnObjectName="Join_5" columnName="MONTH"/>
+    </attribute>
+    <attribute id="LAG_MONTH" order="9" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="LAG_MONTH"/>
+      <keyMapping columnObjectName="Join_5" columnName="LAG_MONTH"/>
+    </attribute>
+    <attribute id="ACTUAL_MONTH" order="11" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ACTUAL_MONTH"/>
+      <keyMapping columnObjectName="Join_5" columnName="ACTUAL_MONTH"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="LAG_QTY" order="10" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="LAG_QTY"/>
+      <measureMapping columnObjectName="Join_5" columnName="LAG_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="ACTUAL_QTY" order="12" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="ACTUAL_QTY"/>
+      <measureMapping columnObjectName="Join_5" columnName="ACTUAL_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="MAPE" order="13" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="MAPE"/>
+      <measureMapping columnObjectName="Join_5" columnName="MAPE"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="MAPE_QTY_ABS" order="14" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="MAPE_QTY_ABS"/>
+      <measureMapping columnObjectName="Join_5" columnName="MAPE_QTY_ABS"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="MAPE_QTY" order="15" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="MAPE_QTY"/>
+      <measureMapping columnObjectName="Join_5" columnName="MAPE_QTY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="436" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="457" y="1876"/>
+      <rectangleSize height="30" width="160"/>
+    </shape><shape><upperLeftCorner/><rectangleSize/></shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="91" y="1451"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="1451"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="512" y="921"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_9" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="537" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="457" y="1771"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="208" y="1291"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="178"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="188"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_7" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="208" y="1186"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Aggregation_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="512" y="1461"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="422" y="1291"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="178"/>
+    </shape>
+    <shape modelObjectName="Projection_3" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="188"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="422" y="1186"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Union_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="1046"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_6" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302" y="931"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_8" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="352" y="641"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Union_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="379" y="501"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Aggregation_10" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="327" y="376"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="436" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_10" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="175"/>
+    </shape>
+    <shape modelObjectName="Aggregation_9" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="181"/>
+    </shape>
+  
+  
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="441" y="766"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_6" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_3">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="175"/>
+    </shape>
+    <shape modelObjectName="Aggregation_5" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_3">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="166"/>
+    </shape>
+    <shape modelObjectName="CP_LOCATION_PRODUCT" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_3">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="215"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="476" y="1596"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="V_CALENDER_DESCRIPTOR" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="920" y="30"/>
+      <rectangleSize width="230"/>
+    </shape>
+    <shape modelObjectName="CP_ASSEMBLY_REQ" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="620" y="30"/>
+      <rectangleSize width="185"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="1220" y="30"/>
+      <rectangleSize width="166"/>
+    </shape></shapes>
+</layout>
+</Calculation:scenario>

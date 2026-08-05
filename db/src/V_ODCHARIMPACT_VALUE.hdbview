@@ -1,0 +1,43 @@
+----------------------------------------------------------------------------------------------------------
+-- Name:            V_ODCHARIMPACT_VALUE
+-- Description:     View to get option percent and impact values for BOM object dep. header
+-- Join Details:    A: CP_TS_OBJDEP_CHAR_IMPACT_F-  Table to capture char. impact values for future
+--                  B: V_OBDHDR  - View to get Obj. Dep header rule for a location and product
+--                  C: V_CLASSCHARVAL - View to get Class, Charateristics , Char. values for int. counter
+--                  D: CP_IBP_FUTUREDEMAND- IBP future demand table  
+-----------------------------------------------------------------------------------------
+VIEW "V_ODCHARIMPACT_VALUE"
+AS SELECT DISTINCT A.LOCATION_ID,
+        A.PRODUCT_ID,
+        A.OBJ_DEP,
+        A.OBJ_COUNTER,
+        B.CHAR_NUM,
+        C.CHAR_DESC,
+        C.CHAR_NAME,
+        A.ROW_ID,
+        A.MODEL_VERSION,
+        A.VERSION,
+        A.SCENARIO,
+        A.CAL_DATE,
+        A.CHAR_IMPACT_VAL,
+        A.CHAR_IMPACT_PERCENT as PREDICTED_VAL,
+        A.CHAR_IMPACT_VAL AS OPT_PERCENT
+        -- ( (A.CHAR_COUNT / D.QUANTITY) * 100)  AS OPT_PERCENT
+ FROM "CP_TS_OBJDEP_CHAR_IMPACT_F" AS A
+ INNER JOIN "CP_FACTORY_SALESLOC" AS E
+ ON A.LOCATION_ID = E.LOCATION_ID
+ INNER JOIN "V_OBDHDR" AS B
+ ON E.FACTORY_LOC = B.LOCATION_ID
+  AND E.PRODUCT_ID = B.PRODUCT_ID
+  AND A.OBJ_DEP = B.OBJ_DEP
+  AND A.OBJ_COUNTER = B.OBJ_COUNTER
+  AND A.ROW_ID = B.ROW_ID
+  INNER JOIN V_CLASSCHARVAL AS C
+ ON B.CLASS_NUM = C.CLASS_NUM
+  AND B.CHAR_NUM = C.CHAR_NUM
+  INNER JOIN "CP_IBP_FUTUREDEMAND" AS D
+ ON A."LOCATION_ID" = D."LOCATION_ID"
+  AND A."PRODUCT_ID" = D."PRODUCT_ID"
+  AND A."VERSION" = D."VERSION"
+  AND A."SCENARIO" = D."SCENARIO"
+  AND A."CAL_DATE" = D."WEEK_DATE"

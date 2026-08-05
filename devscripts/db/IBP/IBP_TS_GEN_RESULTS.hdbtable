@@ -1,0 +1,10 @@
+COLUMN TABLE "IBP_TS_GEN_RESULTS"(
+    "vcdemand_rows" INT,
+    "demand_rows" INT,
+    "comp_demand_rows" INT,
+    "compreq_rows" INT,
+    "timestamp" TIMESTAMP,
+    PRIMARY KEY(
+		"timestamp"
+	)
+);
