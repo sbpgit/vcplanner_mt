@@ -5,6 +5,7 @@ const xsenv = require('@sap/xsenv');
 const axios = require('axios');
 const bodyParser = require('body-parser')
 const registerUpsert  = require('../srv/lib/upsert')
+const jwt = require("jsonwebtoken");
 cloudSdkUtil.setGlobalLogLevel('debug');
 
 cds.on("bootstrap", app => {
@@ -25,51 +26,84 @@ cds.on("bootstrap", app => {
     app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }))
 });
 
-async function authenticate(req,next){
-    if(req.method == 'POST' && req.headers['user-agent'] == undefined){//JobScheduler
-    var liActivities = await cds.run(`SELECT "ACTION_URL" FROM "JS_ACTIVITY_HEADER"`);
-    liActivities.push({"ACTION_URL":"/jobs/ParallelSetjobsCreation"});//Jobs creation by set service
-    liActivities.push({"ACTION_URL":"/jobs/resumeSetParallelJobs"});//Jobs resume by set service
-    liActivities.push({"ACTION_URL":"/catalog/generateTempUID"});
-    liActivities.push({"ACTION_URL":"/jobs/SyncTemplates"}); // for templates Sync from Activity to Template Tables
-    liActivities.push({"ACTION_URL":"/catalog/jobSeedOrder"});//for old seed order application
-    liActivities.push({"ACTION_URL":"/catalog/genProductBatch"});//For Planning configuration app, excel upload
-    liActivities.push({"ACTION_URL":"/pal/purgePredictionModels"});//Service to purge models, predictions from characteristic configuration application    
-    liActivities.push({"ACTION_URL":"/catalog/salesOrderCreation"});//service to create sales order internally
-    //if it is a job action
-   if(liActivities.filter(a=>a.ACTION_URL == req.url).length > 0){
-    const xsuaaService = xsenv.getServices({
-        uaa: {
-            name: 'vcplanner_mt-auth' // Replace with the exact name of the desired service instance
-        }
-    });
-    const clientId = xsuaaService.uaa.clientid;
-    const clientSecret = xsuaaService.uaa.clientsecret;
-    // const tokenUrl = xsuaaService.uaa.url + '/oauth/token';
-    const tokenUrl =  xsuaaService.uaa.url.replace("mttsbpdigital",req.query.host) + '/oauth/token'; 
+async function authenticate(req, next) {
+    if (req.method == 'POST' && req.headers['user-agent'] == undefined) {//JobScheduler
+        const xsuaaService = xsenv.getServices({
+            uaa: {
+                name: 'vcplanner_mt-auth' // Replace with the exact name of the desired service instance
+            }
+        });
+        const clientId = xsuaaService.uaa.clientid;
+        const clientSecret = xsuaaService.uaa.clientsecret;
+        // const tokenUrl = xsuaaService.uaa.url + '/oauth/token';
+        const tokenUrl = xsuaaService.uaa.url.replace("mttsbpdigital", req.query.host) + '/oauth/token';
         const params = new URLSearchParams();
         params.append('grant_type', 'client_credentials');
         params.append('client_id', clientId);
         params.append('client_secret', clientSecret);
-       await axios.post(tokenUrl, params)
-            .then(response => {
-                const accessToken = response.data.access_token;
-                req.headers.authorization = "Bearer "+ 
-                accessToken;
-                next(); 
-            }).catch(error => {
-                console.log("Error obtaining access token:", error);
-                next(); 
-            });
-   }
-   else{
-    next();
-   }
+        try {
+            const response = await axios.post(tokenUrl, params);
+
+            const accessToken = response.data.access_token;
+            req.headers.authorization = `Bearer ${accessToken}`;
+            const jwtPayload = jwt.decode(accessToken);
+            if (!jwtPayload) {
+                throw new Error("Invalid JWT");
+            }
+            const tenantId = jwtPayload?.zid;
+
+            const liActivities = await cds.tx({ tenantId }, async (tx) => {
+                    return tx.run(`SELECT "ACTION_URL" FROM "JS_ACTIVITY_HEADER"`);
+                });
+            // const liActivities = await cds.run(
+            //     `SELECT "ACTION_URL" FROM "JS_ACTIVITY_HEADER"`
+            // );
+
+            liActivities.push({ ACTION_URL: "/jobs/ParallelSetjobsCreation" });
+            liActivities.push({ ACTION_URL: "/jobs/resumeSetParallelJobs" });
+            liActivities.push({ ACTION_URL: "/catalog/generateTempUID" });
+            liActivities.push({ ACTION_URL: "/jobs/SyncTemplates" });
+            liActivities.push({ ACTION_URL: "/catalog/jobSeedOrder" });
+            liActivities.push({ ACTION_URL: "/pal/purgePredictionModels" });
+            liActivities.push({ ACTION_URL: "/catalog/salesOrderCreation" });
+
+            next();
+        } catch (error) {
+            console.log("Error obtaining access token:", error);
+        }
+        //    await axios.post(tokenUrl, params)
+        //         .then(async (response) => {
+        //             const accessToken = response.data.access_token;
+        //             req.headers.authorization = "Bearer "+ 
+        //             accessToken;
+        //               var liActivities = await cds.run(`SELECT "ACTION_URL" FROM "JS_ACTIVITY_HEADER"`);
+        // console.log("test2")
+        // liActivities.push({"ACTION_URL":"/jobs/ParallelSetjobsCreation"});//Jobs creation by set service
+        // liActivities.push({"ACTION_URL":"/jobs/resumeSetParallelJobs"});//Jobs resume by set service
+        // liActivities.push({"ACTION_URL":"/catalog/generateTempUID"});
+        // liActivities.push({"ACTION_URL":"/jobs/SyncTemplates"}); // for templates Sync from Activity to Template Tables
+        // liActivities.push({"ACTION_URL":"/catalog/jobSeedOrder"});//for old seed order application
+        // liActivities.push({"ACTION_URL":"/catalog/genProductBatch"});//For Planning configuration app, excel upload
+        // liActivities.push({"ACTION_URL":"/pal/purgePredictionModels"});//Service to purge models, predictions from characteristic configuration application    
+        // liActivities.push({"ACTION_URL":"/catalog/salesOrderCreation"});//service to create sales order internally
+        // console.log(JSON.stringify(liActivities))
+        // //if it is a job action
+        // next();
+        //         }).catch(error => {
+        //             console.log("Error obtaining access token:", error);
+        //         });
+
+        //    if(liActivities.filter(a=>a.ACTION_URL == req.url.split('?')[0]).length > 0){
+
+        //    }
+        //    else{
+        //     next();
+        //    }
     }
-    else if(req.headers.authorization && (req.url.toString().includes('generateUniqueId') || req.url.toString().includes('deactivateUniqueID')
-    || req.url.toString().includes('getLocProdCharAPI') ||  req.url.toString().includes('getLocProdConfigAPI') ||  req.url.toString().includes('getLocProdActDemandAPI')
-    || req.url.toString().includes('getLocProdActualDemandAPI') ||  req.url.toString().includes('getLocProdActDemandAPICopy') ||  req.url.toString().includes('getClassCharAPI') ||  req.url.toString().includes('getMDTAssembly')
-    )){//cpids
+    else if (req.headers.authorization && (req.url.toString().includes('generateUniqueId') || req.url.toString().includes('deactivateUniqueID')
+        || req.url.toString().includes('getLocProdCharAPI') || req.url.toString().includes('getLocProdConfigAPI') || req.url.toString().includes('getLocProdActDemandAPI')
+        || req.url.toString().includes('getLocProdActualDemandAPI') || req.url.toString().includes('getLocProdActDemandAPICopy') || req.url.toString().includes('getClassCharAPI') || req.url.toString().includes('getMDTAssembly')
+    )) {//cpids
         /*Need to add authorization manually as CPIDS client credentials don't match with config_products */
         const xsuaaService = xsenv.getServices({
             uaa: {
@@ -79,24 +113,24 @@ async function authenticate(req,next){
         const clientId = xsuaaService.uaa.clientid;
         const clientSecret = xsuaaService.uaa.clientsecret;
         const tokenUrl = xsuaaService.uaa.url + '/oauth/token';
-            const params = new URLSearchParams();
-            params.append('grant_type', 'client_credentials');
-            params.append('client_id', clientId);
-            params.append('client_secret', clientSecret);
-           await axios.post(tokenUrl, params)
-                .then(response => {
-                    const accessToken = response.data.access_token;
-                    req.headers.authorization = "Bearer "+ 
+        const params = new URLSearchParams();
+        params.append('grant_type', 'client_credentials');
+        params.append('client_id', clientId);
+        params.append('client_secret', clientSecret);
+        await axios.post(tokenUrl, params)
+            .then(response => {
+                const accessToken = response.data.access_token;
+                req.headers.authorization = "Bearer " +
                     accessToken;
-                    next(); 
-                }).catch(error => {
-                    console.log("Error obtaining access token:", error);
-                    next(); 
-                });
+                next();
+            }).catch(error => {
+                console.log("Error obtaining access token:", error);
+                next();
+            });
     }
-else{
-    next();
-}
+    else {
+        next();
+    }
 }
 
 //To Track and log errors in VCPlanner
@@ -105,94 +139,94 @@ cds.on('served', async () => {
     if (cds.db) {
         registerUpsert(cds.db)
     }
-    for (const srv of cds.services) {
-        const _dispatch = srv.dispatch;
-        srv.dispatch = async function (req) {
-            try {
-                 return await Promise.resolve(_dispatch.call(this, req));
-            } catch (err) {//to catch req.reject(), query errors, coding bugs
-                try {
-                    if (!req._errorLogged) {
-                        req._errorLogged = true;
-                        const tx = db.transaction();
-                        var hostName = req.headers.host;
-                        if(!hostName){
-                            hostName ='';
-                        }
-                        //#region JobScheduler 
-                        const method =req._.req?.method || req.method;
-                         if(method == 'POST' || (method =='GET' && req.event == "createJobFeed")){
-                            if(hostName.includes("localhost") == false){//If running from BAS, Not required to update job to Error& stop it
-                            let aAct = await tx.run(`SELECT DISTINCT ACTION_URL FROM "JS_ACTIVITY_HEADER"`);
-                             aAct.push({ "ACTION_URL": "/jobs/ParallelSetjobsCreation" });//Jobs creation by set service
-                             aAct.push({ "ACTION_URL": "/jobs/resumeSetParallelJobs" });//Jobs resume by set service
-                             aAct.push({ "ACTION_URL": "/catalog/generateTempUID" });
-                             aAct.push({ "ACTION_URL": "/jobs/SyncTemplates" }); // for templates Sync from Activity to Template Tables
-                             aAct.push({ "ACTION_URL": "/catalog/jobSeedOrder" });//for old seed order application
-                             aAct.push({ "ACTION_URL": "/catalog/genProductBatch" });//For Planning configuration app, excel upload
-                             aAct.push({ "ACTION_URL": "/pal/purgePredictionModels" });//Service to purge models, predictions from characteristic configuration application    
-                             aAct.push({ "ACTION_URL": "/catalog/salesOrderCreation" });
-                             aAct.push({ "ACTION_URL": "/jobs/createJobFeed" });//jobfeed
-                             if(aAct.findIndex(a=>a.ACTION_URL.includes(req.event))!=-1){
-                                await tx.run(
-                                 UPDATE('JS_JOB_TEMPLATEDETAILS')
-                                .set({ JOB_STATUS: 'Error' })
-                                 .where(
-                                `JOB_STATUS IS NULL OR JOB_STATUS = '' OR JOB_STATUS = 'Pending'`
-                                     )
-                                    );
+    // for (const srv of cds.services) {
+    //     const _dispatch = srv.dispatch;
+    //     srv.dispatch = async function (req) {
+    //         try {
+    //              return await Promise.resolve(_dispatch.call(this, req));
+    //         } catch (err) {//to catch req.reject(), query errors, coding bugs
+    //             try {
+    //                 if (!req._errorLogged) {
+    //                     req._errorLogged = true;
+    //                     const tx = db.transaction();
+    //                     var hostName = req.headers.host;
+    //                     if(!hostName){
+    //                         hostName ='';
+    //                     }
+    //                     //#region JobScheduler 
+    //                     const method =req._.req?.method || req.method;
+    //                      if(method == 'POST' || (method =='GET' && req.event == "createJobFeed")){
+    //                         if(hostName.includes("localhost") == false){//If running from BAS, Not required to update job to Error& stop it
+    //                         let aAct = await tx.run(`SELECT DISTINCT ACTION_URL FROM "JS_ACTIVITY_HEADER"`);
+    //                          aAct.push({ "ACTION_URL": "/jobs/ParallelSetjobsCreation" });//Jobs creation by set service
+    //                          aAct.push({ "ACTION_URL": "/jobs/resumeSetParallelJobs" });//Jobs resume by set service
+    //                          aAct.push({ "ACTION_URL": "/catalog/generateTempUID" });
+    //                          aAct.push({ "ACTION_URL": "/jobs/SyncTemplates" }); // for templates Sync from Activity to Template Tables
+    //                          aAct.push({ "ACTION_URL": "/catalog/jobSeedOrder" });//for old seed order application
+    //                          aAct.push({ "ACTION_URL": "/catalog/genProductBatch" });//For Planning configuration app, excel upload
+    //                          aAct.push({ "ACTION_URL": "/pal/purgePredictionModels" });//Service to purge models, predictions from characteristic configuration application    
+    //                          aAct.push({ "ACTION_URL": "/catalog/salesOrderCreation" });
+    //                          aAct.push({ "ACTION_URL": "/jobs/createJobFeed" });//jobfeed
+    //                          if(aAct.findIndex(a=>a.ACTION_URL.includes(req.event))!=-1){
+    //                             await tx.run(
+    //                              UPDATE('JS_JOB_TEMPLATEDETAILS')
+    //                             .set({ JOB_STATUS: 'Error' })
+    //                              .where(
+    //                             `JOB_STATUS IS NULL OR JOB_STATUS = '' OR JOB_STATUS = 'Pending'`
+    //                                  )
+    //                                 );
 
-                                 await tx.run(
-                                 UPDATE('JS_JOB_TEMPLATEDETAILS')
-                                    .set({ ACTIVITY_STATUS: 'Error' })
-                                    .where(
-                                     `ACTIVITY_STATUS = 'Pending'`
-                                )
-                            );
-                             }
-                            }
+    //                              await tx.run(
+    //                              UPDATE('JS_JOB_TEMPLATEDETAILS')
+    //                                 .set({ ACTIVITY_STATUS: 'Error' })
+    //                                 .where(
+    //                                  `ACTIVITY_STATUS = 'Pending'`
+    //                             )
+    //                         );
+    //                          }
+    //                         }
                             
-                        }
+    //                     }
                        
-                        //#endregion
+    //                     //#endregion
                        
-                        if(err.message == 'Internal Server Error!'){
-                          return;
-                        }
-                        else if (err.stack) {//for code issues
-                          var sSepartor = "at async next";
-                          if(err.stack.includes("at next")){
-                            sSepartor ="at next"
-                          }
-                          let sError = err.stack.split(sSepartor)[0];
-                          console.log("Error: ", sError);
-                                await tx.run(
-                          INSERT.into("CP_ERROR_LOGS").entries({
-                          MESSAGE: sError,
-                          SERVICE : req.event,
-                          TYPE:"CODE"
-                        }));
-                        }
-                        else if(err.query){//for incorrect queries
-                             let sError = err.query +","+err.message;
-                        console.log("Error: ", sError);
-                          await tx.run(
-                          INSERT.into("CP_ERROR_LOGS").entries({
-                          MESSAGE: sError,
-                          SERVICE : req.event,
-                           TYPE:"QUERY"
-                        }));
-                        }
-                        await tx.commit();
-                    }
-                } catch (dbErr) {
-                    console.error("Exception: ", dbErr)
-                }
-                req.reject(500, 'Internal Server Error!');
-                return
-            }
-        }
-    }
+    //                     if(err.message == 'Internal Server Error!'){
+    //                       return;
+    //                     }
+    //                     else if (err.stack) {//for code issues
+    //                       var sSepartor = "at async next";
+    //                       if(err.stack.includes("at next")){
+    //                         sSepartor ="at next"
+    //                       }
+    //                       let sError = err.stack.split(sSepartor)[0];
+    //                       console.log("Error: ", sError);
+    //                             await tx.run(
+    //                       INSERT.into("CP_ERROR_LOGS").entries({
+    //                       MESSAGE: sError,
+    //                       SERVICE : req.event,
+    //                       TYPE:"CODE"
+    //                     }));
+    //                     }
+    //                     else if(err.query){//for incorrect queries
+    //                          let sError = err.query +","+err.message;
+    //                     console.log("Error: ", sError);
+    //                       await tx.run(
+    //                       INSERT.into("CP_ERROR_LOGS").entries({
+    //                       MESSAGE: sError,
+    //                       SERVICE : req.event,
+    //                        TYPE:"QUERY"
+    //                     }));
+    //                     }
+    //                     await tx.commit();
+    //                 }
+    //             } catch (dbErr) {
+    //                 console.error("Exception: ", dbErr)
+    //             }
+    //             req.reject(500, 'Internal Server Error!');
+    //             return
+    //         }
+    //     }
+    // }
 })
 //Error Handler to handle crash
   process.on('unhandledRejection', async (error) => {

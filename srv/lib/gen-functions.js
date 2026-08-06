@@ -603,6 +603,34 @@ class GenFunctions {
     }
   }
 
+static getTenantId(req) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        throw new Error("Authorization header not found");
+    }
+
+    if (!authHeader.startsWith("Bearer ")) {
+        throw new Error("Invalid authorization header format");
+    }
+
+    const accessToken = authHeader.replace("Bearer ", "");
+    const jwtPayload = jwt.decode(accessToken);
+
+    if (!jwtPayload) {
+        throw new Error("Invalid JWT");
+    }
+
+    const tenantId = jwtPayload?.ext_attr?.zdn;
+
+    if (!tenantId) {
+        throw new Error("Tenant ID not found in JWT");
+    }
+
+    return tenantId;
+}
+
+
   /**
    * Calculate number of weeks between the dates considering weekstart day as monday 
    * @param {startDate} startDate 

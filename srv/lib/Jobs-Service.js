@@ -3532,7 +3532,9 @@ module.exports = async function (srv) {
       let jobDetails = req.data.jobDetails;
       let jDetails = jobDetails.replace(/%2F/g, "/");
       var inputData = JSON.parse(jDetails);
-      const subdomain = req.user.authInfo?.getSubdomain?.();
+
+      // const subdomain = req.user.authInfo?.getSubdomain?.();
+      const subdomain =  GenFunctions.getTenantId(req);
       let baseUrl = req.headers['x-forwarded-proto'] + '://' + getBaseUrl();
 
       let actionUrl = baseUrl + inputData.action + '?host=' + subdomain;
@@ -6345,7 +6347,8 @@ module.exports = async function (srv) {
             saveJobSnapshot(JSON.parse(oStepData), req);
           }
           var sCron = '', STime = schTime;
-          let subdomain = req.user.authInfo?.getSubdomain?.();
+          // let subdomain = req.user.authInfo?.getSubdomain?.();
+          let subdomain = GenFunctions.getTenantId(req);
           const obj = {
             action: liSequences[0].ACTION_URL + '?host=' + subdomain,
             startTime: oCurrentJob.JOB_STARTTIME,
