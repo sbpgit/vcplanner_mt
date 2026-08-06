@@ -987,6 +987,7 @@ service CatalogService @(impl: './lib/cat-service.js',path: '/catalog') {
     function saveProductDemandData(demData: String)                                                                                                                                                                                                                                                                                      returns String;
 
     action   salesDeltaProcess(SALESDATA: String)                                                                                                                                                                                                                                                                                        returns String;
+    action   salesDeltaProcessBatch(SALESDATA: String)                                                                                                                                                                                                                                                                                        returns String;
     action   salesOrderCreation(SALESDATANEW: LargeString);
     action   generateOptionPercentage(LOCATION_ID: String(4), PRODUCT_ID: String, FROM_DATE: String(10), TO_DATE: String(10), MODEL_VERSION: String(20), VERSION: String(10), SCENARIO: String(32));
    

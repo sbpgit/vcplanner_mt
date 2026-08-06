@@ -15997,6 +15997,158 @@ module.exports = (srv) => {
         await objInitProcs.processSalesDelta(oSalesHeader, liSalesData, oSalesHeader.PROD_AVAILABILITY_DT, req);
         return 'SUCCESS';
     })
+    srv.on("salesDeltaProcessBatch", async (req) => {
+
+        let oSales = JSON.parse(req.data.SALESDATA);
+        let liAllSalesConfig = oSales?.aSalesHConfig; // All config lines for all headers
+        let liAllHeaders = oSales?.aSalesH;           // Array of multiple headers
+
+        console.log("Total Headers to process: " + liAllHeaders.length);
+
+        if (!liAllSalesConfig || liAllSalesConfig.length == 0) {
+            console.log("Missing Sales Configurations!");
+            return 'SUCCESS';
+        }
+
+        // 1. Validate prioritization for the reference Product (using the first header)
+        let oReferenceHeader = liAllHeaders[0];
+        let checkPrioritization = await cds.run(
+            SELECT.one.from("V_GETVARCHARPS")
+            .where({ PRODUCT_ID: oReferenceHeader.PRODUCT_ID, CHAR_TYPE: 'P' })
+        );
+
+        if (!checkPrioritization) {
+            console.log(`Characteristic prioritization missing for Product: ${oReferenceHeader.PRODUCT_ID}`);
+            return 'SUCCESS';
+        }
+        
+
+        // 2. ISOLATE CONFIG FOR FIRST HEADER ONLY
+        // We use this to get the UniqueID, PrimaryID, and Mapped ProductID once.
+        let liFirstHeaderConfig = liAllSalesConfig.filter(config => 
+            config.SALES_DOCUMENT      === oReferenceHeader.SALES_DOCUMENT &&
+            config.SALES_DOCUMENT_ITEM === oReferenceHeader.SALES_DOCUMENT_ITEM &&
+            config.PRODUCT_ID          === oReferenceHeader.PRODUCT_ID
+        );
+
+        const objInitProcs = new InitialProcess();
+        // storing processSalesDelta returned { iUniqueID, iPrimaryID, Product_id }
+        let oCalculatedIDs = await objInitProcs.processSalesDelta(
+            oReferenceHeader, 
+            liFirstHeaderConfig, 
+            oReferenceHeader.PROD_AVAILABILITY_DT, 
+            req
+        );
+
+        // 3. PREPARE BATCH DATA
+        let aHeadersToInsert = [];
+        let aHistoryMapping = [];
+        for (let header of liAllHeaders) {
+            //Format lead zeros to salesdocitem and schedulelineno
+            let sDocItem = GenF.addleadzeros(header.SALES_DOCUMENT_ITEM.toString(), 10);
+            let sSchedLine = GenF.addleadzeros(header.SCHEDULE_LINE_NO.toString(), 4);
+             
+            //Deleting existing records from CP_SALESH and CP_SALES_HM
+            await cds.run(DELETE.from("CP_SALESH").where({SALES_DOC: header.SALES_DOCUMENT, SALESDOC_ITEM:sDocItem}))
+            await cds.run(DELETE.from("CP_SALES_HM").where({SALES_DOC: header.SALES_DOCUMENT, SALESDOC_ITEM:sDocItem}))
+
+            //preparing CP_SALESH entries
+            aHeadersToInsert.push({
+                SALES_DOC: header.SALES_DOCUMENT,
+                SALESDOC_ITEM: sDocItem,
+                DOC_CREATEDDATE: header.DOC_CREATED_DATE,
+                SCHEDULELINE_NUM: sSchedLine.toString(),
+                PRODUCT_ID: header.PRODUCT_ID,
+                MATERIAL_VARIANT: header.MATERIAL_VARIANT,
+                REASON_REJ: header.REASON_4REJECTION,
+                UOM: header.UOM,
+                CONFIRMED_QTY: header.CONFIRMED_QTY,
+                ORD_QTY: header.QTY_UNITS,
+                MAT_AVAILDATE: header.PROD_AVAILABILITY_DT,
+                NET_VALUE: header.NET_VALUE,
+                CUSTOMER_GROUP: header.CUSTOMER_GROUP,
+                LOCATION_ID: header.LOCATION_ID,
+                SEEDORD_CHK: null,
+                SALES_ORG: header.SALES_ORG,
+                DISTR_CHANNEL: header.DISTR_CHANNEL,
+                DIVISION: header.DIVISION,
+                SAL_DOCU_TYPE: header.SAL_DOCU_TYPE,
+                ITEM_CREATED_DATE: (header.ITEM_CREATED_DATE) ? header.ITEM_CREATED_DATE : null,
+                ITEM_CHANGE_DATE: (header.ITEM_CHANGE_DATE) ? header.ITEM_CHANGE_DATE : null,
+                OPEN_ORDER: header.OPEN_ORDER,
+                CHARG: header.CHARG,
+                IBP_CUSTOMER: header.IBP_CUSTOMER,
+                RELEVENT_FOR_PLAN: header.NOT_PLANNING,
+                ON_HAND_STOCK: header.ON_HAND_STOCK,
+                IN_TRANSIT: header.IN_TRANSIT,
+                SHIP_FROM_LOC: header.SHIP_FROM_LOC,
+                RESERVE_FIELD1: header.RESERVE_FIELD1,
+                RESERVE_FIELD2: header.RESERVE_FIELD2,
+                RESERVE_FIELD3: header.RESERVE_FIELD3,
+                STOCK_LOC: null,
+                TRANS_TO_LOC: null,
+                TRANS_FROM_LOC: null,
+                CHANGED_DATE: header.CHANGED_DATE,
+                CHANGED_BY: header.CHANGED_BY,
+                CREATED_DATE: header.CREATED_DATE,
+                CREATED_BY: header.CREATED_BY,
+                CHANGED_TIME: header.CHANGED_TIME,
+                CREATED_TIME: header.CREATED_TIME,
+                DELETE_FLAG: header.DELETE_FLAG
+            })
+
+            // Prepare CP_SALES_HM entry (REUSING IDs from the first process)
+            aHistoryMapping.push({
+                SALES_DOC: header.SALES_DOCUMENT,
+                SALESDOC_ITEM: sDocItem,
+                PRODUCT_ID: oCalculatedIDs.Product_id || header.PRODUCT_ID, // Use mapped product if exists
+                LOCATION_ID: header.LOCATION_ID,
+                UNIQUE_ID: oCalculatedIDs.iUniqueID,
+                PRIMARY_ID: oCalculatedIDs.iPrimaryID
+            });
+        }
+
+        // BULK INSERTION into CP_SALESH and CP_SALES_HM
+        if (aHeadersToInsert.length > 0) {
+            await INSERT.into("CP_SALESH").entries(aHeadersToInsert);
+            await INSERT.into("CP_SALES_HM").entries(aHistoryMapping);
+        }
+
+        const matDate = oReferenceHeader.PROD_AVAILABILITY_DT
+        await UPSERT.into("CP_SALESH_CONFIG_DELTA").entries({
+            LOCATION_ID: oReferenceHeader.LOCATION_ID,
+            PRODUCT_ID: oReferenceHeader.PRODUCT_ID,
+            WEEK_DATE: matDate
+        })
+
+        // 4. Frozen Zone Alert Check once
+        let aQuery = `SELECT DISTINCT
+                        ADD_DAYS(CURRENT_DATE, - (CASE DAYOFWEEK(CURRENT_DATE) WHEN 1 THEN 6 ELSE DAYOFWEEK(CURRENT_DATE) - 2 END)) AS CURRENT_WEEK_MONDAY,
+                        ADD_DAYS(CURRENT_DATE, - (CASE DAYOFWEEK(CURRENT_DATE) WHEN 1 THEN 6 ELSE DAYOFWEEK(CURRENT_DATE) - 2 END) + (CFG.VALUE * 7)) AS FROZEN_END_DATE
+                    FROM "V_PLANNEDCONFIG" CFG
+                    WHERE CFG.PARAMETER_ID = 9 AND LOCATION_ID='${oReferenceHeader.LOCATION_ID}'`;
+
+        var aValidDates = await cds.run(aQuery);
+
+        if (aValidDates.length > 0 && matDate && (matDate >= aValidDates[0].CURRENT_WEEK_MONDAY && matDate <= aValidDates[0].FROZEN_END_DATE)) {
+            const alertLog = [{ 
+                MSGID: 'S08', 
+                APPL: 'VCPLANNER', 
+                MSGGRP: 'DATA', 
+                LOCATION_ID: oReferenceHeader.LOCATION_ID, 
+                PRODUCT_ID: oReferenceHeader.PRODUCT_ID, 
+                MSGTXT: matDate 
+            }];
+            await GenF.sendAlert('C', alertLog, req);
+        }
+
+        console.log('Batch Process Completed');
+        //Alert for actual demand and actual demand at VC
+        const objCatFn = new Catservicefn();
+        await objCatFn.dataValidationAlert(req,'ACTUAL_DEMAND');
+        await objCatFn.dataValidationAlert(req,'ACTUAL_DEMAND_VC');
+        return 'SUCCESS';        
+    })
 
 
     // function to getUnique Unique ID's

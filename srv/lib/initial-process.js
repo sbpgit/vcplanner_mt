@@ -745,7 +745,7 @@ class InitialProcess {
                 AND ENTRY_REQ !='X' AND CHAR_TYPE!='NUM' AND CHAR_NUM=REF_CHAR_NUM`);
 
         for(var i =0; i < liSalesData.length; i++){
-            liSalesData[i].SALES_DOCUMENT_ITEM = GenF.addleadzeros(liSalesData[i].SALES_DOCUMENT_ITEM.toString(), 10);
+            liSalesData[i].SALES_DOCUMENT_ITEM = GenF.addleadzeros(oSalesHeader.SALES_DOCUMENT_ITEM.toString(), 10);
             liSalesData[i].CHARACTERSTIC_NUM = GenF.addleadzeros(GenF.parse(liSalesData[i].CHARACTERSTIC_NUM).toString(), 10);
             let el = liSalesData[i];
             
@@ -940,8 +940,8 @@ class InitialProcess {
     
         //Insert into CP_SALES_HM
         const oSales ={
-            SALES_DOC:oSalesHeader.SALES_DOCUMENT,
-            SALESDOC_ITEM:oSalesHeader.SALES_DOCUMENT_ITEM,
+            SALES_DOC:oSalesHeader.SALES_DOCUMENT.toString(),
+            SALESDOC_ITEM:oSalesHeader.SALES_DOCUMENT_ITEM.toString(),
             PRODUCT_ID:oSalesHeader.PRODUCT_ID,
             LOCATION_ID:oSalesHeader.LOCATION_ID,
             UNIQUE_ID:iUniqueID,
@@ -1018,7 +1018,7 @@ class InitialProcess {
                 }
             }
         }
-       
+       console.log(JSON.stringify(oSales))
         await INSERT(oSales).into('CP_SALES_HM');
         //  this.updateUniqueRate(oSalesHeader.LOCATION_ID, oSalesHeader.PRODUCT_ID);
         // console.log("UID Rate Updated");
@@ -1066,17 +1066,17 @@ class InitialProcess {
                     into: {
                         ref: ['CP_UNIQUE_ID_HEADER']
                     },
-                    values: [
-                        iUniqueID,
-                        oSalesHeader.PRODUCT_ID,
-                        iUniqueID.toString(),
-                        UID_TYPE,
-                        0.0,
-                        true,
-                        ' ',
-                        '2000-01-01',
-                        '9999-12-31'
-                    ]
+                    entries: [{
+                        UNIQUE_ID:iUniqueID,
+                        PRODUCT_ID:oSalesHeader.PRODUCT_ID,
+                        UNIQUE_DESC:iUniqueID.toString(),
+                        UID_TYPE:UID_TYPE,
+                        UID_RATE:0.0,
+                        ACTIVE:true,
+                        EX_IDENTIFICATION:' ',
+                        VALID_FROM:'2000-01-01',
+                        VALID_TO:'9999-12-31'
+                }]
                 }
             });
             (UID_TYPE == 'U') ? GenF.log("Unique ID Created: " + iUniqueID):GenF.log("Primary ID Created: " + iUniqueID)
@@ -1106,6 +1106,12 @@ class InitialProcess {
             } catch (e) {
                 GenF.log(e);
             }
+        }
+
+        return {
+            iUniqueID,
+            iPrimaryID,
+            Product_id : oSales.PRODUCT_ID
         }
         }
 
