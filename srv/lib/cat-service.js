@@ -16050,8 +16050,15 @@ module.exports = (srv) => {
              
             //Deleting existing records from CP_SALESH and CP_SALES_HM
             await cds.run(DELETE.from("CP_SALESH").where({SALES_DOC: header.SALES_DOCUMENT, SALESDOC_ITEM:sDocItem}))
-            await cds.run(DELETE.from("CP_SALES_HM").where({SALES_DOC: header.SALES_DOCUMENT, SALESDOC_ITEM:sDocItem}))
-
+            // await cds.run(DELETE.from("CP_SALES_HM").where({SALES_DOC: header.SALES_DOCUMENT, SALESDOC_ITEM:sDocItem}))
+            await cds.run(
+           `DELETE FROM CP_SALES_HM
+WHERE SALES_DOC = '${header.SALES_DOCUMENT}'
+  AND (
+        SALESDOC_ITEM = '${sDocItem}'
+     OR SALESDOC_ITEM = '${header.SALES_DOCUMENT_ITEM}'
+      )`
+        );
             //preparing CP_SALESH entries
             aHeadersToInsert.push({
                 SALES_DOC: header.SALES_DOCUMENT,
