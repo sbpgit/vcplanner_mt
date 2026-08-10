@@ -1109,10 +1109,411 @@ class InitialProcess {
         }
 
         return {
-            iUniqueID,
+                        iUniqueID,
             iPrimaryID,
             Product_id : oSales.PRODUCT_ID
         }
+        }
+        async processSalesDeltaTEMP( oSalesHeader, liSalesData, matDate,req) {
+            let cUID = {};
+        let aCharVal = await cds.run(`SELECT DISTINCT CLASS_NUM,CHAR_NUM,REF_CHAR_NUM,REF_CHAR_VALUE,CHAR_VALUE,CHAR_TYPE,MULTI_CHAR,GENFLAG FROM "V_PRODCLSCHARVAL" WHERE "PRODUCT_ID"='${oSalesHeader.PRODUCT_ID}'`);
+        let aMultiChar = aCharVal.filter(f=>f.MULTI_CHAR =='X');
+        let aSalesConfig =[];
+        let aCharValBucket = await cds.run(`SELECT DISTINCT "CHAR_NUM",TRIM("CHAR_VALUE") AS CHAR_VALUE,"RANGE_FROM","RANGE_TO","MEDIAN" FROM "V_CHARVAL_BUCKET"
+            WHERE "CHAR_NUM" IN (SELECT DISTINCT CHAR_NUM FROM "V_PRODCLSCHARVAL" WHERE "PRODUCT_ID"='${oSalesHeader.PRODUCT_ID}')
+           `);
+                   let aCharZ = await cds.run(`SELECT DISTINCT CHAR_NUM FROM "CP_CHARACTERISTICS"
+                INNER JOIN "V_IBP_PRODCLASS" ON V_IBP_PRODCLASS.CLASS_NUM = CP_CHARACTERISTICS.CLASS_NUM
+                WHERE V_IBP_PRODCLASS.PRODUCT_ID='${oSalesHeader.PRODUCT_ID}' AND V_IBP_PRODCLASS.IBPCHAR_CHK = true
+                AND ENTRY_REQ !='X' AND CHAR_TYPE!='NUM' AND CHAR_NUM=REF_CHAR_NUM`);
+
+        for(var i =0; i < liSalesData.length; i++){
+            liSalesData[i].SALES_DOCUMENT_ITEM = GenF.addleadzeros(liSalesData[i].SALES_DOCUMENT_ITEM.toString(), 10);
+            liSalesData[i].CHARACTERSTIC_NUM = GenF.addleadzeros(GenF.parse(liSalesData[i].CHARACTERSTIC_NUM).toString(), 10);
+            let el = liSalesData[i];
+            
+            let aNumChar = aCharValBucket.filter(n=>n.CHAR_NUM ==  el.CHARACTERSTIC_NUM);
+            if(aNumChar.length >0){
+                for (const record of aNumChar) {
+                    const salesChar = el.CHARACTERSTIC_VALUE.toString().trim();
+                    let isValid = false;
+    
+                    if (!salesChar) {
+                        const value = 0;
+                        isValid = value >= record.RANGE_FROM && value <= record.RANGE_TO;
+                    } else if (salesChar.includes('-')) {
+                        const parts = salesChar.split('-').map(part => parseFloat(part));
+                        if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                            const start = Math.round(parts[0]);
+                            const end = Math.round(parts[1]);
+                            const rangeDifference = Math.abs(end - start);
+                            isValid = rangeDifference >= record.RANGE_FROM && rangeDifference <= record.RANGE_TO;
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        const value = Math.round(parseFloat(salesChar));
+                        if (!isNaN(value)) {
+                            isValid = value >= record.RANGE_FROM && value <= record.RANGE_TO;
+                        } else {
+                            continue;
+                        }
+                    }
+    
+                    if (isValid) {
+                        aSalesConfig.push({
+                            CHAR_NUM: record.CHAR_NUM,
+                            CHARVAL_NUM: record.MEDIAN.toString(),
+                            CHAR_VALUE: record.MEDIAN.toString(),
+                            PRODUCT_ID: oSalesHeader.PRODUCT_ID,
+                            UNIQUE_ID:0,
+                            UID_CHAR_RATE:0
+                        });
+                    }
+                }
+            }
+            //#region MultiChar
+            let aChar = aMultiChar.filter(f=>f.REF_CHAR_NUM == el.CHARACTERSTIC_NUM && f.CHAR_VALUE == el.CHARACTERSTIC_VALUE);
+            if(aChar.length >0){//If exists
+                const obj = {
+                    CHAR_NUM: aChar[0].CHAR_NUM,
+                    CHARVAL_NUM: el.CHARACTERSTIC_VALUE.toString(),
+                    CHAR_VALUE: el.CHARACTERSTIC_VALUE.toString(),
+                    PRODUCT_ID: el.PRODUCT_ID,
+                    UNIQUE_ID:0,
+                    UID_CHAR_RATE:0
+                }
+                aSalesConfig.push(obj);
+            }
+            else if(aNumChar.length ==0){//Not multiChar,not numeric
+                const obj = {
+                    CHAR_NUM: el.CHARACTERSTIC_NUM,
+                    CHARVAL_NUM: el.CHARACTERSTIC_VALUE.toString(),
+                    CHAR_VALUE: el.CHARACTERSTIC_VALUE.toString(),
+                    PRODUCT_ID: el.PRODUCT_ID,
+                    UNIQUE_ID:0,
+                    UID_CHAR_RATE:0
+                }
+                aSalesConfig.push(obj);
+            }
+            //#endregion
+        
+        }
+        let aNotMultiChar = aMultiChar.filter(m=>m.GENFLAG == 'X');//Not values 
+        for(var j =0; j < aNotMultiChar.length; j++){
+            let aSales = aSalesConfig.filter(s=>s.CHAR_NUM == aNotMultiChar[j].CHAR_NUM);//
+            if(aSales.length == 0){
+                const obj = {
+                    CHAR_NUM: aNotMultiChar[j].CHAR_NUM,
+                    CHARVAL_NUM: aNotMultiChar[j].CHAR_VALUE.toString(),
+                    CHAR_VALUE: aNotMultiChar[j].CHAR_VALUE.toString(),
+                    PRODUCT_ID: oSalesHeader.PRODUCT_ID,
+                    UNIQUE_ID:0,
+                    UID_CHAR_RATE:0
+                }
+                aSalesConfig.push(obj);
+            }
+        }
+         //Adding ZZZZ values
+            if(aCharZ.length >0){
+                   const salesSet = new Set(
+                        aSalesConfig.map(item => item.CHAR_NUM));
+                    aCharZ = aCharZ.filter(item =>
+                    !salesSet.has(item.CHAR_NUM)
+                    );
+
+                    if(aCharZ.length>0){
+                        aCharZ.forEach(el=>{
+                             const obj = {
+                    CHAR_NUM: el.CHAR_NUM,
+                    CHARVAL_NUM: 'ZZZZ',
+                    CHAR_VALUE: 'ZZZZ',
+                    PRODUCT_ID: oSalesHeader.PRODUCT_ID,
+                    UNIQUE_ID:0,
+                    UID_CHAR_RATE:0
+                }
+                aSalesConfig.push(obj);
+                        })
+                    }
+            }
+       
+        //#region Unique ID
+        //    let sQuery =`SELECT TOP 1 "UNIQUE_ID",COUNT(*) AS COUNT FROM "V_UNIQUE_ID" WHERE "PRODUCT_ID"='${oSalesHeader.PRODUCT_ID}' AND UID_TYPE='U' AND (`;
+        //    for(var s =0; s < aSalesConfig.length; s++){
+        //     sQuery+=`("CHAR_NUM"='${aSalesConfig[s].CHAR_NUM}' AND "CHAR_VALUE"='${aSalesConfig[s].CHAR_VALUE}')`;
+        //     if(s != aSalesConfig.length -1) sQuery+='OR'
+        //    }
+        //    sQuery+=`) GROUP BY UNIQUE_ID
+        //    ORDER BY COUNT DESC`;
+
+        let sQuery = `SELECT TOP 1 v."UNIQUE_ID",COUNT(*) AS COUNT FROM "V_UNIQUE_ID" v
+                    JOIN (
+                         SELECT "UNIQUE_ID", COUNT(*) AS COUNT_ITEM FROM "CP_UNIQUE_ID_ITEM" WHERE "PRODUCT_ID"='${oSalesHeader.PRODUCT_ID}'
+                        GROUP BY "UNIQUE_ID"
+                        ) i
+                    ON v."UNIQUE_ID" = i."UNIQUE_ID" WHERE v."PRODUCT_ID"='${oSalesHeader.PRODUCT_ID}' AND v."UID_TYPE"='U'  AND (`
+   for(var s =0; s < aSalesConfig.length; s++){
+            sQuery+=`("CHAR_NUM"='${aSalesConfig[s].CHAR_NUM}' AND "CHAR_VALUE"='${aSalesConfig[s].CHAR_VALUE}')`;
+            if(s != aSalesConfig.length -1) sQuery+='OR'
+           }
+
+           sQuery+= `) GROUP BY v."UNIQUE_ID", i.COUNT_ITEM HAVING COUNT(*) = i.COUNT_ITEM ORDER BY COUNT DESC`
+           let aResult = await cds.run(sQuery);
+           const countMatch = aResult?.[0]?.COUNT === aSalesConfig.length;
+           //Get Last Unique ID
+           var lsUniqueInd = await SELECT.one.columns("MAX(UNIQUE_ID) AS MAX_ID")
+           .from('CP_UNIQUE_ID_HEADER');
+           var iUniqueID =0;
+       if (lsUniqueInd.MAX_ID !== null) {
+        iUniqueID = parseInt(lsUniqueInd.MAX_ID);
+       } else {
+        iUniqueID = 0;
+       }
+       var iPrimaryID =iUniqueID;
+           if (countMatch) {
+            iUniqueID = aResult?.[0].UNIQUE_ID;
+          }
+          else{//create Unique ID and update user preference table
+            iUniqueID+=1;
+            iPrimaryID = iUniqueID;
+           await createUniquePrimary(iUniqueID,oSalesHeader,'U',aSalesConfig);
+          }
+    
+          //#endregion
+    
+        //#region  Primary ID
+        let liPriChar = await cds.run(`SELECT DISTINCT "CHAR_NUM"
+            FROM "CP_VARCHAR_PS"
+           WHERE "PRODUCT_ID" = '${oSalesHeader.PRODUCT_ID}' AND "CHAR_TYPE" = 'P'`);
+           if(liPriChar.length == 0){
+
+            cUID.UID = '';
+            cUID.PID = '';
+            cUID.config = '';
+
+            return cUID;
+           
+           }
+        let aPriData =[];
+        for(var x =0; x < aSalesConfig.length; x++){
+            if(liPriChar.findIndex(p=>p.CHAR_NUM == aSalesConfig[x].CHAR_NUM) !=-1){
+                aPriData.push(aSalesConfig[x]);
+            }
+        }
+    
+        // let sPriQuery =`SELECT TOP 1 "UNIQUE_ID",COUNT(*) AS COUNT FROM "V_UNIQUE_ID" WHERE "PRODUCT_ID"='${oSalesHeader.PRODUCT_ID}' AND UID_TYPE='P' AND (`;
+        // for(var s =0; s < aPriData.length; s++){
+        //  sPriQuery+=`("CHAR_NUM"='${aPriData[s].CHAR_NUM}' AND "CHAR_VALUE"='${aPriData[s].CHAR_VALUE}')`;
+        //  if(s != aPriData.length -1) sPriQuery+='OR'
+        // }
+        // sPriQuery+=`) GROUP BY UNIQUE_ID
+        // ORDER BY COUNT DESC`;
+
+        let sPriQuery = `SELECT TOP 1 v."UNIQUE_ID",COUNT(*) AS COUNT FROM "V_UNIQUE_ID" v
+        JOIN (
+        SELECT "UNIQUE_ID", COUNT(*) AS COUNT_ITEM FROM "CP_UNIQUE_ID_ITEM" WHERE "PRODUCT_ID"='${oSalesHeader.PRODUCT_ID}' GROUP BY "UNIQUE_ID"
+        ) i
+         ON v."UNIQUE_ID" = i."UNIQUE_ID" WHERE v."PRODUCT_ID"='${oSalesHeader.PRODUCT_ID}' AND v."UID_TYPE"='P'  AND (`
+    for(var s =0; s < aPriData.length; s++){
+         sPriQuery+=`("CHAR_NUM"='${aPriData[s].CHAR_NUM}' AND "CHAR_VALUE"='${aPriData[s].CHAR_VALUE}')`;
+         if(s != aPriData.length -1) sPriQuery+='OR'
+        }
+        sPriQuery+= `) GROUP BY v."UNIQUE_ID", i.COUNT_ITEM HAVING COUNT(*) = i.COUNT_ITEM ORDER BY COUNT DESC`
+        let aPriResult = await cds.run(sPriQuery);
+        const countMatchP = aPriResult?.[0]?.COUNT === aPriData.length;
+        if(countMatchP){
+            iPrimaryID = aPriResult[0].UNIQUE_ID;
+        }
+        else{
+            iPrimaryID+=1;
+            await createUniquePrimary(iPrimaryID,oSalesHeader,'P',aPriData); 
+        }
+        //#endregion
+    
+        // //Insert into CP_SALES_HM
+        // const oSales ={
+        //     SALES_DOC:oSalesHeader.SALES_DOCUMENT,
+        //     SALESDOC_ITEM:oSalesHeader.SALES_DOCUMENT_ITEM,
+        //     PRODUCT_ID:oSalesHeader.PRODUCT_ID,
+        //     LOCATION_ID:oSalesHeader.LOCATION_ID,
+        //     UNIQUE_ID:iUniqueID,
+        //     PRIMARY_ID:iPrimaryID
+        // }
+        // if(oSalesHeader.MATERIAL_VARIANT!= '' && oSalesHeader.MATERIAL_VARIANT!=null){//Material variant
+        //     oSales.PRODUCT_ID = oSalesHeader.MATERIAL_VARIANT;
+        // }
+        // else{
+        //     const liPartialProd = await cds.run(
+        //         `SELECT *
+        //                 FROM V_PARTIALPRODCHAR
+        //                 WHERE REF_PRODID    = '${oSalesHeader.PRODUCT_ID}'
+        //                   AND LOCATION_ID   = '${oSalesHeader.LOCATION_ID}'
+        //                   AND PRODUCT_ID != '${oSalesHeader.PRODUCT_ID}'
+        //                 ORDER BY LOCATION_ID,
+        //                          PRODUCT_ID,
+        //                          CLASS_NUM,
+        //                          CHAR_NUM`
+        //     );
+        //     if(liPartialProd.length >0){
+        //         let aPartialProd = [];
+        //         if (liPartialProd.length > 0) {
+        //             let liPartialConfig = [];
+        //             aPartialProd = liPartialProd.reduce((aProd, curr) => {
+        //                 const ITEM = [];
+        //                 const {
+        //                     LOCATION_ID,
+        //                     PRODUCT_ID,
+        //                     CLASS_NUM,
+        //                     CHAR_NUM,
+        //                     CHAR_VALUE,
+        //                 } = curr;
+        //                 const findObj = aProd.find((o) => o.LOCATION_ID === LOCATION_ID && o.PRODUCT_ID === PRODUCT_ID);
+        //                 if (!findObj) {
+        //                     ITEM.push({
+        //                         LOCATION_ID,
+        //                         PRODUCT_ID,
+        //                         CLASS_NUM,
+        //                         CHAR_NUM,
+        //                         CHAR_VALUE,
+        //                     });
+        //                     aProd.push({
+        //                         LOCATION_ID,
+        //                         PRODUCT_ID,
+        //                         ITEM
+        //                     });
+        //                 } else {
+        //                     findObj.ITEM.push({
+        //                         LOCATION_ID,
+        //                         PRODUCT_ID,
+        //                         CLASS_NUM,
+        //                         CHAR_NUM,
+        //                         CHAR_VALUE,
+        //                     });
+        //                 }
+        //                 return aProd;
+        //             }, []);
+        //             for (let cntPC = 0; cntPC < aPartialProd.length; cntPC++) {
+        //                 liPartialConfig = [];
+        //                 let elPartialProd = aPartialProd[cntPC];
+        //                 // Filter array of objects based on another array
+        //                 liPartialConfig = aSalesConfig.filter((el) => {
+        //                     return elPartialProd.ITEM.some((f) => {
+        //                         return f.CHAR_NUM === el.CHAR_NUM && f.CHAR_VALUE === el.CHAR_VALUE;
+        //                     });
+        //                 });
+        //                 // Check if length of filtered sales config matches with partial prod config
+        //                 if (liPartialConfig.length === elPartialProd.ITEM.length) {
+        //                     oSales.PRODUCT_ID = GenF.parse(elPartialProd.PRODUCT_ID);
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+       
+        // await INSERT(oSales).into('CP_SALES_HM');
+        // //  this.updateUniqueRate(oSalesHeader.LOCATION_ID, oSalesHeader.PRODUCT_ID);
+        // // console.log("UID Rate Updated");
+    
+        // //Inserting into Delta table
+        // await cds.run(UPSERT.into("CP_SALESH_CONFIG_DELTA").entries({
+        //     LOCATION_ID: oSalesHeader.LOCATION_ID,
+        //     PRODUCT_ID: oSalesHeader.PRODUCT_ID,
+        //     WEEK_DATE: matDate
+        // }));
+
+        // let aQuery = `SELECT DISTINCT
+        //     -- Current week Monday
+        //         ADD_DAYS(
+        //             CURRENT_DATE,
+        //             - (CASE DAYOFWEEK(CURRENT_DATE)
+        //                 WHEN 1 THEN 6   -- if Sunday
+        //                 ELSE DAYOFWEEK(CURRENT_DATE) - 2
+        //             END)
+        //         ) AS CURRENT_WEEK_MONDAY,
+        //         ADD_DAYS(
+        //             CURRENT_DATE,
+        //             - (CASE DAYOFWEEK(CURRENT_DATE)
+        //                 WHEN 1 THEN 6
+        //                 ELSE DAYOFWEEK(CURRENT_DATE) - 2
+        //             END)
+        //             + (CFG.VALUE * 7)
+        //         ) AS FROZEN_END_DATE
+        //     FROM "V_PLANNEDCONFIG" CFG
+        //     WHERE CFG.PARAMETER_ID = 9 AND LOCATION_ID='${oSalesHeader.LOCATION_ID}'`
+        // var aValidDates = await cds.run(aQuery);
+        // if (aValidDates.length > 0 && matDate && (matDate >= aValidDates[0].CURRENT_WEEK_MONDAY && matDate <= aValidDates[0].FROZEN_END_DATE)) {
+        //     const alertLog = [{ MSGID: 'S08', APPL: 'VCPLANNER', MSGGRP: 'DATA', LOCATION_ID: oSalesHeader.LOCATION_ID, PRODUCT_ID: oSalesHeader.PRODUCT_ID, MSGTXT: matDate }];
+        //     await GenF.sendAlert('C', alertLog, req);
+        // }
+ 
+        console.log("Process Completed");
+        
+        //Alert for actual demand and actual demand at VC
+         const objCatFn = new Catservicefn();
+        // await objCatFn.dataValidationAlert(req,'ACTUAL_DEMAND');
+        // await objCatFn.dataValidationAlert(req,'ACTUAL_DEMAND_VC');
+        async function createUniquePrimary(iUniqueID,oSalesHeader,UID_TYPE,aSalesConfig){
+           if(UID_TYPE == "U"){
+            cUID.UID = iUniqueID;
+            cUID.config = aSalesConfig;
+           }
+           if(UID_TYPE == "P"){
+            cUID.PID = iUniqueID;
+
+           }
+            await cds.run({
+                INSERT: {
+                    into: {
+                        ref: ['CP_UNIQUE_ID_HEADER']
+                    },
+                    values: [
+                        iUniqueID,
+                        oSalesHeader.PRODUCT_ID,
+                        iUniqueID.toString(),
+                        UID_TYPE,
+                        0.0,
+                        true,
+                        ' ',
+                        '2000-01-01',
+                        '9999-12-31'
+                    ]
+                }
+            });
+            (UID_TYPE == 'U') ? GenF.log("Unique ID Created: " + iUniqueID):GenF.log("Primary ID Created: " + iUniqueID)
+    
+            try {
+                aSalesConfig = aSalesConfig.map(function (obj) {
+                    return { ...obj, "UNIQUE_ID": iUniqueID };
+                  })
+                  
+                await cds.run({
+                    INSERT: {
+                        into: {
+                            ref: ['CP_UNIQUE_ID_ITEM']
+                        },
+                        entries: aSalesConfig
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
+    
+            try {
+                await UPDATE`CP_USER_PREFERENCES`
+                    .with({
+                        PARAMETER_VALUE: iUniqueID.toString()
+                    })
+                    .where(`PARAMETER = 'UNIQUE_ID'`);
+            } catch (e) {
+                GenF.log(e);
+            }
+        }
+        return cUID;
+
+
+
+
         }
 
     /**

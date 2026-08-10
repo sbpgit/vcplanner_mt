@@ -34,6 +34,7 @@ const MultiValueServices = require("./multivaluechar-service");
 const oMVCharfn = new MultiValueServices();
 const fs = require('fs');
 const e = require("express");
+const { throwDeprecation } = require("process");
 const chatbotUrl = process.env.CHATBOT_URL;
 
 function getBaseUrl() {
@@ -4660,8 +4661,8 @@ module.exports = (srv) => {
     srv.on("genFullConfigDemand", async (req) => {
         // req.data.LocProdData = JSON.stringify(
         //     [{
-        //          "LOCATION_ID" : "1600",
-        //         "PRODUCT_ID"     : "VCP_1600",
+        //          "LOCATION_ID" : "1900",
+        //         "PRODUCT_ID"     : "000000000000002257",
         //         "VERSION"        : "__BASELINE"    ,                         
         //         "SCENARIO"       : "_PLAN"  ,                          
         //         "MODEL_VERSION"  : "Active"
@@ -4772,12 +4773,12 @@ module.exports = (srv) => {
     });
     srv.on("generateAssemblyReq", async (req) => {
         // req.data = {
-        //          "LOCATION_ID" : "2000",
-        //         "PRODUCT_ID"     : "000000000000002266",
-        //         "VERSION"        : "__BASELINE"    ,                         
-        //         "SCENARIO"       : "_PLAN"  
+        //     "LOCATION_ID": "2000",
+        //     "PRODUCT_ID": "000000000000002242",
+        //     "VERSION": "COPYBASE",
+        //     "SCENARIO": "_PLAN"
 
-        //     }
+        // }
 
         req.data.FACTORY_LOC = req.data.LOCATION_ID;
 
@@ -9128,6 +9129,515 @@ module.exports = (srv) => {
         }
 
     });
+
+
+    srv.on("postCIRQuantitiesToS4API", async (req) => {
+        
+        // req.data = {
+        //     LOCATION_ID : '2000',
+        //     PLANNING_LOC : '',
+        //     PRODUCT_ID : '000000000000002242',
+        //     VERSION : '__BASELINE',
+        //     SCENARIO : '_PLAN',
+        //     FROMDATE : '2026-07-26',
+        //     TODATE : '2027-07-04',
+        //     MODEL_VERSION : 'Active',
+        //     VALIDUSER : 'T_BTP',
+        //     USER_ID : '',
+        //     FORECAST_SNAPTIME : ''
+        // }
+        const objCIR = new CIRService();
+        let oCIRData = {};
+        let token = '';
+        let sCFDestUser = '';
+        // const sCFDestUser = req.data.VALIDUSER;
+        try {
+            token = await srv.send("getCFAuthToken");
+            console.log("token", token);
+            sCFDestUser = await srv.send("getCFDestinationUser", { TOKEN: token });
+            console.log("sCFDestUser", sCFDestUser)
+        } catch (error) {
+            return error.message;
+        }
+        // const sLoginUserId = req.headers['x-username'];
+        let sLoginUserId = "";
+        let aFilteredChar = [], aFilteredCIR = [];
+        let sUniqueId = "";
+        let oUniqueIdChars = {};
+        let aUniqueIdChars = [];
+        let oEntry = {};
+        let nextDtIndex = '';
+        let aFilSalesH = [];
+        let aCIRLogData = [], aFilCIRLogData = [], sWeekDate = '';              // 2024-04-16
+        let aFilUID = [];                                                       // 2024-04-20
+        let iSOQty = 0;
+        let iCIROpenQty = 0;                                 // Existing CIR qtys - Actual Sales order qty
+        var aErrorLog = [];
+        let dnxtDate = new Date();
+        // sLoginUserId = req.data.USER_ID;
+        sLoginUserId = '';
+        let finalData = [];
+
+        let versionscenario = await cds.run(`SELECT DISTINCT 
+                                                     "PARAMETER_ID",
+                                                     "VALUE"
+                                              FROM CP_PARAMETER_VALUES
+                                             WHERE "PARAMETER_ID" IN ('20', '21')
+                                             ORDER BY "PARAMETER_ID" `);
+        req.data.VERSION = versionscenario.filter(el => el.PARAMETER_ID === 20)[0].VALUE;
+        req.data.SCENARIO = versionscenario.filter(el => el.PARAMETER_ID === 21)[0].VALUE;  
+        req.data.MODEL_VERSION = 'Active';               
+
+        oCIRData = await objCIR.getCIRData(req);
+        let iIndex = -1;                                            // 2024-04-23
+        let aUniqueIdConfig = [],
+            aSalesHis = [],
+            aCIRData = [],
+            aUID_SALESH = [];
+
+        let liCIRQty = oCIRData.liCIRQty;
+        if (liCIRQty.length === 0) {
+            await GenF.jobSchMessage('X', 'No data exists for selected filters!', req);
+            return;
+        }
+
+        // GenF.log(`Tech: Get from V_UNIQUE_ID and V_SALES_H using ${lLocation} ${lProduct}`); 
+        GenF.log(`Step 1 Started publishing CIR Quantities`);
+
+        let liUniqueId = oCIRData.liUniqueId;
+        let liSalesH = oCIRData.liSalesH;
+        let aUniqueIdChar = await objCIR.getUniqueIdCharacteristics(req);
+        aCIRLogData = await objCIR.getCIRLogData(req);           // 2024-04-16
+
+        GenF.log(`Step 2 Completed Data Fetching for selected filters`);
+        GenF.log(`Step 2.1 Unique Id Data: ${liUniqueId.length}`);
+        GenF.log(`Step 2.2 Sales Data: ${liSalesH.length}`);
+        GenF.log(`Step 2.3 Unique Characteristics Data: ${aUniqueIdChar.length}`);
+
+        // if(req.user) {
+        //   sLoginUserId = req.user;
+        // }
+        // if(req.req.rawHeaders[1]) {
+        //    sLoginUserId = req.req.rawHeaders[1];
+        // }
+        console.log(req.req.rawHeaders[1]);
+
+        /** Begin of 2024-04-23 */
+        // Build nested array for Unique Id Configuration
+        if (aUniqueIdChar.length > 0) {
+            // Build nested array for Unique Id Characteristics
+            aUniqueIdConfig = aUniqueIdChar.reduce((aUniqueConfig, curr) => {
+                const CONFIG = [];
+                const {
+                    UNIQUE_ID,
+                    PRODUCT_ID,
+                    CLASS_NUM,
+                    CLASS_NAME,
+                    CHAR_NUM,
+                    CHAR_NAME,
+                    CHAR_DESC,
+                    CHARVAL_NUM,
+                    CHAR_VALUE,
+                    CHARVAL_DESC,
+                    REF_CHAR_NUM,
+                    REF_CHAR_NAME,
+                    REF_CHAR_DESC,
+                    REF_CHAR_VALUE,
+                    MEDIAN
+                } = curr;
+                const findObj = aUniqueConfig.find((o) => o.UNIQUE_ID === UNIQUE_ID && o.PRODUCT_ID === PRODUCT_ID);
+                if (!findObj) {
+                    CONFIG.push({
+                        UNIQUE_ID,
+                        PRODUCT_ID,
+                        CLASS_NUM,
+                        CLASS_NAME,
+                        CHAR_NUM,
+                        CHAR_NAME,
+                        CHAR_DESC,
+                        CHARVAL_NUM,
+                        CHAR_VALUE,
+                        CHARVAL_DESC,
+                        REF_CHAR_NUM,
+                        REF_CHAR_NAME,
+                        REF_CHAR_DESC,
+                        REF_CHAR_VALUE,
+                        MEDIAN
+                    });
+                    aUniqueConfig.push({ UNIQUE_ID, PRODUCT_ID, CONFIG });
+                } else {
+                    findObj.CONFIG.push({
+                        UNIQUE_ID,
+                        PRODUCT_ID,
+                        CLASS_NUM,
+                        CLASS_NAME,
+                        CHAR_NUM,
+                        CHAR_NAME,
+                        CHAR_DESC,
+                        CHARVAL_NUM,
+                        CHAR_VALUE,
+                        CHARVAL_DESC,
+                        REF_CHAR_NUM,
+                        REF_CHAR_NAME,
+                        REF_CHAR_DESC,
+                        REF_CHAR_VALUE,
+                        MEDIAN
+                    });
+                }
+                return aUniqueConfig;
+            }, []);
+        }
+
+        // Include SALESH and CIR as nested array in each object of Unique Id array
+        if (liUniqueId.length > 0) {
+            liUniqueId.forEach(function (obj) {
+                obj.SALESH = [];
+                obj.CIR = [];
+            });
+        }
+
+        // Update Sales History Data in Unique Id Array
+        if (liSalesH.length > 0) {
+            // Build nested array for Sales History Data
+            aSalesHis = liSalesH.reduce((aSalesH, curr) => {
+                const ITEM = [];
+                const {
+                    UNIQUE_ID,
+                    PRODUCT_ID,
+                    MAT_AVAILDATE,
+                    ORD_QTY,
+                } = curr;
+                const findObj = aSalesH.find((o) => o.UNIQUE_ID === UNIQUE_ID);
+                if (!findObj) {
+                    ITEM.push({
+                        UNIQUE_ID,
+                        PRODUCT_ID,
+                        MAT_AVAILDATE,
+                        ORD_QTY,
+                    });
+                    aSalesH.push({ UNIQUE_ID, ITEM });
+                } else {
+                    findObj.ITEM.push({
+                        UNIQUE_ID,
+                        PRODUCT_ID,
+                        MAT_AVAILDATE,
+                        ORD_QTY,
+                    });
+                }
+                return aSalesH;
+            }, []);
+
+            for (let iSales = 0; iSales < aSalesHis.length; iSales++) {
+                iIndex = -1;
+                iIndex = liUniqueId.findIndex(obj => obj.UNIQUE_ID === aSalesHis[iSales].UNIQUE_ID);
+                if (iIndex > -1) {
+                    liUniqueId[iIndex].SALESH = aSalesHis[iSales].ITEM;
+                }
+            }
+        }
+
+        // Update CIR Data in Unique Id array
+        if (liCIRQty.length > 0) {
+            // Build nested array of CIRs Generated for each Unique Id
+            aCIRData = liCIRQty.reduce((aCIR, curr) => {
+                const ITEM = [];
+                const {
+                    UNIQUE_ID,
+                    LOCATION_ID,
+                    REF_PRODID,
+                    PRODUCT_ID,
+                    WEEK_DATE,
+                    CIR_QTY
+                } = curr;
+                const findObj = aCIR.find((o) => o.UNIQUE_ID === UNIQUE_ID);
+                if (!findObj) {
+                    ITEM.push({
+                        UNIQUE_ID,
+                        LOCATION_ID,
+                        REF_PRODID,
+                        PRODUCT_ID,
+                        WEEK_DATE,
+                        CIR_QTY
+                    });
+                    aCIR.push({ UNIQUE_ID, ITEM });
+                } else {
+                    findObj.ITEM.push({
+                        UNIQUE_ID,
+                        LOCATION_ID,
+                        REF_PRODID,
+                        PRODUCT_ID,
+                        WEEK_DATE,
+                        CIR_QTY
+                    });
+                }
+                return aCIR;
+            }, []);
+
+            iIndex = -1;
+            for (let iCIR = 0; iCIR < aCIRData.length; iCIR++) {
+                iIndex = -1;
+                iIndex = liUniqueId.findIndex(obj => obj.UNIQUE_ID === aCIRData[iCIR].UNIQUE_ID);
+                if (iIndex > -1) {
+                    liUniqueId[iIndex].CIR = aCIRData[iCIR].ITEM;
+                }
+            }
+        }
+
+        /** End Of 2024-04-23 */
+
+        for (let i = 0; i < liUniqueId.length; i++) {
+            // Unique Id Characteristics
+            aUniqueIdChars = [];
+            aFilteredChar = [];
+            aFilSalesH = [];
+            sUniqueId = liUniqueId[i].UNIQUE_ID;
+            if (aUniqueIdConfig.length > 0) {
+                aFilteredChar = aUniqueIdConfig.filter(function (aUniqueId) {
+                    return aUniqueId.UNIQUE_ID == sUniqueId;
+                });
+            }
+
+            GenF.log(`Step 3 Processing Unique ID: ${sUniqueId}`);
+
+            if (aFilteredChar.length > 0) {
+                aFilteredChar = aFilteredChar[0].CONFIG;                     // 2024-04-23
+
+                for (let k = 0; k < aFilteredChar.length; k++) {
+                    oUniqueIdChars = {};
+                    oUniqueIdChars.UniqueId = (aFilteredChar[k].UNIQUE_ID).toString();
+                    if (aFilteredChar[k].CHARVAL_NUM.includes('_N')) {
+                    } else {
+                        oUniqueIdChars.Charc = aFilteredChar[k].REF_CHAR_NAME;
+                        // oUniqueIdChars.Value = aFilteredChar[k].REF_CHAR_VALUE;
+                        if (aFilteredChar[k].MEDIAN !== 'NULL' && aFilteredChar[k].MEDIAN !== null) {
+                            oUniqueIdChars.Value = aFilteredChar[k].MEDIAN.toString();
+                        } else {
+                            oUniqueIdChars.Value = aFilteredChar[k].REF_CHAR_VALUE;
+                        }
+                        aUniqueIdChars.push(oUniqueIdChars);
+                    }
+                }
+            }
+
+            // CIR Weekly Quantity 
+            aFilteredCIR = [];
+            aFilteredCIR = liUniqueId[i].CIR;                          // 2024-04-23
+            // aFilteredCIR = liCIRQty.filter(function (aCIRQty) {
+            //     return aCIRQty.UNIQUE_ID == sUniqueId;
+            // });
+
+
+            for (let j = 0; j < aFilteredCIR.length; j++) {
+                aFilSalesH = [];
+                iSOQty = 0;
+                iCIROpenQty = 0;
+                dnxtDate = new Date();
+                aFilCIRLogData = [], sWeekDate = '';        // 2024-04-16
+
+                // Code to skip publish of Invalid Unique Id
+                if (liUniqueId[i].VALID_FROM <= aFilteredCIR[j].WEEK_DATE && liUniqueId[i].VALID_TO >= aFilteredCIR[j].WEEK_DATE) {
+                } else {
+                    // break;
+                    continue;
+                }
+
+                //
+                nextDtIndex = GenF.addOne(j, aFilteredCIR.length);
+                // Add 7 days to Current Date to Get Next WeekDate
+                dnxtDate = new Date(aFilteredCIR[j].WEEK_DATE);
+                dnxtDate = new Date(dnxtDate.setDate(dnxtDate.getDate() + 7));
+                dnxtDate = dnxtDate.toISOString().split('Z')[0].split('T')[0];
+
+                // Filter Sales History from current weekdate to next week date
+                aUID_SALESH = []
+                aUID_SALESH = liUniqueId[i].SALESH;
+                if (aUID_SALESH.length > 0) {
+                    aFilSalesH = aUID_SALESH.filter(function (aSalesH) {
+                        return aSalesH.MAT_AVAILDATE >= aFilteredCIR[j].WEEK_DATE
+                            && aSalesH.MAT_AVAILDATE < dnxtDate;
+                    });
+                }
+                // aFilSalesH = liSalesH.filter(function (aSalesH) {
+                //     return aSalesH.UNIQUE_ID === sUniqueId
+                //         && aSalesH.MAT_AVAILDATE >= aFilteredCIR[j].WEEK_DATE
+                //         && aSalesH.MAT_AVAILDATE < dnxtDate;
+                // });
+
+
+                if (aFilSalesH.length > 0) {
+                    for (let vQtyIndex = 0; vQtyIndex < aFilSalesH.length; vQtyIndex++) {
+                        iSOQty = iSOQty + parseInt(aFilSalesH[vQtyIndex].ORD_QTY);
+                    }
+                }
+
+                // Subtraction of Actual Orders Quantity from Generated CIR Qtys. 
+                iCIROpenQty = aFilteredCIR[j].CIR_QTY - iSOQty;
+                // GenF.log(`Step 3.1 Processing For Week Date: ${aFilteredCIR[j].WEEK_DATE}`);
+                GenF.log(`Step 3.1 Processing For Week Date: ${aFilteredCIR[j].WEEK_DATE}`);
+                GenF.log(`Step 3.2 CIR Quantity: ${iCIROpenQty}`);
+
+                // Code to check CIR Quantity generated in S4 - 2024-04-16
+                // Filter CIR LOG Data
+                if (aCIRLogData.length > 0) {
+                    sWeekDate = aFilteredCIR[j].WEEK_DATE;
+                    sWeekDate = sWeekDate.toString();
+                    sWeekDate = sWeekDate.replace(/-/g, '');
+
+                    aFilCIRLogData = aCIRLogData.filter(function (aCIRLog) {
+                        return aCIRLog.UNIQUE_ID === sUniqueId
+                            && aCIRLog.CUST_MATERIAL === aFilteredCIR[j].PRODUCT_ID
+                            && aCIRLog.PLANT === aFilteredCIR[j].LOCATION_ID
+                            && aCIRLog.WEEK_DATE === sWeekDate;
+                    });
+
+                    if (aFilCIRLogData.length > 0) {
+                        if (iCIROpenQty === parseInt(aFilCIRLogData[0].CIR_QTY)) {
+                            continue;
+                        }
+                    } else {
+                        if (iCIROpenQty <= 0) {
+                            continue;
+                        }
+                    }
+                }
+                // End of CIR Quantity Check from S4
+
+                // if (iCIROpenQty < 0) {
+                if (iCIROpenQty <= 0) {                // 2024-04-16
+                    iCIROpenQty = 0;
+                    // continue;
+                }
+
+                oEntry = {}
+                oEntry.Werks = aFilteredCIR[j].LOCATION_ID;
+                oEntry.Matnr = aFilteredCIR[j].REF_PRODID;
+                oEntry.CustMaterial = aFilteredCIR[j].PRODUCT_ID;
+                if (oEntry.CustMaterial.toString().length > 35) {//remove 5 leading zeroes
+                    oEntry.CustMaterial = oEntry.CustMaterial.toString().substring(5);
+                }
+                oEntry.Quantity = iCIROpenQty.toString();             //(aFilteredCIR[j].CIR_QTY).toString();
+                oEntry.UniqueId = (aFilteredCIR[j].UNIQUE_ID).toString();
+                // Send External Identification (i.e, V***) 
+                if (liUniqueId[i].EX_IDENTIFICATION !== '' && liUniqueId[i].EX_IDENTIFICATION !== null) {
+                    oEntry.External_Id = liUniqueId[i].EX_IDENTIFICATION;
+                } else {
+                    oEntry.External_Id = oEntry.UniqueId;
+                }
+                oEntry.Datum = aFilteredCIR[j].WEEK_DATE + "T10:00:00";
+                oEntry.Valid_User = sCFDestUser;
+                if (sLoginUserId) {
+                    oEntry.User_Id = sLoginUserId;
+                }
+                oEntry.HeaderConfig = GenF.parse(aUniqueIdChars);
+
+                finalData.push(oEntry);
+                // try {
+
+                //     console.log("Pre:" + oEntry);
+                //     req.headers['Application-Interface-Key'] = vAIRKey;
+                //     await oModel.tx(req).post("/headerSet", oEntry);
+                //     GenF.log(`Step 3.4 Completed Processing Unique ID: ${sUniqueId}`);
+                // }
+                // catch (err) {
+                //     let sLog = err.message;
+                //     aErrorLog.push(sLog);
+                //     GenF.log(`Step 3.4 Failed Processing Unique ID: ${sUniqueId}`);
+                // }
+
+            }
+
+        }
+
+        /** Code to publish CIRs which are changed to zero demand  */
+        aCIRLogData = [];
+        aCIRLogData = await objCIR.getCIRLogData(req);
+        if (aCIRLogData.length > 0) {
+            for (let i = 0; i < aCIRLogData.length; i++) {
+                aFilteredCIR = [];
+                sWeekDate = aCIRLogData[i].WEEK_DATE;
+                sWeekDate = sWeekDate.substring(0, 4) + "-" + sWeekDate.substring(4, 6) + "-" + sWeekDate.substring(6, 8);
+                aFilteredCIR = liCIRQty.filter(function (aCIRQty) {
+                    return aCIRQty.REF_PRODID === aCIRLogData[i].MATNR
+                        && aCIRQty.LOCATION_ID === aCIRLogData[i].PLANT
+                        && aCIRQty.UNIQUE_ID === aCIRLogData[i].UNIQUE_ID
+                        && aCIRQty.WEEK_DATE === sWeekDate
+                        && aCIRQty.PRODUCT_ID === aCIRLogData[i].CUST_MATERIAL;
+                });
+
+                if (aFilteredCIR.length === 0) {
+                    aFilteredChar = [];
+                    aFilUID = [];
+                    GenF.log(`Posting zero demand for UniqueId: ${aCIRLogData[i].UNIQUE_ID} Date: ${sWeekDate}`);
+                    iCIROpenQty = 0;
+                    oEntry = {}
+                    oEntry.Werks = aCIRLogData[i].PLANT;
+                    oEntry.Matnr = aCIRLogData[i].MATNR;
+                    oEntry.CustMaterial = aCIRLogData[i].CUST_MATERIAL;
+                    oEntry.Quantity = iCIROpenQty.toString();
+                    oEntry.UniqueId = (aCIRLogData[i].UNIQUE_ID).toString();
+                    oEntry.External_Id = oEntry.UniqueId;
+
+                    // Send External Identification (i.e, V***) 
+                    aFilUID = liUniqueId.filter(function (aUniqueId) {
+                        return aUniqueId.UNIQUE_ID == aCIRLogData[i].UNIQUE_ID;
+                    });
+                    if (aFilUID.length > 0) {
+                        if (aFilUID[0].EX_IDENTIFICATION !== '' && aFilUID[0].EX_IDENTIFICATION !== null) {
+                            oEntry.External_Id = aFilUID[0].EX_IDENTIFICATION;
+                        }
+                    }
+
+                    oEntry.Datum = sWeekDate + "T10:00:00";
+                    oEntry.Valid_User = sCFDestUser;
+                    if (sLoginUserId) {
+                        oEntry.User_Id = sLoginUserId;
+                    }
+
+                    // Unique Id Characteristics
+                    aFilteredChar = aUniqueIdChar.filter(function (aUniqueId) {
+                        return aUniqueId.UNIQUE_ID == aCIRLogData[i].UNIQUE_ID;
+                    });
+                    aUniqueIdChars = [];
+                    for (let k = 0; k < aFilteredChar.length; k++) {
+                        oUniqueIdChars = {};
+                        oUniqueIdChars.UniqueId = (aFilteredChar[k].UNIQUE_ID).toString();
+                        if (aFilteredChar[k].CHARVAL_NUM.includes('_N')) {
+                        } else {
+                            oUniqueIdChars.Charc = aFilteredChar[k].REF_CHAR_NAME;
+                            // oUniqueIdChars.Value = aFilteredChar[k].REF_CHAR_VALUE;
+                            if (aFilteredChar[k].MEDIAN !== 'NULL' && aFilteredChar[k].MEDIAN !== null) {
+                                oUniqueIdChars.Value = aFilteredChar[k].MEDIAN.toString();
+                            } else {
+                                oUniqueIdChars.Value = aFilteredChar[k].REF_CHAR_VALUE;
+                            }
+                            aUniqueIdChars.push(oUniqueIdChars);
+                        }
+                    }
+
+                    oEntry.HeaderConfig = GenF.parse(aUniqueIdChars);
+                    finalData.push(oEntry);
+                    // try {
+                    //     console.log("Pre:" + oEntry);
+                    //     req.headers['Application-Interface-Key'] = vAIRKey;
+                    //     await oModel.tx(req).post("/headerSet", oEntry);
+                    //     GenF.log(`Step 3.4 Completed Processing Unique ID: ${aCIRLogData[i].UNIQUE_ID}`);
+                    // }
+                    // catch (err) {
+                    //     let sLog = err.message;
+                    //     aErrorLog.push(sLog);
+                    //     GenF.log(`Step 3.4 Failed Processing Unique ID:  ${aCIRLogData[i].UNIQUE_ID}`);
+                    // }
+
+                }
+
+            }
+        }
+
+
+        return JSON.stringify(finalData);
+
+
+    });
     // Save CIR FIRM Quantities
     srv.on("modifyCIRFirmQuantities", async (req) => {
         let aCIRQuantities = [];
@@ -10052,8 +10562,8 @@ module.exports = (srv) => {
 
             })
             .catch(function (error) {
-                console.log('Get Token - Error ', error);
-                ret_response = JSON.stringify(error);
+                console.log('Get Token - Error ', error.statusCode, error.message);
+                throw new Error(`getCFAuthToken failed (${error.statusCode}): ${error.message}`);
             });
 
         // console.log(ret_response);
@@ -10098,8 +10608,8 @@ module.exports = (srv) => {
                 ret_response = oDestination.destinationConfiguration.User;
             })
             .catch(function (error) {
-                console.log('Get Destination - Error ', error);
-                ret_response = JSON.stringify(error);
+                console.log('Get Destination - Error ', error.statusCode, error.message);
+                throw new Error(`getCFDestinationUser failed (${error.statusCode}): ${error.message}`);
             });
 
         // console.log(ret_response);
@@ -15340,8 +15850,8 @@ module.exports = (srv) => {
 
     srv.on("genBOMUIDMapping", async (req) => {
         // req.data.LocProdData = JSON.stringify([{
-        //     "LOCATION_ID" : "1010",
-        //     "PRODUCT_ID"  : "VCP_200",
+        //     "LOCATION_ID" : "2000",
+        //     "PRODUCT_ID"  : "000000000000002266",
         //     "FULL_RUN" : "X"
         // }])
         const objAsmreq = new AssemblyReq();
@@ -16158,6 +16668,399 @@ WHERE SALES_DOC = '${header.SALES_DOCUMENT}'
     })
 
 
+srv.on("salesNewProcess", async (req) => {
+        let salesCreateData = [];
+        let oSales = {};
+        let limit = 100000;
+        let offset = 0;
+        let allData = [];
+        let sHeasder = [];
+        let cqnQuery = '';
+
+
+
+
+        sHeasder = await cds.run(`SELECT * from CP_SALESH_STB where DELETE_FLAG !='X' or DELETE_FLAG is NULL `);
+
+        let sItem =[];
+        for (let h = 0; h < sHeasder.length; h++) {
+            try {
+                await cds.tx(async () => {
+
+                    console.log('sHeasder[h]', sHeasder[h].SALES_DOCUMENT );
+                    
+                    // let sItems = await cds.run(`
+                    //         SELECT * FROM CP_SALESH_CONFIG_STB WHERE SALES_DOCUMENT = '${sHeasder[h].SALES_DOCUMENT}'
+                    //     `);
+
+                    // allData.push(...sItems);
+
+            
+                    try {
+
+                        // let index = salesCreateData.findIndex(el=> el.SALES_DOCUMENT == sHeasder[h].SALES_DOCUMENT);
+                        let index = salesCreateData.findIndex(el => el.SALES_DOCUMENT == sHeasder[h].SALES_DOCUMENT);
+                        if (index == -1) {
+                            // let sItem = await cds.run(`SELECT * FROM CP_SALESH_CONFIG_STB WHERE PRODUCT_ID = '${SProduct[p].PRODUCT_ID}' 
+                            //                                                 and SALES_DOCUMENT = '${sHeasder[h].SALES_DOCUMENT}'`);
+
+                            sItem = await cds.run(`SELECT * FROM CP_SALESH_CONFIG_STB WHERE SALES_DOCUMENT = '${sHeasder[h].SALES_DOCUMENT}'`);
+
+                            //  sItem = allData.filter(item => item.SALES_DOCUMENT === sHeasder[h].SALES_DOCUMENT);
+
+                            let temp = {}
+
+                            temp.aSalesH = sHeasder[h];
+                            temp.aSalesHConfig = sItem;
+
+                            const updateReq = {
+                                SALESDATA: JSON.stringify(temp)
+                            };
+                            let uidC = await salesDeltaProcessTEMP(updateReq, req);
+                            uidC = JSON.parse(uidC);
+
+                            // console.log('uidC:', uidC);
+                            // console.log('uidC.UID:', uidC.UID);
+                            // console.log('typeof uidC.UID:', typeof uidC.UID);
+                            // console.log('uidC.UID !== undefined:', uidC.UID !== undefined);
+
+                            // if (uidC.UID !== undefined) {
+                            // console.log('inside if');
+                            // }
+
+                            console.log('uidC.UID:', uidC.UID);
+                            console.log('uidC.PID:', uidC.PID);
+
+                            if (uidC?.UID !== undefined && uidC?.UID !== null && uidC?.UID !== '') {
+
+                                console.log('uidC.config:', uidC.config.length);
+
+                                let refData = sItem.map(row => ({
+                                    CHARACTERSTIC_NUM: row['CHARACTERSTIC_NUM'],
+                                    CHARACTERSTIC_VALUE: row['CHARACTERSTIC_VALUE']
+                                }))
+
+
+                                // '${r.CHARACTERSTIC_NUM}' / '${parseInt(r.CHARACTERSTIC_NUM, 10) }'
+                                const caseConditions = refData.map(r => `
+                    WHEN TO_NVARCHAR(CHARACTERSTIC_NUM) = '${r.CHARACTERSTIC_NUM}' 
+                    AND TRIM(TO_NVARCHAR(CHARACTERSTIC_VALUE)) = '${r.CHARACTERSTIC_VALUE}' 
+                    THEN 1
+                    `).join('\n');
+
+                                const charNums = refData.map(r => r.CHARACTERSTIC_NUM).join(',');
+                                // AND CHARACTERSTIC_NUM IN (${charNums})
+                                const query = `SELECT SALES_DOCUMENT, SALES_DOCUMENT_ITEM
+                            FROM CP_SALESH_CONFIG_STB
+                            WHERE PRODUCT_ID = '${sHeasder[h].PRODUCT_ID}'
+                            
+                            GROUP BY SALES_DOCUMENT, SALES_DOCUMENT_ITEM
+                            HAVING 
+                            COUNT(*) = ${refData.length}
+                            AND SUM(
+                                CASE
+                                ${caseConditions}
+                                ELSE 0
+                                END
+                            ) = ${refData.length}  `;
+                                //  console.log(query);
+                                const result = await cds.run(query);
+                                // console.log("query", query);
+                                console.log("result.length", result.length);
+                                salesCreateData = salesCreateData.concat(result);
+                                let salesHM = [];
+                                if (result.length > 0) {
+                                    for (let s = 0; s < result.length; s++) {
+
+                                        //Insert into CP_SALES_HM
+                                        oSales = {
+                                            SALES_DOC: result[s].SALES_DOCUMENT,
+                                            SALESDOC_ITEM: String(result[s].SALES_DOCUMENT_ITEM).padStart(10, '0'),
+                                            PRODUCT_ID: sHeasder[h].PRODUCT_ID,
+                                            LOCATION_ID: sHeasder[h].LOCATION_ID,
+                                            UNIQUE_ID: uidC?.UID,
+                                            PRIMARY_ID: uidC?.PID
+                                        }
+                                        if (sHeasder[h].MATERIAL_VARIANT != '' && sHeasder[h].MATERIAL_VARIANT != null) {//Material variant
+                                            oSales.PRODUCT_ID = sHeasder[h].MATERIAL_VARIANT;
+                                        }
+                                        // else{
+                                        //     const liPartialProd = await cds.run(
+                                        //         `SELECT *
+                                        //                 FROM V_PARTIALPRODCHAR
+                                        //                 WHERE REF_PRODID    = '${sHeasder[h].PRODUCT_ID}'
+                                        //                   AND LOCATION_ID   = '${sHeasder[h].LOCATION_ID}'
+                                        //                   AND PRODUCT_ID != '${sHeasder[h].PRODUCT_ID}'
+                                        //                 ORDER BY LOCATION_ID,
+                                        //                          PRODUCT_ID,
+                                        //                          CLASS_NUM,
+                                        //                          CHAR_NUM`
+                                        //     );
+                                        //     if(liPartialProd.length >0){
+                                        //         let aPartialProd = [];
+                                        //         if (liPartialProd.length > 0) {
+                                        //             let liPartialConfig = [];
+                                        //             aPartialProd = liPartialProd.reduce((aProd, curr) => {
+                                        //                 const ITEM = [];
+                                        //                 const {
+                                        //                     LOCATION_ID,
+                                        //                     PRODUCT_ID,
+                                        //                     CLASS_NUM,
+                                        //                     CHAR_NUM,
+                                        //                     CHAR_VALUE,
+                                        //                 } = curr;
+                                        //                 const findObj = aProd.find((o) => o.LOCATION_ID === LOCATION_ID && o.PRODUCT_ID === PRODUCT_ID);
+                                        //                 if (!findObj) {
+                                        //                     ITEM.push({
+                                        //                         LOCATION_ID,
+                                        //                         PRODUCT_ID,
+                                        //                         CLASS_NUM,
+                                        //                         CHAR_NUM,
+                                        //                         CHAR_VALUE,
+                                        //                     });
+                                        //                     aProd.push({
+                                        //                         LOCATION_ID,
+                                        //                         PRODUCT_ID,
+                                        //                         ITEM
+                                        //                     });
+                                        //                 } else {
+                                        //                     findObj.ITEM.push({
+                                        //                         LOCATION_ID,
+                                        //                         PRODUCT_ID,
+                                        //                         CLASS_NUM,
+                                        //                         CHAR_NUM,
+                                        //                         CHAR_VALUE,
+                                        //                     });
+                                        //                 }
+                                        //                 return aProd;
+                                        //             }, []);
+                                        //             for (let cntPC = 0; cntPC < aPartialProd.length; cntPC++) {
+                                        //                 liPartialConfig = [];
+                                        //                 let elPartialProd = aPartialProd[cntPC];
+                                        //                 // Filter array of objects based on another array
+                                        //                 liPartialConfig = aSalesConfig.filter((el) => {
+                                        //                     return elPartialProd.ITEM.some((f) => {
+                                        //                         return f.CHAR_NUM === el.CHAR_NUM && f.CHAR_VALUE === el.CHAR_VALUE;
+                                        //                     });
+                                        //                 });
+                                        //                 // Check if length of filtered sales config matches with partial prod config
+                                        //                 if (liPartialConfig.length === elPartialProd.ITEM.length) {
+                                        //                     oSales.PRODUCT_ID = GenF.parse(elPartialProd.PRODUCT_ID);
+                                        //                     break;
+                                        //                 }
+                                        //             }
+                                        //         }
+                                        //     }
+                                        // }
+
+                                        salesHM.push(oSales);
+
+                                        // await INSERT(oSales).into('CP_SALES_HM');
+
+                                        //Inserting into Delta table
+                                        // await cds.run(UPSERT.into("CP_SALESH_CONFIG_DELTA").entries({
+                                        //     LOCATION_ID: sHeasder[h].LOCATION_ID,
+                                        //     PRODUCT_ID: sHeasder[h].PRODUCT_ID,
+                                        //     WEEK_DATE: matDate
+                                        // }));
+
+                                    }
+
+                                    console.log(salesHM.length);
+                                    cqnQuery = { UPSERT: { into: { ref: ['CP_SALES_HM'] }, entries: salesHM } };
+                                    try {
+                                        await cds.run(cqnQuery);
+                                        responseMessage = "Successfully updated the saleshm data";
+                                        // await cds.run(`DELETE from CP_SALESH_STB WHERE PRODUCT_ID = '${SProduct[p].PRODUCT_ID}'`);
+                                        // await cds.run(`DELETE from CP_SALESH_CONFIG_STB WHERE PRODUCT_ID = '${SProduct[p].PRODUCT_ID}'`);
+
+                                        for (let i = 0; i < salesHM.length; i++) {
+                                            try {
+                                                await UPDATE`CP_SALESH_STB`
+                                                    .with({
+                                                        DELETE_FLAG: 'X'
+                                                    })
+                                                    .where(`SALES_DOCUMENT = '${salesHM[i].SALES_DOC}'`);
+
+
+                                            } catch (e) {
+                                                console.log(e);
+                                            }
+                                        }
+                                    }
+                                    catch (exception) {
+                                        console.log("Query exception ", cqnQuery);
+                                        console.log("Query Error ", exception.toString());
+                                        responseMessage = exception.toString();
+                                    }
+                                }
+                            }
+
+
+                        } else {
+                            let oSalesHeader = sHeasder[h];
+                            let sSalesDocItem = GenF.addleadzeros(oSalesHeader.SALES_DOCUMENT_ITEM.toString(), 10);
+
+                            
+                            oSalesHeader.SALES_DOCUMENT_ITEM = sSalesDocItem;
+                            oSalesHeader.SCHEDULE_LINE_NO = GenF.addleadzeros(oSalesHeader.SCHEDULE_LINE_NO.toString(), 4);
+                            const oHeader = [{
+                                SALES_DOC: oSalesHeader.SALES_DOCUMENT,
+                                SALESDOC_ITEM: oSalesHeader.SALES_DOCUMENT_ITEM,
+                                DOC_CREATEDDATE: oSalesHeader.DOC_CREATED_DATE,
+                                SCHEDULELINE_NUM: oSalesHeader.SCHEDULE_LINE_NO.toString(),
+                                PRODUCT_ID: oSalesHeader.PRODUCT_ID,
+                                MATERIAL_VARIANT: oSalesHeader.MATERIAL_VARIANT,
+                                REASON_REJ: oSalesHeader.REASON_4REJECTION,
+                                UOM: oSalesHeader.UOM,
+                                CONFIRMED_QTY: oSalesHeader.CONFIRMED_QTY,
+                                ORD_QTY: oSalesHeader.QTY_UNITS,
+                                MAT_AVAILDATE: oSalesHeader.PROD_AVAILABILITY_DT,
+                                NET_VALUE: oSalesHeader.NET_VALUE,
+                                CUSTOMER_GROUP: oSalesHeader.CUSTOMER_GROUP,
+                                LOCATION_ID: oSalesHeader.LOCATION_ID,
+                                SEEDORD_CHK: null,
+                                SALES_ORG: oSalesHeader.SALES_ORG,
+                                DISTR_CHANNEL: oSalesHeader.DISTR_CHANNEL,
+                                DIVISION: oSalesHeader.DIVISION,
+                                SAL_DOCU_TYPE: oSalesHeader.SAL_DOCU_TYPE,
+                                ITEM_CREATED_DATE: (oSalesHeader.ITEM_CREATED_DATE) ? oSalesHeader.ITEM_CREATED_DATE : null,
+                                ITEM_CHANGE_DATE: (oSalesHeader.ITEM_CHANGE_DATE) ? oSalesHeader.ITEM_CHANGE_DATE : null,
+                                OPEN_ORDER: oSalesHeader.OPEN_ORDER,
+                                CHARG: oSalesHeader.CHARG,
+                                IBP_CUSTOMER: oSalesHeader.IBP_CUSTOMER,
+                                RELEVENT_FOR_PLAN: oSalesHeader.NOT_PLANNING,
+                                ON_HAND_STOCK: oSalesHeader.ON_HAND_STOCK,
+                                IN_TRANSIT: oSalesHeader.IN_TRANSIT,
+                                SHIP_FROM_LOC: oSalesHeader.SHIP_FROM_LOC,
+                                RESERVE_FIELD1: oSalesHeader.RESERVE_FIELD1,
+                                RESERVE_FIELD2: oSalesHeader.RESERVE_FIELD2,
+                                RESERVE_FIELD3: oSalesHeader.RESERVE_FIELD3,
+                                STOCK_LOC: null,
+                                TRANS_TO_LOC: null,
+                                TRANS_FROM_LOC: null,
+                                CHANGED_DATE: oSalesHeader.CHANGED_DATE,
+                                CHANGED_BY: oSalesHeader.CHANGED_BY,
+                                CREATED_DATE: oSalesHeader.CREATED_DATE,
+                                CREATED_BY: oSalesHeader.CREATED_BY,
+                                CHANGED_TIME: oSalesHeader.CHANGED_TIME,
+                                CREATED_TIME: oSalesHeader.CREATED_TIME,
+                                DELETE_FLAG: oSalesHeader.DELETE_FLAG
+                            }]
+                            cqnQuery = { UPSERT: { into: { ref: ['CP_SALESH'] }, entries: oHeader } };
+                                    try {
+                                        await cds.run(cqnQuery);
+                                        }
+                                    catch (exception) {
+                                        console.log("Query exception ", cqnQuery);
+                                        console.log("Query Error ", exception.toString());
+                                    }
+                        }
+                    }
+                    catch (exception) {
+                        console.log("Query exception ", cqnQuery);
+                        console.log("Query Error ", exception.toString());
+                        // responseMessage = exception.toString();
+                        // continue
+                    }
+
+
+                }); // end cds.tx — commits this product's data immediately
+            } catch (productError) {
+                console.error(`Product  failed, skipping:`, productError.message || productError);
+            }
+
+        }
+
+
+        await GenF.jobSchMessage('X', 'Unique ID generated', req);
+
+
+
+
+
+    });
+
+    // srv.on("salesDeltaProcessTEMP", async (req) => {
+    async function salesDeltaProcessTEMP(data, req) {
+
+        let oSales = JSON.parse(data.SALESDATA);//contains an object of Sales and Sales Configuration
+        let liSalesData = oSales?.aSalesHConfig;
+        let oSalesHeader = oSales?.aSalesH;
+
+        console.log("Sales Config:" + liSalesData.length);
+        if (liSalesData.length == 0) {
+            console.log("Missing Sales Configurations!");
+            return 'SUCCESS';
+        }
+        //Validate if Product has Characteristic Prioritization
+        if ((await cds.run(`SELECT  TOP 1 "PRODUCT_ID" FROM "V_GETVARCHARPS" WHERE "PRODUCT_ID"='${oSalesHeader.PRODUCT_ID}' AND "CHAR_TYPE"='P'`)).length == 0) {
+            sCharPr = `Characteristic prioritization missing for Product: ${oSalesHeader.PRODUCT_ID}`
+            console.log(sCharPr);
+            return 'SUCCESS';
+        }
+
+        let sSalesDocItem = GenF.addleadzeros(oSalesHeader.SALES_DOCUMENT_ITEM.toString(), 10);
+
+        //Delete from CP_SALESH and CP_SALES_HM
+        await cds.run(`DELETE FROM "CP_SALESH" WHERE "SALES_DOC"='${oSalesHeader.SALES_DOCUMENT}' AND 
+            ("SALESDOC_ITEM"='${oSalesHeader.SALES_DOCUMENT_ITEM}' OR "SALESDOC_ITEM"='${sSalesDocItem}')`);
+        await cds.run(`DELETE FROM "CP_SALES_HM" WHERE "SALES_DOC"='${oSalesHeader.SALES_DOCUMENT}' AND 
+          ("SALESDOC_ITEM"='${oSalesHeader.SALES_DOCUMENT_ITEM}' OR "SALESDOC_ITEM"='${sSalesDocItem}')`);
+
+        oSalesHeader.SALES_DOCUMENT_ITEM = sSalesDocItem;
+        oSalesHeader.SCHEDULE_LINE_NO = GenF.addleadzeros(oSalesHeader.SCHEDULE_LINE_NO.toString(), 4);
+        const oHeader = {
+            SALES_DOC: oSalesHeader.SALES_DOCUMENT,
+            SALESDOC_ITEM: oSalesHeader.SALES_DOCUMENT_ITEM,
+            DOC_CREATEDDATE: oSalesHeader.DOC_CREATED_DATE,
+            SCHEDULELINE_NUM: oSalesHeader.SCHEDULE_LINE_NO.toString(),
+            PRODUCT_ID: oSalesHeader.PRODUCT_ID,
+            MATERIAL_VARIANT: oSalesHeader.MATERIAL_VARIANT,
+            REASON_REJ: oSalesHeader.REASON_4REJECTION,
+            UOM: oSalesHeader.UOM,
+            CONFIRMED_QTY: oSalesHeader.CONFIRMED_QTY,
+            ORD_QTY: oSalesHeader.QTY_UNITS,
+            MAT_AVAILDATE: oSalesHeader.PROD_AVAILABILITY_DT,
+            NET_VALUE: oSalesHeader.NET_VALUE,
+            CUSTOMER_GROUP: oSalesHeader.CUSTOMER_GROUP,
+            LOCATION_ID: oSalesHeader.LOCATION_ID,
+            SEEDORD_CHK: null,
+            SALES_ORG: oSalesHeader.SALES_ORG,
+            DISTR_CHANNEL: oSalesHeader.DISTR_CHANNEL,
+            DIVISION: oSalesHeader.DIVISION,
+            SAL_DOCU_TYPE: oSalesHeader.SAL_DOCU_TYPE,
+            ITEM_CREATED_DATE: (oSalesHeader.ITEM_CREATED_DATE) ? oSalesHeader.ITEM_CREATED_DATE : null,
+            ITEM_CHANGE_DATE: (oSalesHeader.ITEM_CHANGE_DATE) ? oSalesHeader.ITEM_CHANGE_DATE : null,
+            OPEN_ORDER: oSalesHeader.OPEN_ORDER,
+            CHARG: oSalesHeader.CHARG,
+            IBP_CUSTOMER: oSalesHeader.IBP_CUSTOMER,
+            RELEVENT_FOR_PLAN: oSalesHeader.NOT_PLANNING,
+            ON_HAND_STOCK: oSalesHeader.ON_HAND_STOCK,
+            IN_TRANSIT: oSalesHeader.IN_TRANSIT,
+            SHIP_FROM_LOC: oSalesHeader.SHIP_FROM_LOC,
+            RESERVE_FIELD1: oSalesHeader.RESERVE_FIELD1,
+            RESERVE_FIELD2: oSalesHeader.RESERVE_FIELD2,
+            RESERVE_FIELD3: oSalesHeader.RESERVE_FIELD3,
+            STOCK_LOC: null,
+            TRANS_TO_LOC: null,
+            TRANS_FROM_LOC: null,
+            CHANGED_DATE: oSalesHeader.CHANGED_DATE,
+            CHANGED_BY: oSalesHeader.CHANGED_BY,
+            CREATED_DATE: oSalesHeader.CREATED_DATE,
+            CREATED_BY: oSalesHeader.CREATED_BY,
+            CHANGED_TIME: oSalesHeader.CHANGED_TIME,
+            CREATED_TIME: oSalesHeader.CREATED_TIME,
+            DELETE_FLAG: oSalesHeader.DELETE_FLAG
+        }
+        await cds.run(INSERT.into("CP_SALESH").entries(oHeader));
+        const objInitProcs = new InitialProcess();
+        let uid = await objInitProcs.processSalesDeltaTEMP(oSalesHeader, liSalesData, oSalesHeader.PROD_AVAILABILITY_DT, req);
+        let temp = JSON.stringify(uid);
+        return temp;
+    }
+
+
     // function to getUnique Unique ID's
     srv.on("getUniqueIds", async (req) => {
         var sProduct = req.data.PRODUCT_ID;
@@ -16185,12 +17088,14 @@ WHERE SALES_DOC = '${header.SALES_DOCUMENT}'
     });
 
     srv.on("testing", async (req) => {
+       
 
-        var aData = await cds.run(`SELECT TOP 7000000 * FROM "V_SALESCONFIGTEST"`);
+        // var aData = await cds.run(`SELECT TOP 7000000 * FROM "V_SALESCONFIGTEST"`);
 
-        console.log("total sales config length - " + aData.length);
+        // console.log("total sales config length - " + aData.length);
 
-        return aData.length;
+        // return aData.length;
+       
     });
 
 
@@ -18181,10 +19086,10 @@ WHERE SALES_DOC = '${header.SALES_DOCUMENT}'
     srv.on("generateOptionPercentage", async (req) => {
 
         //  req.data= {   
-        //                 "LOCATION_ID": "1600",
-        //                 "PRODUCT_ID": "[\"VCP_1600\"]",
-        //                 "FROM_DATE": "2026-06-26",
-        //                 "TO_DATE": "2028-06-23",
+        //                 "LOCATION_ID": "1900",
+        //                 "PRODUCT_ID": "[\"000000000000002257\"]",
+        //                 "FROM_DATE": "2026-07-27",
+        //                 "TO_DATE": "2028-07-24",
         //                 "VERSION": "__BASELINE",
         //                 "SCENARIO": "_PLAN",
         //                 "MODEL_VERSION": "Active"

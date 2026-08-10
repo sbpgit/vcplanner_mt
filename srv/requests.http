@@ -4181,22 +4181,22 @@ GET http://localhost:4004/oData/v4/catalog/getForecastCharAnalysis(LOCATION_ID='
 
 // Initialization Process
 ###
-POST http://localhost:4004/oData/v4/catalog/genFullConfigDemand
+POST http://localhost:4004/oData/v4/catalog/generateAssemblyReq
 Content-Type: application/json
  
 {
-    "LocProdData":"TEST"
+    
 }
 
 ###
-GET http://localhost:4004/oData/v4/catalog/getProdAsmbComp()
+GET http://localhost:4004/oData/v4/catalog/salesNewProcess()
 
 
 # ### testing Forecast orders 
 # GET http://localhost:4004/odata/v4/catalog/getForecastCIRWeekly(LOCATION_ID='test',PLANNING_LOC='test',PRODUCT_ID='VCP_220',VERSION='__BASELINE',SCENARIO='_PLAN',FROMDATE=2025-04-04,TODATE=2025-07-04,MODEL_VERSION='Active',UNIQUE_ID='test')
 
 ###test planned option percentages
-GET http://localhost:4004/odata/v4/catalog/getPlannedOptionPercentage(LOCATION_ID='1600',PRODUCT_ID='["VCP_1600"]',FROM_DATE=2026-06-27,TO_DATE=2028-07-29,MODEL_VERSION='Active',VERSION='__BASELINE',SCENARIO='_PLAN')
+GET http://localhost:4004/odata/v4/catalog/generateAssemblyReq(LOCATION_ID='2000',PRODUCT_ID='000000000000002266',VERSION='__BASELINE',SCENARIO='_PLAN')
 
 ###
 GET http://localhost:4004/odata/v4/planner/getRestrictionLagFun(FACTORY_LOACATION='1600',LOCATION='1600',LINE='1600',RESTRICTION_ID='RTR_NEW',MONTH='FY26 P07')

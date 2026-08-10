@@ -956,6 +956,7 @@ service CatalogService @(impl: './lib/cat-service.js',path: '/catalog') {
 
     //TO get Demand Quantity for weeks in forecast order
     action   postCIRQuantitiesToS4(LOCATION_ID: String(4), PLANNING_LOC: String, PRODUCT_ID: String(40), VERSION: String(10), SCENARIO: String(32), FROMDATE: Date, TODATE: Date, MODEL_VERSION: String(20), VALIDUSER: String(12), USER_ID: String(100), FORECAST_SNAPTIME: String);
+    function   postCIRQuantitiesToS4API(LOCATION_ID: String(4), PRODUCT_ID: String(40), FROMDATE: Date, TODATE: Date) returns LargeString;
     action   genDynamicFrozenFirmHorizon();
     ///*****/ Assembly Requirements /*****/
     action   generateAssemblyReq(LOCATION_ID: String(4), PRODUCT_ID: String(40), VERSION: String(10), SCENARIO: String(32));
@@ -968,7 +969,7 @@ service CatalogService @(impl: './lib/cat-service.js',path: '/catalog') {
 
     // // Saved Configuration API
     // action generateUniqueId(vcRulesList : array of ds.UniqueIdDetails);
-
+    
     action   uploadUniqueId(sequence_ID: String)                                                                                                                                                                                                                                                                                         returns ds.uniqueIdResponse;
     action   generateSeedOrders(LOCATION_ID: String(4), PRODUCT_ID: String(40), CUSTOMER_GROUP: String(20), FROMDATE: Date, TODATE: Date, CHARDATA: String, CHAROPTFLAG: String(1))                                                                                                                                                      returns String;
     action   deleteLocProdData(LocProdDate: String)                                                                                                                                                                                                                                                                                      returns String;
@@ -987,7 +988,8 @@ service CatalogService @(impl: './lib/cat-service.js',path: '/catalog') {
     function saveProductDemandData(demData: String)                                                                                                                                                                                                                                                                                      returns String;
 
     action   salesDeltaProcess(SALESDATA: String)                                                                                                                                                                                                                                                                                        returns String;
-    action   salesDeltaProcessBatch(SALESDATA: String)                                                                                                                                                                                                                                                                                        returns String;
+    // function salesNewProcess() returns String;
+    action salesNewProcess() ;
     action   salesOrderCreation(SALESDATANEW: LargeString);
     action   generateOptionPercentage(LOCATION_ID: String(4), PRODUCT_ID: String, FROM_DATE: String(10), TO_DATE: String(10), MODEL_VERSION: String(20), VERSION: String(10), SCENARIO: String(32));
    

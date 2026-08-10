@@ -2427,7 +2427,7 @@ class GenTimeseriesM2 {
             message: ''
         };
         oReturn.message = "Successfully Completed Forecast Orders Consumption for Location Product: " + aData.LOCATION_ID +" "+ aData.PRODUCT_ID;
-        if (aProductionOrder.length > 0) {
+        // if (aProductionOrder.length > 0) {
 
             let aForecast = await cds.run(`WITH UID_PID AS
                                                 (
@@ -3440,10 +3440,10 @@ class GenTimeseriesM2 {
                     return bExtraForecast;
                 }
 
-            }
-            else{
-                 oReturn.message ="Forecast Orders Consumption failed for Location Product: " + aData.LOCATION_ID +" "+ aData.PRODUCT_ID;
-            }
+            // }
+            // else{
+            //      oReturn.message ="Forecast Orders Consumption failed for Location Product: " + aData.LOCATION_ID +" "+ aData.PRODUCT_ID;
+            // }
         }
         else{
              oReturn.message ="Forecast Orders Consumption failed for Location Product: " + aData.LOCATION_ID +" "+ aData.PRODUCT_ID;

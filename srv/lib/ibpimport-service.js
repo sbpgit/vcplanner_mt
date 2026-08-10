@@ -6215,6 +6215,9 @@ console.log("vDateDeld", vDateDeld);
             }
 console.log("Line 5190", reqCust);
 
+                let deci = 0;
+                let old_date = '';
+
             // Loop request to insert into
             for (let i in reqCust) {
                 let vWeekDate = dateJSONToEDM(reqCust[i][ConfigWeek]).split("T")[0];
@@ -6222,7 +6225,10 @@ console.log("Line 5190", reqCust);
                 vWeekDate = GenF.getNextMondayCmp(vWeekDate);
                 // if (dateJSONToEDM([i].PERIODID4_TSTAMP) >= vDateDeld) {
 console.log("vWeekDate", vWeekDate)                
-console.log("vDateDeld", vDateDeld)                
+console.log("vDateDeld", vDateDeld)     
+                if(vWeekDate !== old_date && deci > 0){
+                    iFutureDemandCust[iFutureDemandCust.length - 1].QUANTITY = iFutureDemandCust[iFutureDemandCust.length - 1].QUANTITY + 1;
+                }
                 if (vWeekDate >= vDateDeld) {
                     sFutureDemandCust = {};
                     sFutureDemandCust["LOCATION_ID"] = GenF.parse(reqCust[i].LOCID);
@@ -6235,8 +6241,16 @@ console.log("vDateDeld", vDateDeld)
                         sFutureDemandCust["SCENARIO"] = GenF.parse(reqCust[i].SCENARIOID);
                     }
                     sFutureDemandCust["WEEK_DATE"] = GenF.parse(vWeekDate);
-                    // sFutureDemandCust["QUANTITY"] = GenF.parse(reqCust[i].TOTALDEMANDOUTPUT);
-                    sFutureDemandCust["QUANTITY"] = GenF.parse(reqCust[i][QuantityField]);
+                    // // // sFutureDemandCust["QUANTITY"] = GenF.parse(reqCust[i].TOTALDEMANDOUTPUT);
+                    // // sFutureDemandCust["QUANTITY"] = GenF.parse(reqCust[i][QuantityField]);
+                    // deci = reqCust[i][QuantityField] - Math.floor(reqCust[i][QuantityField]);
+                    // reqCust[i][QuantityField] = reqCust[i][QuantityField] + (reqCust[i][QuantityField] - Math.floor(reqCust[i][QuantityField]));
+                    deci = deci + (reqCust[i][QuantityField] - Math.floor(reqCust[i][QuantityField]));
+                    reqCust[i][QuantityField] = deci > 1 ? reqCust[i][QuantityField] + 1 : reqCust[i][QuantityField];
+                    deci = deci > 1 ? deci - 1 : deci;
+                    sFutureDemandCust["QUANTITY"] = Math.trunc(reqCust[i][QuantityField]);
+
+                    old_date = vWeekDate;
                     // VP-1419
                     // sFutureDemandCust["QUANTITY"] = GenF.parse(reqCust[i].STATISTICALFCSTQTY);
                     iFutureDemandCust.push(GenF.parse(sFutureDemandCust));
@@ -6249,11 +6263,11 @@ console.log("iFutureDemandCust", iFutureDemandCust);
                 console.log("Step 6.1 Successfully imported Future Demand for Loc Product Customer " + lsData);
                 // flag = "D";
             }
-            let iFutureDemand = [];
-            let sFutureDemand = {};
+             let iFutureDemand = [];
+             let sFutureDemand = {};
 
 
-                const result = Object.values(
+                let result = Object.values(
                 iFutureDemandCust.reduce((acc, row) => {
                     // group by everything EXCEPT customer group
                     const key = `${row.LOCATION_ID}|${row.PRODUCT_ID}|${row.VERSION}|${row.SCENARIO}|${row.WEEK_DATE}`;
@@ -6275,8 +6289,12 @@ console.log("iFutureDemandCust", iFutureDemandCust);
                 );
 
 console.log(result);
-
+                result.forEach(row => {
+                    row.QUANTITY = Math.ceil(row.QUANTITY); // round up the summed quantity
+                });
+console.log("result final", result);
 iFutureDemand = result;
+console.log("iFutureDemand", iFutureDemand);
 
 // console.log("Line 5225", req)
 //             // Loop request to insert into
@@ -6339,7 +6357,7 @@ console.log("Line 5252", iFutureDemand.length)
                     const string = date.toISOString();
                     return string;
                 };
-
+console.log("aDates", aDates);
                 if (aDates.length > 0) {
                     for (let k = 0; k < aDates.length; k++) {
                         GenF.log(`Import Started: IBP Option Percent for Week Dates ${aDates[k].vFromDate} To ${aDates[k].vToDate}`);

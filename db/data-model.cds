@@ -1789,8 +1789,8 @@ context cp {
             PRODUCT_ID           : String(40);
             PROD_AVAILABILITY_DT : Date;
             CLASS                : String(18);
-            CLASS_NUM            : Integer;
-            CHARACTERSTIC_NUM    : Integer;
+            CLASS_NUM            : String(10);
+            CHARACTERSTIC_NUM    : String(10);
             VALUE_NUM            : Integer;
             DELETE_FLAG          : String(1);
             CHANGED_DATE         : Date;
@@ -2392,6 +2392,7 @@ entity ![V_SALES_H] {
         ![SALE_LOCATION]     : String(4)      @title: 'SALE_LOCATION';
         ![PLAN_LOC]          : String(4)      @title: 'PLAN_LOC';
         ![FACTORY_LOC]       : String(4)      @title: 'FACTORY_LOC';
+        ![OPEN_ORDER]       : String(4)      @title: 'OPEN_ORDER';
         ![SEEDORD_CHK]       : String(1)      @title: 'SEEDORD_CHK';
         ![SALES_ORG]         : String(4)      @title: 'SALES_ORG';
         ![DISTR_CHANNEL]     : String(2)      @title: 'DISTR_CHANNEL';
