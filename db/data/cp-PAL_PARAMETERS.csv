@@ -1,0 +1,169 @@
+METHOD;PARA_NAME;DATATYPE;DEFAULTVAL;INTVAL;DOUBLEVAL;STRVAL;DESCRIPTION;DEPENDENCY
+HGBT;THREAD_RATIO;DOUBLE;-1;;-1;;The ratio of available threads.\n0: single thread0~1: percentageOthers: heuristically determined;
+HGBT;SEED;INTEGER;0;0;;;The seed for random number generating.\n0: current timeOthers: the seed;
+HGBT;SPLIT_METHOD;VARCHAR or NVARCHAR;exact;;;exact;The method to find split point for numeric feature.\nexact: the exact method, trying all possible pointssketch: the sketch method, accounting for the distribution of the sum of hessiansampling: samples the split point randomlyhistogram:builds histogram upon data and uses it as split point;The exact method comparably has the highest test accuracy, but costs more time. The other three methods have relative higher computational efficiency but might lead to lower test accuracy, and are considered to be adopted as the training data set is Valid only for numeric features.huge.
+HGBT;SKETCH_EPS;DOUBLE;0.1;;0.1;;The epsilon of the sketch method. It indicates that the sum of hessian between two split points is not larger than this value. That is, the number of bins is approximately 1/eps.;The less is this value, the more split points are tried.
+HGBT;MAX_BIN_NUM;INTEGER;256;256;;;The maximum bin number for histogram method. Decreasing this number gains better performance in terms of running time at a cost of accuracy.;Only valid when SPLIT_METHOD is set to histogram.
+HGBT;ITER_NUM;INTEGER;10;10;;;Total iteration number, which is equivalent to the number of trees in the final model.;
+HGBT;MAX_DEPTH;INTEGER;6;6;;;The maximum depth of each tree.;
+HGBT;NODE_SIZE;INTEGER;1;1;;;The minimum number of data in a leaf.;
+HGBT;ETA;DOUBLE;0.3;;0.3;;Learning rate of each iteration. Range: (0, 1];
+HGBT;GAMMA;DOUBLE;0;;0;;The minimum loss change value to make a split in tree growth (gamma in the equation).;
+HGBT;MIN_CHILD_HESSIAN;DOUBLE;1;;1;;The minimum summation of sample weights (hessian) in the leaf node.;
+HGBT;NODE_WEIGHT_CONSTRAINT;DOUBLE;0;;0;;The maximum weight constraint assigned to each tree node. 0 for no constraint.;
+HGBT;ROW_SAMPLE_RATE;DOUBLE;1;;1;;The sample rate of row (data points).\nRange: (0, 1];
+HGBT;COL_SAMPLE_RATE_BYSPLIT;DOUBLE;1;;1;;The sample rate of feature set in each split.\nRange: (0, 1];
+HGBT;COL_SAMPLE_RATE_BYTREE;DOUBLE;1;;1;;The sample rate of feature set in each tree growth. \nRange: (0, 1];
+HGBT;LAMBDA;DOUBLE;1;;1;;L2 regularization.\nRange: [0, 1];
+HGBT;ALPHA;DOUBLE;0;;0;;L1 regularization.\nRange: [0, 1];
+HGBT;BASE_SCORE;DOUBLE;0.5 for binary classification, 0 otherwise.;;0;;Initial prediction score of all instances.\nGlobal bias for sufficient number of iterationsRange: (0, 1), only for binary classification.;
+HGBT;START_FROM_AVERAGE;INTEGER;0;0;;;Indicates whether to adopt the prior distribution as the initial point. To be specific, use average value if it is a regression problem, and use frequencies of labels if it is a classification problem.\n0: no1: yes;BASE_SCORE is ignored if this parameter is set to 1.
+HGBT;OBJ_FUNC;INTEGER;0 for regression problem.\n5 for binary classification.7 for multiple classification.;0;;;For regression:\n0. Squared error1. Squared log error2. Pseudo Huber error3. Gamma4. TweedieFor binary classification:5. Logistic6. HingeFor multiple classification:7. Softmax;
+HGBT;TWEEDIE_POWER;Double;1.5;;1.5;;For Tweedie object function, must in range [1.0, 2.0];Only valid when OBJ_FUNC equals 4
+HGBT;REPLACE_MISSING;INTEGER;1;1;;;Replace missing value by another value in the feature. If it is a continuous feature, the value is the mean value, if it is a categorical feature, the value is the most frequent one.\n0: no1: yes;
+HGBT;DEFAULT_MISSING_DIRECTION;INTEGER;1;1;;;Define the default direction where missing value will go to while splitting.\n0: left1: right;
+HGBT;FEATURE_GROUPING;INTEGER;0;0;;;Apply feature grouping by grouping sparse features that only contains one significant value in each row.\n0: no1: yes;
+HGBT;TOLERANT_RATE;DOUBLE;0.0001;;0.0001;;While applying feature grouping, still merge features when there are rows containing more than one significant value. This parameter specifies the rate of such rows allowed.;Only available when FEATURE_GROUPING is set to 1
+HGBT;CATEGORICAL_VARIABLE;VARCHAR or NVARCHAR;Detected from input data;;;Detected from input data;Indicates which variables are treated as categorical. The default behavior is:\nSTRING: categoricalINTEGER and DOUBLE: continuous;Valid only for INTEGER variables, omitted otherwise.
+HGBT;HAS_ID;INTEGER;0;0;;;Specifies if the first column of the DATA table is used as ID column\n0: no1: yes, the first column is discarded during training.;
+HGBT;DEPENDENT_VARIABLE;VARCHAR or NVARCHAR;The last column name of DATA table;;;The last column name of DATA table;Specifies the variable used as independent.;Cannot be the first column name if HAS_ID is 1.
+HGBT;CALCULATE_IMPORTANCE;INTEGER;1;1;;;Determines whether to calculate variable importance:\n0: no1: yes;
+HGBT;CALCULATE_CONFUSION_MATRIX;INTEGER;1;1;;;Determines whether to calculate confusion matrix:\n0: no1: yes;For classification only.
+HGBT;COMPRESSION;INTEGER;0;0;;;Indicate whether result model should be compressed:\n0: no1: yes;
+HGBT;MAX_BITS;INTEGER;12;12;;;Maximal number of bits to quantize continuous features. Equivalent to use 2 ^MAX_BITS bins.;Valid only when COMPRESSION equals to 1. Must be less than 31.
+HGBT;RESAMPLING_METHOD;NVARCHAR;No default value;;;;Specify re-sampling method for model evaluation or parameter selection.\ncvstratified_cvbootstrapstratified_bootstrapIf no value is specified for this parameter, then no model evaluation or parameter selection will be activated.;stratified_cv and stratified_bootstrap can only be specified when applying classification.
+HGBT;EVALUATION_METRIC;NVARCHAR;No default value;;;;Specify evaluation metric for model evaluation or parameter selection.\nClassification: RMSE, MAE, NLL, ERROR_RATE, AUCRegression: RMSE, MAE;It is mandatory if RESAMPLING_METHOD is set.
+HGBT;REF_METRIC;VARCHAR/NVARCHAR;No default value;;;;The metric(s) for reference. Could be of multi-lines, for example, more than one REF_METRIC.;The metric that is identical to EVALUATION_METRIC will be omitted.
+HGBT;FOLD_NUM;INTEGER;No default value;;;;Specify fold number for cross validation method.;Mandatory and valid only when RESAMPLING_METHOD is set to cv or stratified_cv.
+HGBT;REPEAT_TIMES;INTEGER;1;1;;;Specify repeat times for resampling.;
+HGBT;PARAM_SEARCH_STRATEGY;NVARCHAR;No default value;;;;Specify value to this parameter to active parameter selection.\ngridrandom;If this parameter is not set, then only model evaluation is activated.
+HGBT;RANDOM_SEARCH_TIMES;INTEGER;No default value;;;;Specify times to randomly select candidate parameters for selection.;Mandatory and valid when PARAM_SEARCH_STRATEGY is set to random.
+HGBT;TIMEOUT;INTEGER;0;0;;;Specify maximum running time for model evaluation or parameter selection, in seconds. No timeout when 0 is specified.;
+HGBT;PROGRESS_INDICATOR_ID;NVARACHAR;No default value;;;;Set an ID of progress indicator for model evaluation or parameter selection. No progress indicator will be active if no value is provided.;
+HGBT;ITER_NUM_VALUES;NVARCHAR;No default value;;;;Specifies values of parameter ITER_NUM to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;ITER_NUM_RANGE;NVARCHAR;No default value;;;;Specifies range of parameter ITER_NUM to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;MAX_DEPTH_VALUES;NVARCHAR;No default value;;;;Specifies values of parameter MAX_DEPTH to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;MAX_DEPTH_RANGE;NVARCHAR;No default value;;;;Specifies range of parameter MAX_DEPTH to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;NODE_SIZE_VALUES;NVARCHAR;No default value;;;;Specifies values of parameter NODE_SIZE to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;NODE_SIZE_RANGE;NVARCHAR;No default value;;;;Specifies range of parameter NODE_SIZE to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;ETA_VALUES;NVARCHAR;No default value;;;;Specifies values of parameter ETA to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;ETA_RANGE;NVARCHAR;No default value;;;;Specifies range of parameter ETA to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;GAMMA_VALUES;NVARCHAR;No default value;;;;Specifies values of parameter GAMMA to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;GAMMA_RANGE;NVARCHAR;No default value;;;;Specifies range of parameter GAMMA to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;MIN_CHILD_HESSIAN_VALUES;NVARCHAR;No default value;;;;Specifies values of parameter MIN_CHILD_HESSIAN to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;MIN_CHILD_HESSIAN_RANGE;NVARCHAR;No default value;;;;Specifies range of parameter MIN_CHILD_HESSIAN to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;NODE_WEIGHT_CONSTRAINT _VALUES;NVARCHAR;No default value;;;;Specifies values of parameter NODE_WEIGHT_CONSTRAINT to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;NODE_WEIGHT_CONSTRAINT _RANGE;NVARCHAR;No default value;;;;Specifies range of parameter NODE_WEIGHT_CONSTRAINT to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;ROW_SAMPLE_RATE _VALUES;NVARCHAR;No default value;;;;Specifies values of parameter ROW_SAMPLE_RATE to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;ROW_SAMPLE_RATE _RANGE;NVARCHAR;No default value;;;;Specifies range of parameter ROW_SAMPLE_RATE to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;COL_SAMPLE_RATE_BYSPLIT_VALUES;NVARCHAR;No default value;;;;Specifies values of parameter COL_SAMPLE_RATE_BYSPLIT to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;COL_SAMPLE_RATE_BYSPLIT _RANGE;NVARCHAR;No default value;;;;Specifies range of parameter COL_SAMPLE_RATE_BYSPLIT to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;COL_SAMPLE_RATE_BYTREE _VALUES;NVARCHAR;No default value;;;;Specifies values of parameter COL_SAMPLE_RATE_BYTREE to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;COL_SAMPLE_RATE_BYTREE _RANGE;NVARCHAR;No default value;;;;Specifies range of parameter COL_SAMPLE_RATE_BYTREE to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;LAMBDA _VALUES;NVARCHAR;No default value;;;;Specifies values of parameter LAMBDA to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;LAMBDA _RANGE;NVARCHAR;No default value;;;;Specifies range of parameter LAMBDA to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;ALPHA _VALUES;NVARCHAR;No default value;;;;Specifies values of parameter ALPHA to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;ALPHA _RANGE;NVARCHAR;No default value;;;;Specifies range of parameter ALPHA to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;BASE_SCORE _VALUES;NVARCHAR;No default value;;;;Specifies values of parameter BASE_SCORE to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+HGBT;BASE_SCORE _RANGE;NVARCHAR;No default value;;;;Specifies range of parameter BASE_SCORE to be selected;Only valid when PARAM_SEARCH_STRATEGY is specified
+MLR;THREAD_RATIO;DOUBLE;0;;0;;Specifies the ratio of total number of threads that can be used by this function. The value range is from 0 to 1, where 0 means only using 1 thread, and 1 means using at most all the currently available threads. Values outside the range will be ignored and this function heuristically determines the number of threads to use.;Only valid when ALG is\n1,4,5 or 6
+MLR;ALG;INTEGER;1;1;;;Specifies algorithms for solving the least square problem: \n1: QR decomposition (numerically stable, but fails when A is rank-deficient) 2: SVD (numerically stable and can handle rank deficiency but computationally expensive) 4: Cyclical coordinate descent method to solve elastic net regularized multiple linear regression 5: Cholesky decomposition (fast but numerically unstable) 6: Alternating direction method of multipliers (ADMM) to solve elastic net regularized multiple linear regression. This method is faster than the cyclical coordinate descent method in many cases and recommended.;The value 4 and 6 are supported only when VARIABLE_SELECTION is 0.
+MLR;CATEGORICAL_VARIABLE;VARCHAR;No\ndefault value;;;;Indicates by the column name whether or not a column data is actually corresponding to a category variable even the data type of this column is INTEGER. By default,\n'VARCHAR' or 'NVARCHAR' is category variable, and 'INTEGER' or 'DOUBLE' is continuous variable.;The data type of the column speci ed by this parameter must be INTEGER.
+MLR;VARIABLE_SELECTION;INTEGER;0;0;;;0: All variables are included\n1: Forward selection2: Backward selection3: Stepwise selection;The value 1 or 2 or 3 are supported only when ALG is not 4 or 6.
+MLR;MANDATORY_FEATURE;VARCHAR;No\ndefault value;;;;Specifies the column name that needs to be included in the nal training model when executing the variable selection. This parameter can be specified multiple times, each time with one column name as feature.\n NoteThis parameter is a hint. There are exceptional cases that speci ed mandatory feature is excluded in the nal model, for instance, some mandatory features can be represented as a linear combination of other features,among which some are also mandatory features.;Only valid when\nVARIABLE_SELECTION is not 0.
+MLR;NO_INTERCEPT;INTEGER;0;0;;;Specifies whether the intercept term should be ignored in the model.\n0: Do not ignore1: Ignore;
+MLR;ALPHA_TO_ENTER;DOUBLE;0.05 or 0.15;;;;P-value for forward selection and stepwise selection.;When\nVARIABLE_SELECTION is 1, default value is0.05, whenVARIABLE_SELECTIONis 3, default value is0.15.
+MLR;ALPHA_TO_REMOVE;DOUBLE;0.1 or 0.15;;;;P-value for backward selection and stepwise selection.;When\nVARIABLE_SELECTION is 2, default value is0.1, whenVARIABLE_SELECTIONis 3, default value is0.15.
+MLR;ENET_LAMBDA;DOUBLE;No\ndefault value;;;;Penalized weight. The value should be equal to or greater than 0.;Only valid when ALG is 4 or 6.
+MLR;ENET_ALPHA;DOUBLE;1;;1;;The elastic net mixing parameter. The value range is between 0 and 1 inclusively.\n0: Ridge penalty1: LASSO penalty;Only valid when ALG is 4 or 6.
+MLR;HANDLE_MISSING;INTEGER;;;;;Whether to handle missing value:\n0: No1: Yes;
+MLR;MAX_ITERATION;INTEGER;100000;100000;;;Maximum number of passes over training data. If convergence is not reached after the speci ed number of iterations, an error will be generated.;Only valid when ALG is 4 or 6.
+MLR;THRESHOLD;DOUBLE;0.0000001;;1e-7;;Convergence threshold for coordinate descent.;Only valid when ALG is 4.
+MLR;PHO;DOUBLE;1.8;;1.8;;Step size for ADMM. Generally, the value should be greater than 1.;Only valid when ALG is 6.
+MLR;STAT_INF;INTEGER;0;0;;;Specifies whether to output t-value and Pr(>|t|) of coefficients in the Result table or not.\n0: No1: Yes;
+MLR;ADJUSTED_R2;INTEGER;0;0;;;Specifes whether to output adjusted R square or not.\n0: No1: Yes;
+MLR;DW_TEST;INTEGER;0;0;;;Specifies whether to do Durbin-Watson test under the  hypothesis that the errors do not follow a rst order autoregressive process.\n0: No1: Yes;Not available if elastic net regularization is enabled or\nNO_INTERCEPT = 1.
+MLR;RESET_TEST;INTEGER;1;1;;;Specifies the order of Ramsey RESET test.\nChoosing 1 means this test will not be conducted. If you specify an INTEGER larger than 1, then the MLR function will run Ramsey RESET test with power of variables ranging from 2 to the value you specify.;Not available if elastic net regularization is enabled or\nNO_INTERCEPT = 1.
+MLR;BP_TEST;INTEGER;0;0;;;Specifies whether or not to do Breusch-Pagan test under the  hypothesis that homoscedasticity is satis ed.\n0: No1: Yes;Not available if elastic net regularization is enabled or\nNO_INTERCEPT = 1.
+MLR;KS_TEST;INTEGER;0;0;;;Specifies whether or not to do Kolmogorov-Smirnov normality test under the  hypothesis that if errors of MLR follow a normal distribution.\n0: No1: Yes;Not available if elastic net regularization is enabled or\nNO_INTERCEPT = 1.
+MLR;PMML_EXPORT;INTEGER;0;0;;;0: Does not export multiple linear regression model in PMML.\n 	2: Exports multiple linear regression model in PMML. The maximum length of each row is 5000 characters.;
+MLR;HAS_ID;INTEGER;1;1;;;Specifies whether the input data table has an ID column.\nIf it exists, the ID column must be the rst column.0: No ID column1: Has an ID column;
+MLR;SELECTED_FEATURES;VARCHAR;No\ndefault value;;;;A string to specify the features that will be processed. The pattern is “X1,…,Xn”, where Xi is the corresponding column name in the data table. If this parameter is not speci ed, all the features will be processed, and all columns except for the rst and second column data will be processed as independent variables.;
+MLR;DEPENDENT_VARIABLE;VARCHAR;No\ndefault value;;;;Column name in the data table used as dependent variable. If this parameter is not specified, the second column data will be processed as dependent variables.;
+MLR;RESAMPLING_METHOD;NVARCHAR;No\ndefault value;;;;Specifies the resampling method for model evaluation or parameter selection.\ncv bootstrapIf no value is speci ed for this parameter, neither model evaluation nor parameter selection is activated.;
+MLR;EVALUATION_METRIC;NVARCHAR;No\ndefault value;;;;Specifies the evaluation metric for model evaluation or parameter selection.\n	 	RMSE;
+MLR;FOLD_NUM;INTEGER;No\ndefault value;;;;Specifies the fold number for a cross validation method.;Mandatory and valid only when\nRESAMPLING_METHOD is set to cv.
+MLR;REPEAT_TIMES;INTEGER;No\ndefault value;;;;Specifies the number of repeat times for resampling.;
+MLR;PARAM_SEARCH_STRATEGY;NVARCHAR;No\ndefault value;;;;Specifies the method to activate parameter selection.\n(1) grid(2) random;
+MLR;RANDOM_SEARCH_TIMES;INTEGER;No\ndefault value;;;;Specifies the number of times to randomly select candidate parameters for selection.;Mandatory and valid when\nPARAM_SEARCH_STRATEGY is set to random.
+MLR;SEED;INTEGER;0;0;;;Specifies the seed for random generation. Use system time when 0 is specifi ed.;
+MLR;TIMEOUT;INTEGER;0;0;;;Specifies maximum running time for model evaluation or parameter selection, in seconds.\nNo timeout when 0 is speci ed.;
+MLR;PROGRESS_INDICATOR_ID;NVARCHAR;No\ndefault value;;;;Sets an ID of progress indicator for model evaluation or parameter selection. No progress indicator is active if no value is provided.;
+MLR;ENET_LAMBDA_VALUES;NVARCHAR;No\ndefault value;;;;Specifies values of ENET_LAMBDA to be selected.;Only valid when\nPARAM_SEARCH_STRATEGY is specified.
+MLR;ENET_LAMBDA_RANGE;NVARCHAR;No\ndefault value;;;;Specifies the range of ENET_LAMBDA to be selected.;Only valid when\nPARAM_SEARCH_STRATEGY is specified.
+MLR;ENET_ALPHA_VALUES;NVARCHAR;No\ndefault value;;;;Specifies values of ENET_ALPHA to be selected.;Only valid when\nPARAM_SEARCH_STRATEGY is specified.
+VARMA;P;INTEGER;-1;-1;;;The vector auto-regression order:\n-1: automatic>=0: user-defined;
+VARMA;D;INTEGER;0;0;;;The differencing order.;
+VARMA;Q;INTEGER;-1;-1;;;The vector moving average order:\n-1: automatic>=0: user-defined;
+VARMA;M;INTEGER;-1;-1;;;The lag number of explanatory variables:\n-1: automatic identify>=0: user-defined;Valid only when MODEL = 0.
+VARMA;MAX_P;INTEGER;6 if MODEL = 0 or if MODEL = 2 and\nSEARCH_METHOD= 0	 	2 if MODEL = 2 andSEARCH_METHOD= 1;;;;The maximum vector auto-regression order entertained.;Valid only when MODEL = 0 or 2.
+VARMA;MAX_Q;INTEGER;8 if MODEL = 1\n5 if MODEL = 2 andSEARCH_METHOD= 0	 	2 if MODEL = 2 andSEARCH_METHOD= 1;;;;The maximum vector moving average order entertained.;Valid only when MODEL = 1 or 2.
+VARMA;MAX_M;INTEGER;4;4;;;The maximum lag number of explanatory variables.;Valid only when MODEL = 0.
+VARMA;SEASONAL_PERIOD;INTEGER;0;0;;;Seasonal period.;
+VARMA;SEASONAL_P;INTEGER;-1;-1;;;The seasonal vector auto-regression order:\n-1: automatic>=0: user-defined;Valid only when\nSEASONAL_PERIOD is larger than 1.
+VARMA;SEASONAL_D;INTEGER;0;0;;;The seasonal differencing order.;Valid only when\nSEASONAL_PERIOD is larger than 1.
+VARMA;SEASONAL_Q;INTEGER;-1;-1;;;The seasonal vector moving average order:\n-1: automatic identify>=0: user-defined;Valid only when\nSEASONAL_PERIOD is larger than 1.
+VARMA;MAX_SEASONAL_P;INTEGER;3 if MODEL = 0\n1 if MODEL = 2 andSEARCH_METHOD= 1;;;;The maximum seasonal vector autoregression order entertained.;Valid only when MODEL = 0 and 2.
+VARMA;MAX_SEASONAL_Q;INTEGER;1;1;;;The maximum seasonal vector moving average order entertained.;Valid only when MODEL = 2 and SEARCH_METHOD = 1.
+VARMA;MODEL;INTEGER;2;2;;;Model type:\n0: VAR1: VMA2: VARMA;VAR is valid only when Q and SEASONAL_Q vanish.\nVMA is valid only when P,SEASONAL_P, andSEASONAL_Q vanish.VMA does not support seasonality and explanatory variables.
+VARMA;SEARCH_METHOD;INTEGER;1;1;;;Speci es the orders of a VARMA model:\n0: eccm1: grid search;eccm is valid only when\nSEASONAL_PERIOD <= 1.
+VARMA;INITIAL_GUESS;INTEGER;1;1;;;The model used as initial estimation for\nVARMA:0: ARMA1: VAR;Valid only for VARMA.
+VARMA;INFORMATION_CRITERION;INTEGER;0;0;;;Information criteria for order speci cation:\n0: Akaike information criterion(AIC)1: Bayesian information criterion(BIC);
+VARMA;MAX_ITERATION;INTEGER;200;200;;;Maximum number of iterations of LBFGS-B optimizer.;Valid only for VMA and\nVARMA.
+VARMA;FINITE_DIFFERENCE_ACCURACY;INTEGER;1;1;;;Polynomial order of finite difference. Approximate the gradient of objective function with finite difference. The valid range is from 1 to 4.;Valid only for VMA and\nVARMA.
+VARMA;DISPLACEMENT;DOUBLE;2.2×10-6;;0.0000022;;The step length for finite-difference method.;Valid only for VMA and\nVARMA.
+VARMA;FTOL;DOUBLE;1.0×10-5;;0.00001;;Tolerance for objective convergence test.;Valid only for VMA and\nVARMA.
+VARMA;GTOL;DOUBLE;1.0×10-5;;0.00001;;Tolerance for gradient convergence test.;Valid only for VMA and\nVARMA.
+VARMA;INCLUDE_MEAN;INTEGER;1 when D +\nSEASONAL_D < 10 otherwise;;;;An indicator whether to include the mean vector:\n0: no1: yes;Nonvanishing only when D + SEASONAL_D < 1.
+VARMA;HESSIAN;INTEGER;0;0;;;Specifies whether to calculate the Hessian matrix:\n0: no1: yes;VMA and VARMA will output standard error of parameter estimates only when HESSIAN = 1.
+RDT;THREAD_RATIO;DOUBLE;-1;;-1;;The ratio of available threads.\n0: single thread0~1: percentageOthers: heuristically determined;
+RDT;TREES_NUM;INTEGER;100;100;;;Specifies the number of trees to grow.;
+RDT;ALLOW_MISSING_DEPENDENT;INTEGER;1;;;;Specifies if missing target value is allowed.\n0: Not allowed. An error occurs if missing dependent presents.1: Allowed. The datum with missing dependent is removed.;
+AHC;CLUSTER_METHOD;INTEGER;5;5;;;Linkage type between two clusters.\n1: Nearest Neighbor (single linkage)2: Furthest Neighbor (complete linkage)3: Group Average (UPGMA)4: Weighted Average (WPGMA)5: Centroid Clustering6: Median Clustering7: Ward MethodNoteFor clustering method 5, 6, or 7, the corresponding distance function (DISTANCE_FUNC) must be set to 11.The initial cluster distances in Ward's method are defined to be the squared Euclidean distance between points.;
+AHC;THREAD_RATIO;DOUBLE;0;;0;;Specifies the ratio of total number of threads that can be used by this function. The value range is from 0 to 1, where 0 means only using 1 thread, and 1 means using at most all the currently available threads. Values outside the range will be ignored and this function heuristically determines the number of threads to use.;
+AUTOML;CONFIG_DICT;VARCHAR or NVARCHAR;default;;;;;
+AUTOML;PIPELINE_TYPE;VARCHAR or NVARCHAR;regressor;;;;;
+AES;FORECAST_NUM;INTEGER;0;0;;;Number of values to be forecast;
+AES;MODELSELECTION;INTEGER;1;1;;;When this is set to 1, the algorithm will select the best model among Single/Double/Triple/Damped Double/Damped Triple Exponential Smoothing models.\n\nIf FORECAST_MODEL_NAME is set, the model defined by FORECAST_MODEL_NAME will be used.\n\nWhen this is set to 0, the algorithm will not perform the model selection.;
+AES;FORECAST_MODEL_NAME;VARACHAR;No\ndefault value;;;;Name of the statistical model used for calculating the forecast.\n\nSESM: Single Exponential Smoothing\n\nDESM: Double Exponential Smoothing\n\nTESM: Triple Exponential Smoothing;This parameter must be set unless MODELSELECTION is set to 1.
+AES;CYCLE;INTEGER;No\ndefault value;;;;Length of a cycle (L > 1). For example, the cycle of quarterly data is 4, and the cycle of monthly data is 12.;Only valid when the model is set by user or identified \nby the algorithm as a TESM.
+AES;OPTIMIZER_TIME_BUDGET;INTEGER;1;1;;;Time budget for Nelder-Mead optimization process. \nThe time unit is second and the value should be larger than zero.;
+AES;MAX_ITERATION;INTEGER;100;100;;;Maximum number of iterations for simulated annealing.;
+AES;THREAD_RATIO;DOUBLE;1;;1;;Specifies the ratio of total number of threads that can be used by this function. The value range is from 0 to 1,\n where 0 means only using one thread, and 1 means using at most all the currently available threads. \nValues outside the range are ignored and this function heuristically determines the number of threads to use.;
+AES;EXPOST_FLAG;INTEGER;1;1;;;0: Does not output the expost forecast, and just outputs the forecast values.\n\n1: Outputs the expost forecast and the forecast values.;
+AES;ALPHA;DOUBLE;No\ndefault value;;;;Default value computed automatically.\nWeight for smoothing.\nValue range: 0 < ? < 1;
+AES;BETA;DOUBLE;No\ndefault value;;;;Weight for the trend component.\n\nValue range: 0 Value range: 0 ? ? < 1\n\nNote: If it is not set, the optimized value will be computed automatically.;Only valid when the model is set by user or identified by the algorithm as a DESM/TESM.\n\nValue 0 is allowed under TESM model only.
+AES;GAMMA;DOUBLE;No\ndefault value;;;;Weight for the seasonal component.\n\nValue range: 0 < ? < 1;Only valid when the model is set by user or identified by the algorithm as TESM.
+AES;PHI;DOUBLE;No\ndefault value;;;;Value of the damped smoothing constant ? (0 < ? < 1).;Only valid when the model is set by user or identified by the algorithm as a DAMPED model.
+AES;SEASONAL;INTEGER;No\ndefault value;;;;If MODELSELECTION is set to 1, the default value will be computed automatically. Otherwise, the default value is 0.\n0: Multiplicative triple exponential smoothing\n\n1: Additive triple exponential smoothing;Only valid when the model is set by user or identified by the algorithm as a TESM.
+AES;INITIAL_METHOD;INTEGER;0 or 1;;;;Initialization method for the trend and seasonal components. Refer to Triple Exponential Smoothing for detailed information on initialization method.;Only valid when the model is set by user or identified by the algorithm as a TESM.
+AES;TRAINING_RATIO;DOUBLE;1;;1;;The ratio of training data to the whole time series.\n\nAssuming the size of time series is N, and the training ratio is r, the first N*r time series is used to train, whereas only the latter N*(1-r) one is used to test.;If this parameter is set to 0.0 or 1.0, or the resulting training data (N*r) is less than 1 or equal to the size of time series, no train-and-test procedure is carried out.
+AES;DAMPED;INTEGER;No default value;;;;If MODELSELECTION is set to 1, the default value will be computed automatically. \nOtherwise, the default value is 0.\nFor DESM:\n\n0: Uses the Holt's linear method.\n\n1: Uses the additive damped trend Holt's linear method.\n\nFor TESM:\n\n0: Uses the Holt Winter method.\n\n1: Uses the additive damped seasonal Holt Winter method.;
+AES;ACCURACY_MEASURE;VARCHAR;MSE;;;MSE;The criterion used for the optimization. Available values are MSE and MAPE.;
+AES;SEASONALITY_CRITERION;DOUBLE;0.5;;0.5;;The criterion of the auto-correlation coefficient for accepting seasonality, in the range of (0, 1). The larger it is, the less probable a time series is regarded to be seasonal.;Only valid when FORECAST_MODEL_NAME is TESM or MODELSELECTION is set to 1, and CYCLE is not defined.
+AES;TREND_TEST_METHOD;INTEGER;1;1;;;The method to test trend:\n\n1: MK test\n\n2: Difference-sign test;Only valid when MODELSELECTION is set to 1.
+AES;TREND_TEST_ALPHA;DOUBLE;0.05;;0.05;;Tolerance probability for trend test. The value range is (0, 0.5).;Only valid when MODELSELECTION is set to 1.
+AES;ALPHA_MIN;DOUBLE;1E-10;;1e-10;;Sets the minimum value of ALPHA.;Only valid when ALPHA is not defined.
+AES;BETA_MIN;DOUBLE;0.0000000001;;1e-10;;Sets the minimum value of BETA.;Only valid when BETA is not defined.
+AES;GAMMA_MIN;DOUBLE;1E-10;;1e-10;;Sets the minimum value of GAMMA.;Only valid when GAMMA is not defined.
+AES;PHI_MIN;DOUBLE;1E-10;;1e-10;;Sets the minimum value of PHI.;Only valid when PHI is not defined.
+AES;ALPHA_MAX;DOUBLE;1;;1;;Sets the maximum value of ALPHA.;Only valid when ALPHA is not defined.
+AES;BETA_MAX;DOUBLE;1;;1;;Sets the maximum value of BETA.;Only valid when BETA is not defined.
+AES;GAMMA_MAX;DOUBLE;1;;1;;Sets the maximum value of GAMMA.;Only valid when GAMMA is not defined.
+AES;PHI_MAX;DOUBLE;1;;1;;Sets the maximum value of PHI.;Only valid when PHI is not defined.
+AES;PREDICTION_CONFIDENCE_1;DOUBLE;0.8;;0.8;;Prediction confidence for interval 1;Only valid when the upper and lower columns are provided in the result table.
+AES;PREDICTION_CONFIDENCE_2;DOUBLE;0.95;;0.95;;Prediction confidence for interval 2;Only valid when the upper and lower columns are provided in the result table.
+AES;LEVEL_START;DOUBLE;No default value;;;;The initial value for level component S. If this value is not provided, it will be calculated in the way as described in Triple Exponential Smoothing.\n\nNote: LEVEL_START cannot be zero. If it is set to zero, 0.0000000001 will be used instead.\n\nRefer to Triple Exponential Smoothing for detailed information;
+AES;TREND_START;DOUBLE;No default value;;;;The initial value for trend component B. If this value is not provided, it will be calculated in the way as described in Triple Exponential Smoothing.\n\nRefer to Triple Exponential Smoothing for detailed information;
+AES;SEASON_START;INTEGER\n or DOUBLE;No default value;;;;A list of initial values for seasonal component C. If this parameter is not used, the initial values of C will be calculated in the way as described in Triple Exponential Smoothing.\n\nTwo values must be provided for each cycle:\n\nCycle ID: An INTEGER which represents which cycle the initial value is used for.\n\nInitial value: A DOUBLE precision number which represents the initial value for the corresponding cycle.\n\nFor example: To give the initial value 0.5 to the 3rd cycle, insert tuple ('SEASON_START', 3, 0.5, NULL) into the parameter table.\n\nNote: The initial values of all cycles must be provided if this parameter is used.\n\nRefer to Triple Exponential Smoothing for detailed information;
+AHC;DISTANCE_FUNC;INTEGER;11;11;;;11: Precalculated Distance (Based on Gowers Distance Method);
