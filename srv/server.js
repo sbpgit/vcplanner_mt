@@ -51,13 +51,17 @@ async function authenticate(req, next) {
                 throw new Error("Invalid JWT");
             }
             const tenantId = jwtPayload?.zid;
+            // const liActivities = await cds.tx({ tenantId }, async (tx) => {
+            //         return tx.run(`SELECT "ACTION_URL" FROM "JS_ACTIVITY_HEADER"`);
+            //     });
+            const JsActivityHeader = cds.entities['js.ACTIVITY_HEADER'];
+            const liActivities = await cds.tx({ tenant: tenantId }, async (tx) => {
+                return await tx.run(
+                    SELECT.from(JsActivityHeader).columns('ACTION_URL')
+                );
+            });
+            console.log(liActivities.length);
 
-            const liActivities = await cds.tx({ tenantId }, async (tx) => {
-                    return tx.run(`SELECT "ACTION_URL" FROM "JS_ACTIVITY_HEADER"`);
-                });
-            // const liActivities = await cds.run(
-            //     `SELECT "ACTION_URL" FROM "JS_ACTIVITY_HEADER"`
-            // );
 
             liActivities.push({ ACTION_URL: "/jobs/ParallelSetjobsCreation" });
             liActivities.push({ ACTION_URL: "/jobs/resumeSetParallelJobs" });
@@ -69,7 +73,7 @@ async function authenticate(req, next) {
 
             next();
         } catch (error) {
-            console.log("Error obtaining access token:", error);
+            console.log("Error obtaining access token1:", error);
         }
         //    await axios.post(tokenUrl, params)
         //         .then(async (response) => {
@@ -124,7 +128,7 @@ async function authenticate(req, next) {
                     accessToken;
                 next();
             }).catch(error => {
-                console.log("Error obtaining access token:", error);
+                console.log("Error obtaining access token2:", error);
                 next();
             });
     }

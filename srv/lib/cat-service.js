@@ -10532,7 +10532,7 @@ module.exports = (srv) => {
          *********************************************************************/
         // const oServices = cfenv.getAppEnv().getServices();
         // const uaa_service = cfenv.getAppEnv().getService('config_products-xsuaa-service');
-        const dest_service = cfenv.getAppEnv().getService('config_products-destination-service');
+        const dest_service = cfenv.getAppEnv().getService('vcplanner_mt-destination');
         const sUaaCredentials = dest_service.credentials.clientid + ':' + dest_service.credentials.clientsecret;
 
         // const sDestinationName = 'S4D_HTTP';
@@ -10582,7 +10582,7 @@ module.exports = (srv) => {
          *********************************************************************/
         // const oServices = cfenv.getAppEnv().getServices();
         // const uaa_service = cfenv.getAppEnv().getService('config_products-xsuaa-service');
-        const dest_service = cfenv.getAppEnv().getService('config_products-destination-service');
+        const dest_service = cfenv.getAppEnv().getService('vcplanner_mt-destination');
         // const sUaaCredentials = dest_service.credentials.clientid + ':' + dest_service.credentials.clientsecret;
 
         const sDestinationName = 'S4D_HTTP';
@@ -18432,12 +18432,16 @@ srv.on("salesNewProcess", async (req) => {
             }
         }
         const jsonData = JSON.stringify(oNumData)
-        return new Promise((resolve, reject) => {
-            zlib.gzip(jsonData, (err, buffer) => {
-                if (err) reject(err);
-                resolve({ compressed: buffer.toString("base64") });
-            });
-        });
+        // return new Promise((resolve, reject) => {
+        //     zlib.gzip(jsonData, (err, buffer) => {
+        //         if (err) reject(err);
+        //         resolve({ compressed: buffer.toString("base64") });
+        //     });
+        // });
+
+           const buffer = zlib.gzipSync(jsonData);
+        const result = { compressed: buffer.toString("base64") };
+        return JSON.stringify(result);
     });
 
     //Function to get Partial Products by Demand Locations

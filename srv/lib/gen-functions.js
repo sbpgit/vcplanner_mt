@@ -763,7 +763,7 @@ static getTenantId(req) {
     try {
       const xsuaaService = xsenv.getServices({
         uaa: {
-          name: 'configprodoauth' // Replace with the exact name of the desired service instance
+          name: 'vcplanner_mt-auth' // Replace with the exact name of the desired service instance
         }
       });
       const clientId = xsuaaService.uaa.clientid;

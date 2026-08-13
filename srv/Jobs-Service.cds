@@ -108,7 +108,10 @@ service JobsService @(impl : './lib/Jobs-Service.js', path: '/jobs') {
   //Action to sync Templates
   action SyncTemplates(JOBDATA : String);
   //Function to create job
-  function addJobCreation(jobDetails : String) returns String;
+  function addJobCreation(jobDetails : String) returns {
+    sequenceId : String;
+    jobId : Integer;
+  };
 
   function updateJobSchedules(SEQUENCE_ID : String, JOB_ID: Integer) returns String;
 
