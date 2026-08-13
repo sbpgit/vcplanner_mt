@@ -16110,13 +16110,15 @@ module.exports = (srv) => {
         }
         let tree = await buildTree(req.data.LOCATION_ID + "_" + req.data.PRODUCT_ID)
         const jsonData = JSON.stringify(tree);
-        return new Promise((resolve, reject) => {
-            zlib.gzip(jsonData, (err, buffer) => {
-                if (err) reject(err);
-                resolve({ compressed: buffer.toString("base64") });
-            });
-        });
-        //   return JSON.stringify(tree);
+        // return  new Promise((resolve, reject) => {
+        //     zlib.gzip(jsonData, (err, buffer) => {
+        //         if (err) reject(err);
+        //         resolve({ compressed: buffer.toString("base64") });
+        //     });
+        // });
+          const buffer = zlib.gzipSync(jsonData);
+    const result = { compressed: buffer.toString("base64") };
+        return JSON.stringify(result);
     });
 
 
