@@ -27,7 +27,7 @@ cds.on("bootstrap", app => {
 });
 
 async function authenticate(req, next) {
-    if (req.method == 'POST' && req.headers['user-agent'] == undefined) {//JobScheduler
+    if (req.method == 'POST' && req.headers['user-agent'] == undefined && req.query.host) {//JobScheduler
         const xsuaaService = xsenv.getServices({
             uaa: {
                 name: 'vcplanner_mt-auth' // Replace with the exact name of the desired service instance

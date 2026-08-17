@@ -361,6 +361,48 @@ context js {
             MANDATORY   : String(1);
             MAIN_SET    : Integer;
     }
+    type JobSchedule {
+  scheduleId : String;
+  description : String;
+  data        : String;
+  type        : String;
+  active      : Boolean;
+  startTime   : String;
+  endTime     : String;
+  time        : String;
+  nextRunAt   : String;
+  modifiedAt  : String;
+}
+
+type AnsConfig {
+  onError   : Boolean;
+  onSuccess : Boolean;
+}
+
+type CalmConfig {
+  enabled : Boolean;
+}
+
+type JobDetailsResult {
+  name          : String;
+  description   : String;
+  action        : String;
+  active        : Boolean;
+  httpMethod    : String;
+  user          : String;
+  startTime     : String;
+  endTime       : String;
+  signatureVersion : Integer;
+  jobType       : String;
+  ansConfig     : AnsConfig;
+  calmConfig    : CalmConfig;
+  createdAt     : String;
+  ACTIVECOUNT   : Integer;
+  INACTIVECOUNT : Integer;
+  _id           : Integer64;
+  schedules     : many JobSchedule;
+}
+
 }
 
 @cds.persistence.exists

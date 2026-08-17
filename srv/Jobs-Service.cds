@@ -60,7 +60,7 @@ service JobsService @(impl : './lib/Jobs-Service.js', path: '/jobs') {
 
     // GET API's job-scheduler
   function readJobs() returns array of js.Jobs;
-  function readJobDetails(jobId : Integer, displaySchedules: Boolean) returns String;
+  function readJobDetails(jobId : Integer, displaySchedules: Boolean) returns  js.JobDetailsResult;
   function readJobSchedules(jobId : Integer) returns array of js.Schedules;
   function readJobSchedule(jobId : Integer, scheduleId : String, displayLogs: Boolean) returns String;
 
