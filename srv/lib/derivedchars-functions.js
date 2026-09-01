@@ -2445,11 +2445,11 @@ class DerivedConfig {
 
       //Get the varaint table relevent to Derived Characteristics
       let aDVariantTables = await cds.run(`SELECT DISTINCT TABLE_NAME,CHAR_NAME,CHAR_KEY FROM "CP_VAR_DEF" 
-            WHERE TABLE_NAME IN( SELECT DISTINCT TABLE_NAME FROM "CP_VAR_HDR" WHERE BOM_IND!='X')
+            WHERE TABLE_NAME IN( SELECT DISTINCT TABLE_NAME FROM "CP_VAR_HDR" WHERE BOM_IND!='X' OR BOM_IND IS NULL)
           ORDER BY TABLE_NAME`);
       //Get varaint tables relevent to Derived Char.
       aVaraintTables = await cds.run(`SELECT DISTINCT TABLE_NAME,CHAR_NAME,CHARACTERISTIC_VALUE,ROW_ID FROM "CP_VAR_CONTNT" 
-            WHERE TABLE_NAME IN( SELECT DISTINCT TABLE_NAME FROM "CP_VAR_HDR" WHERE BOM_IND!='X')
+            WHERE TABLE_NAME IN( SELECT DISTINCT TABLE_NAME FROM "CP_VAR_HDR" WHERE BOM_IND!='X' OR BOM_IND IS NULL)
           ORDER BY TABLE_NAME`);
 
       //Get variant tables with column count
@@ -3235,6 +3235,11 @@ class DerivedConfig {
      let aRes = await this.applyProbability(aFinal,PRODUCT_ID);
 
      await cds.run(`DELETE FROM "CP_DERIVED_NODES" WHERE "PRODUCT_ID"='${PRODUCT_ID}'`);
+       aRes.forEach(r => {
+      if (typeof r.CLASS_NAME === 'string') {
+        r.CLASS_NAME = r.CLASS_NAME.toUpperCase();
+      }
+    });
       await cds.run(INSERT.into("CP_DERIVED_NODES").entries(aRes));
 
       //If product has any Partials, generate tree for partials as well
@@ -3254,6 +3259,11 @@ class DerivedConfig {
       
        const keys2 = ["PRODUCT_ID ", "NODE_KEY","CHAR_NAME","CHAR_VALUE","PARENT_KEY","ROOT_KEY"];
      aResponse = GenF.removeDuplicate(aResponse, keys2);
+       aResponse.forEach(r => {
+  if (typeof r.CLASS_NAME === 'string') {
+    r.CLASS_NAME = r.CLASS_NAME.toUpperCase();
+  }
+});
       await cds.run(INSERT.into("CP_DERIVED_NODES").entries(aResponse));
         }
       }
