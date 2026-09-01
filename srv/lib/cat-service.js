@@ -19433,7 +19433,7 @@ srv.on("salesNewProcess", async (req) => {
                 COMMENTS: "",
                 USER: el.USER,
                 OLD_VALUE: el.OPT_PERCENT,
-                DATE_TIME: new Date()
+                DATE_TIME: new Date().toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, '')
             }));
 
 

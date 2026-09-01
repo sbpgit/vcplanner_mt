@@ -4011,7 +4011,7 @@ entity V_FINAL_OPTION_PLAN {
         // WEEK_DATE      : Date         @title: 'WEEK_DATE';
         OPT_PERCENT     : Decimal(5, 2)  @title: 'OPT_PERCENT';
         OPT_QTY         : Decimal(13, 3) @title: 'OPT_QTY';
-    key TYPE            : Integer        @title: 'TYPE';
+    key TYPE            : String(10)        @title: 'TYPE';
         CHAR_DESC       : String(160)    @title: 'CHAR_DESC';
         CHAR_TYPE       : String(4)      @title: 'Charateristic Type';
         CHARVAL_DESC    : String(160)    @title: 'CHARVAL_DESC';
