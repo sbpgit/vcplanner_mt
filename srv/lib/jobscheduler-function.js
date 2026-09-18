@@ -518,7 +518,7 @@ class jobSchedulerFunc {
                 AND REF_PRODID = '${lProduct}'`
         );
         if (liDistinctProd.length > 0) {
-            var auth =  await GenF.getAuthorization();
+            var auth =  await GenF.getAuthorization(req);
             for (let i = 0; i < liDistinctProd.length; i++) {
                 var options = {
                     'method': 'POST',

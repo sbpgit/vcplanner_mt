@@ -908,7 +908,7 @@ async function _getJobRunStatus(req, _jobId, _scheduleId, _runId)
   }
 
   // console.log('lreadJobScheduleUrl ', lreadJobScheduleUrl);
-  var auth = await GenFunctions.getAuthorization();
+  var auth = await GenFunctions.getAuthorization(req);
   options = {
     'method': 'GET',
     'url': lreadJobScheduleUrl,
@@ -1119,7 +1119,7 @@ module.exports = async function (srv) {
           let baseUrl = req.headers['x-forwarded-proto'] + '://' + getBaseUrl();
           deleteJobUrl = baseUrl + '/jobs/deleteJob'; //(jobId=' + purgeJobsList[purgeIdx].JOB_ID + ')';
         }
-        var auth = await GenFunctions.getAuthorization();
+        var auth = await GenFunctions.getAuthorization(req);
         options = {
           'method': 'POST',
           'url': deleteJobUrl,
@@ -1386,7 +1386,7 @@ module.exports = async function (srv) {
       readJobsUrl = baseUrl + '/jobs/readJobs()';
     }
 
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': readJobsUrl,
@@ -1903,7 +1903,7 @@ module.exports = async function (srv) {
         }
 
         // console.log('lreadJobSchedulesUrl ', lreadJobSchedulesUrl);
-        var auth = await GenFunctions.getAuthorization();
+        var auth = await GenFunctions.getAuthorization(req);
         options = {
           'method': 'GET',
           'url': lreadJobSchedulesUrl,
@@ -2048,7 +2048,7 @@ module.exports = async function (srv) {
         }
 
         // console.log('lreadJobScheduleUrl ', lreadJobScheduleUrl);
-        var auth = await GenFunctions.getAuthorization();
+        var auth = await GenFunctions.getAuthorization(req);
         options = {
           'method': 'GET',
           'url': lreadJobScheduleUrl,
@@ -2270,7 +2270,7 @@ module.exports = async function (srv) {
       let baseUrl = req.headers['x-forwarded-proto'] + '://' + getBaseUrl();
       readJobsUrl = baseUrl + '/jobs/readJobs()';
     }
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': readJobsUrl,
@@ -2320,7 +2320,7 @@ module.exports = async function (srv) {
     }
 
     console.log('lreadJobDetails  jobId', jobId, 'displayJobSchedules ', displaySchedules);
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': lreadJobDetailsUrl,
@@ -2368,7 +2368,7 @@ module.exports = async function (srv) {
       let baseUrl = req.headers['x-forwarded-proto'] + '://' + getBaseUrl();
       lreadJobSchedulesUrl = baseUrl + '/jobs/readJobSchedules(jobId=' + jobId + ')';
     }
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': lreadJobSchedulesUrl,
@@ -2421,7 +2421,7 @@ module.exports = async function (srv) {
       lreadJobScheduleUrl = baseUrl +
         '/jobs/readJobSchedule(jobId=' + jobId + ',' + 'scheduleId=' + "'" + scheduleId + "'" + "," + 'displayLogs=' + displayLogs + ')';
     }
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': lreadJobScheduleUrl,
@@ -2469,7 +2469,7 @@ module.exports = async function (srv) {
       let baseUrl = req.headers['x-forwarded-proto'] + '://' + getBaseUrl();
       lreadJobActionLogsUrl = baseUrl + '/jobs/readJobActionLogs(jobId=' + jobId + ')';
     }
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': lreadJobActionLogsUrl,
@@ -2523,7 +2523,7 @@ module.exports = async function (srv) {
       lreadJobRunLogsUrl = baseUrl +
         '/jobs/readJobRunLogs(jobId=' + jobId + ',' + 'scheduleId=' + "'" + scheduleId + "'" + "," + 'page_size=' + page_size + ',' + 'offset=' + offset + ')';
     }
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': lreadJobRunLogsUrl,
@@ -2574,7 +2574,7 @@ module.exports = async function (srv) {
       let baseUrl = req.headers['x-forwarded-proto'] + '://' + getBaseUrl();
       addJobsUrl = baseUrl + '/jobs/addMLJob(jobDetails=' + "'" + jDetails + "'" + ')';
     }
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': addJobsUrl,
@@ -2625,7 +2625,7 @@ module.exports = async function (srv) {
 
       lupdateJobUrl = baseUrl + '/jobs/updateMLJob(jobDetails=' + "'" + jDetails + "'" + ')';
     }
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': lupdateJobUrl,
@@ -2678,7 +2678,7 @@ module.exports = async function (srv) {
       ldeleteJobUrl = baseUrl +
         '/jobs/deleteMLJob(jobId=' + jobId + ')';
     }
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': ldeleteJobUrl,
@@ -2734,7 +2734,7 @@ module.exports = async function (srv) {
       addJobScheduleUrl = baseUrl + '/jobs/addJobSchedule(schedule=' + "'" + sDetails + "'" + ')';
 
     }
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': addJobScheduleUrl,
@@ -2787,7 +2787,7 @@ module.exports = async function (srv) {
 
       updateMLJobScheduleUrl = baseUrl + '/jobs/updateMLJobSchedule(schedule=' + "'" + sDetails + "'" + ')';
     }
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': updateMLJobScheduleUrl,
@@ -2840,7 +2840,7 @@ module.exports = async function (srv) {
 
       ldeleteMLJobScheduleUrl = baseUrl + '/jobs/deleteMLJobSchedule(scheduleDetails=' + "'" + sDetails + "'" + ')';
     }
-    var auth = await GenFunctions.getAuthorization();
+    var auth = await GenFunctions.getAuthorization(req);
     options = {
       'method': 'GET',
       'url': ldeleteMLJobScheduleUrl,
@@ -3798,7 +3798,7 @@ module.exports = async function (srv) {
           await updateJobDetails(templateObj, CurrJobName);
           var jobInterval = setInterval(async () => {
             if (el) { //Read from Job Logs (lreadJobRunLogs),to get Job State
-              var auth = await GenFunctions.getAuthorization();
+              var auth = await GenFunctions.getAuthorization(req);
               let sUrl = baseUrl + '/jobs/readJobRunLogs(jobId=' + el.jobID + ',scheduleId=' + "'" + el.scheduleID + "'" + ',page_size=' + 55 + ',offset=' + 0 + ')';
               var options = {
                 'method': 'GET',
@@ -4217,7 +4217,7 @@ module.exports = async function (srv) {
             VERSION: oSnapData.VERSION
           };
           const url = `${snapShotURL}?${new URLSearchParams(queryParams)}`;
-          var auth = await GenFunctions.getAuthorization();
+          var auth = await GenFunctions.getAuthorization(req);
           const options = {
             headers: {
               'Authorization': auth
@@ -4567,7 +4567,7 @@ module.exports = async function (srv) {
                  await updateJobDetails(templateObj);
                   var jobInterval = setInterval(async () => {
                     if (el) {//Read from Job Logs (lreadJobRunLogs),to get Job State
-                      var auth = await GenFunctions.getAuthorization();
+                      var auth = await GenFunctions.getAuthorization(req);
                       let sUrl = baseUrl + '/jobs/readJobRunLogs(jobId=' + el.jobID + ',scheduleId=' + "'" + el.scheduleID + "'" + ',page_size=' + 55 + ',offset=' + 0 + ')';
                       var options = {
                         'method': 'GET',
@@ -4812,7 +4812,7 @@ module.exports = async function (srv) {
                 await updateJobDetails(templateObj);
                 var jobInterval = setInterval(async () => {
                   if (el) {//Read from Job Logs (lreadJobRunLogs),to get Job State
-                    var auth = await GenFunctions.getAuthorization();
+                    var auth = await GenFunctions.getAuthorization(req);
                     let sUrl = baseUrl + '/jobs/readJobRunLogs(jobId=' + el.jobID + ',scheduleId=' + "'" + el.scheduleID + "'" + ',page_size=' + 55 + ',offset=' + 0 + ')';
                     var options = {
                       'method': 'GET',
@@ -5145,7 +5145,7 @@ module.exports = async function (srv) {
               VERSION: oSnapData.VERSION
             };
             const url = `${snapShotURL}?${new URLSearchParams(queryParams)}`;
-            var auth = await GenFunctions.getAuthorization();
+            var auth = await GenFunctions.getAuthorization(req);
             const options = {
               headers: {
                 'Authorization': auth
@@ -5417,7 +5417,7 @@ module.exports = async function (srv) {
                   var jobInterval = setInterval(async () => {
                     if (el) { //Read from Job Logs (lreadJobRunLogs),to get Job State
                       //For Oauth 2.0 we need to add authorization
-                      var auth = await GenFunctions.getAuthorization();
+                      var auth = await GenFunctions.getAuthorization(req);
                       let sUrl = baseUrl + '/jobs/readJobRunLogs(jobId=' + el.jobID + ',scheduleId=' + "'" + el.scheduleID + "'" + ',page_size=' + 55 + ',offset=' + 0 + ')';
                       var options = {
                         'method': 'GET',
@@ -5680,7 +5680,7 @@ module.exports = async function (srv) {
                   await updateJobStatus('Pending', mainJobID);
                   var jobInterval = setInterval(async () => {
                     if (el) { //Read from Job Logs (lreadJobRunLogs),to get Job State
-                      var auth = await GenFunctions.getAuthorization();
+                      var auth = await GenFunctions.getAuthorization(req);
                       let sUrl = baseUrl + '/jobs/readJobRunLogs(jobId=' + el.jobID + ',scheduleId=' + "'" + el.scheduleID + "'" + ',page_size=' + 55 + ',offset=' + 0 + ')';
                       var options = {
                         'method': 'GET',
@@ -6048,7 +6048,7 @@ module.exports = async function (srv) {
               VERSION: oSnapData.VERSION
             };
             const url = `${snapShotURL}?${new URLSearchParams(queryParams)}`;
-            var auth = await GenFunctions.getAuthorization();
+            var auth = await GenFunctions.getAuthorization(req);
             const options = {
               headers: {
                 'Authorization': auth
@@ -6384,7 +6384,7 @@ module.exports = async function (srv) {
             var jobInterval = setInterval(async () => {
                     if(oCurrentJob.bJobRunning) return;
               if (el) {//Read from Job Logs (lreadJobRunLogs),to get Job State
-                var auth = await GenFunctions.getAuthorization();
+                var auth = await GenFunctions.getAuthorization(req);
                       let sUrl = baseUrl + '/jobs/readJobRunLogs(jobId=' + el.jobID + ',scheduleId=' + "'" + el.scheduleID + "'" + ',page_size=' + 55 + ',offset=' + 0 + ')';
                 var options = {
                   'method': 'GET',
@@ -6714,7 +6714,7 @@ module.exports = async function (srv) {
                   var jobInterval = setInterval(async () => {
                      if(oCurrentJob.bJobRunning) return;
                     if (el) {//Read from Job Logs (lreadJobRunLogs),to get Job State
-                      var auth = await GenFunctions.getAuthorization();
+                      var auth = await GenFunctions.getAuthorization(req);
                       let sUrl = baseUrl + '/jobs/readJobRunLogs(jobId=' + el.jobID + ',scheduleId=' + "'" + el.scheduleID + "'" + ',page_size=' + 55 + ',offset=' + 0 + ')';
                       var options = {
                         'method': 'GET',
@@ -7117,7 +7117,7 @@ module.exports = async function (srv) {
             VERSION: oSnapData.VERSION
           };
           const url = `${snapShotURL}?${new URLSearchParams(queryParams)}`;
-          var auth = await GenFunctions.getAuthorization();
+          var auth = await GenFunctions.getAuthorization(req);
           const options = {
             headers: {
               'Authorization': auth

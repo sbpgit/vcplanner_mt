@@ -759,8 +759,19 @@ static getTenantId(req) {
     }
   }
   //This function returns Bearer token required for authorization
-  static async getAuthorization() {
+  static async getAuthorization(req) {
     try {
+         const authHeader = req.headers.authorization;
+          if (!authHeader) {
+              throw new Error("Authorization header not found");
+          }
+          const jwtaccessToken = authHeader.replace("Bearer ", "");
+          const jwtpayload = jwt.decode(jwtaccessToken);
+          const subdomain = jwtpayload?.ext_attr?.zdn;
+          if (!subdomain) {
+              throw new Error("Subdomain not found in JWT");
+          }
+
       const xsuaaService = xsenv.getServices({
         uaa: {
           name: 'vcplanner_mt-auth' // Replace with the exact name of the desired service instance
@@ -768,7 +779,9 @@ static getTenantId(req) {
       });
       const clientId = xsuaaService.uaa.clientid;
       const clientSecret = xsuaaService.uaa.clientsecret;
-      const tokenUrl = xsuaaService.uaa.url + '/oauth/token';
+
+
+      const tokenUrl = xsuaaService.uaa.url.replace("mttsbpdigital",subdomain) + '/oauth/token';
       const params = new URLSearchParams();
       params.append('grant_type', 'client_credentials');
       params.append('client_id', clientId);

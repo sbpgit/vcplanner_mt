@@ -1454,8 +1454,8 @@ return responseMessage;
 });
 
 //Service to get oAuth2.0 Bearer token
-srv.on("getAuthorization", async ()=>{
-  let auth = await GenFunctions.getAuthorization();
+srv.on("getAuthorization", async (req)=>{
+  let auth = await GenFunctions.getAuthorization(req);
   return auth;
 });
 

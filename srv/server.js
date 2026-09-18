@@ -22,8 +22,8 @@ cds.on("bootstrap", app => {
       
     });
     app.use(proxy());
-    app.use(bodyParser.json({ limit: '10mb' }))
-    app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }))
+    app.use(bodyParser.json({ limit: '100mb' }))
+    app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }))
 });
 
 async function authenticate(req, next) {
@@ -60,7 +60,6 @@ async function authenticate(req, next) {
                     SELECT.from(JsActivityHeader).columns('ACTION_URL')
                 );
             });
-            console.log(liActivities.length);
 
 
             liActivities.push({ ACTION_URL: "/jobs/ParallelSetjobsCreation" });

@@ -10,7 +10,7 @@ function registerUpsert(srv) {
       // so the HANA compiler generates a proper UPSERT/MERGE with correct key handling
       req.query.UPSERT.into = { ref: [resolved.name] }
       req.target = resolved
-      console.log(`[upsert-dedupe] resolved target ${req.query?.UPSERT?.into?.ref?.[0]} -> ${resolved.name}`)
+      // console.log(`[upsert-dedupe] resolved target ${req.query?.UPSERT?.into?.ref?.[0]} -> ${resolved.name}`)
     }
 
     // 2. Dedup entries as before
@@ -19,7 +19,7 @@ function registerUpsert(srv) {
 
     const keyFields = getKeyFields(resolved || req.target)
     if (keyFields.length === 0) {
-      console.warn(`[upsert-dedupe] could not resolve key fields for target`, req.target?.name)
+      // console.warn(`[upsert-dedupe] could not resolve key fields for target`, req.target?.name)
       return
     }
 
@@ -31,9 +31,9 @@ function registerUpsert(srv) {
 
     const deduped = [...seen.values()]
     if (deduped.length !== entries.length) {
-      console.warn(
-        `[upsert-dedupe] ${req.target.name}: removed ${entries.length - deduped.length} duplicate(s)`
-      )
+      // console.warn(
+      //   `[upsert-dedupe] ${req.target.name}: removed ${entries.length - deduped.length} duplicate(s)`
+      // )
       req.query.UPSERT.entries = deduped
     }
   })

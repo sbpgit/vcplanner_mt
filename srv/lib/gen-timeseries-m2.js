@@ -4559,7 +4559,7 @@ class GenTimeseriesM2 {
         // } else {
         //   sProfile = "SBP_AHC_0";
         // }
-        var auth = await GenF.getAuthorization();
+        var auth = await GenF.getAuthorization(req);
         var options = {
             'method': 'POST',
             'url': sUrl,

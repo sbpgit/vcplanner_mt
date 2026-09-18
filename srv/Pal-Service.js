@@ -882,7 +882,7 @@ async function _postPredictionRequest(req,url,paramsObj,numChars,dataObj,modelTy
     let password = conn_params.pwd; 
     // var auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
     //For Oauth 2.0 we need to add authorization
-    var auth =  await GenFunctions.getAuthorization();
+    var auth =  await GenFunctions.getAuthorization(req);
 
     if (modelType == 'HGBT')
     {
@@ -12230,7 +12230,7 @@ async function _postPurgePredictionModels(req,Location,Product,groupId,Type)
     let password = conn_params.pwd;
     // var auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
     //For Oauth 2.0 we need to add authorization
-    var auth =  await GenFunctions.getAuthorization();
+    var auth =  await GenFunctions.getAuthorization(req);
 
     var baseUrl = req.headers['x-forwarded-proto'] + '://' + req.headers.host; 
     // var baseUrl = 'http' + '://' + req.headers.host;
@@ -12281,7 +12281,7 @@ async function _postRegressionRequest(req,url,paramsObj,numChars,dataObj,modelTy
     let password = conn_params.pwd;
     // var auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
     //For Oauth 2.0 we need to add authorization
-    var auth =  await GenFunctions.getAuthorization();
+    var auth =  await GenFunctions.getAuthorization(req);
 
     if (modelType == 'HGBT')
     {
@@ -15108,7 +15108,7 @@ async function _genClusterUniqueIDSByLocProduct(req, location, product,uuid)
     var sUrl = baseUrl + '/pal/genClusters';
     // var sUrl = baseUrl + '/odata/v4/pal/genClusters';
 
-    var auth =  await GenFunctions.getAuthorization();
+    var auth =  await GenFunctions.getAuthorization(req);
 
 
     let options = {
@@ -16964,7 +16964,7 @@ async function _genPcaCatSByLocProduct(req, location, product,uuid)
     var sUrl = baseUrl + '/pal/genPcaCat';
     // var sUrl = baseUrl + '/odata/v4/pal/genPcaCat';
 
-    var auth =  await GenFunctions.getAuthorization();
+    var auth =  await GenFunctions.getAuthorization(req);
 
 
     let options = {
@@ -17525,7 +17525,7 @@ async function _postClustersRequest(req,url,paramsObj,dataObj,vcRuleListObj)
     let password = conn_params.pwd;
     // var auth = "Basic " + new Buffer(username + ":" + password).toString("base64");
     //For Oauth 2.0 we need to add authorization
-    var auth =  await GenFunctions.getAuthorization();
+    var auth =  await GenFunctions.getAuthorization(req);
 
     // console.log("_postClustersRequest paramsObj", paramsObj);
     // console.log("_postClustersRequest dataObj", dataObj);
@@ -17791,7 +17791,6 @@ async function _generateClusters (req,isGet) {
                         ' AND "LOCATION_ID" =' + "'" +   vcRulesListReq[i].Location + "'" + 
                         ' GROUP BY "LOCATION_ID", "PRODUCT_ID"';
             console.log("_generateClusters sqlStr", sqlStr);
-
             //  results = await cds.run(sqlStr);
             let clusterDataResults= [];
 
@@ -18352,7 +18351,7 @@ async function _generatePcaCatComponents (req,isGet) {
     var options;
 
     //For Oauth 2.0 we need to add authorization
-    var auth =  await GenFunctions.getAuthorization();
+    var auth =  await GenFunctions.getAuthorization(req);
 
     // console.log("_postPcaCatRequest paramsObj", paramsObj);
     // console.log("_postPcaCatRequest dataObj", dataObj);
@@ -20965,7 +20964,7 @@ async function _postForecastRequest(req,url,paramsObj,dataObj,modelType,vcRuleLi
     // var request = require('request');
     var options;
     //For Oauth 2.0 we need to add authorization
-    var auth =  await GenFunctions.getAuthorization();
+    var auth =  await GenFunctions.getAuthorization(req);
 
     if (modelType == 'AES')
     {

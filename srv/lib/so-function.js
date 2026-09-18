@@ -2056,7 +2056,7 @@ class SOFunctions {
 
                 // Based on Unique Id Count, profile is changed as per the test script config
                 sProfile = GenF.getClusterProfile(iCountUID[0].COUNT_UID);
-                var auth =  await GenF.getAuthorization();
+                var auth =  await GenF.getAuthorization(req);
                 // if (iCountUID[0].COUNT_UID < 10) {
                 //     sProfile = "SBP_AHC_3";
                 // } else {
