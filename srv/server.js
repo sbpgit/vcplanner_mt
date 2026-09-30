@@ -142,94 +142,94 @@ cds.on('served', async () => {
     if (cds.db) {
         registerUpsert(cds.db)
     }
-    // for (const srv of cds.services) {
-    //     const _dispatch = srv.dispatch;
-    //     srv.dispatch = async function (req) {
-    //         try {
-    //              return await Promise.resolve(_dispatch.call(this, req));
-    //         } catch (err) {//to catch req.reject(), query errors, coding bugs
-    //             try {
-    //                 if (!req._errorLogged) {
-    //                     req._errorLogged = true;
-    //                     const tx = db.transaction();
-    //                     var hostName = req.headers.host;
-    //                     if(!hostName){
-    //                         hostName ='';
-    //                     }
-    //                     //#region JobScheduler 
-    //                     const method =req._.req?.method || req.method;
-    //                      if(method == 'POST' || (method =='GET' && req.event == "createJobFeed")){
-    //                         if(hostName.includes("localhost") == false){//If running from BAS, Not required to update job to Error& stop it
-    //                         let aAct = await tx.run(`SELECT DISTINCT ACTION_URL FROM "JS_ACTIVITY_HEADER"`);
-    //                          aAct.push({ "ACTION_URL": "/jobs/ParallelSetjobsCreation" });//Jobs creation by set service
-    //                          aAct.push({ "ACTION_URL": "/jobs/resumeSetParallelJobs" });//Jobs resume by set service
-    //                          aAct.push({ "ACTION_URL": "/catalog/generateTempUID" });
-    //                          aAct.push({ "ACTION_URL": "/jobs/SyncTemplates" }); // for templates Sync from Activity to Template Tables
-    //                          aAct.push({ "ACTION_URL": "/catalog/jobSeedOrder" });//for old seed order application
-    //                          aAct.push({ "ACTION_URL": "/catalog/genProductBatch" });//For Planning configuration app, excel upload
-    //                          aAct.push({ "ACTION_URL": "/pal/purgePredictionModels" });//Service to purge models, predictions from characteristic configuration application    
-    //                          aAct.push({ "ACTION_URL": "/catalog/salesOrderCreation" });
-    //                          aAct.push({ "ACTION_URL": "/jobs/createJobFeed" });//jobfeed
-    //                          if(aAct.findIndex(a=>a.ACTION_URL.includes(req.event))!=-1){
-    //                             await tx.run(
-    //                              UPDATE('JS_JOB_TEMPLATEDETAILS')
-    //                             .set({ JOB_STATUS: 'Error' })
-    //                              .where(
-    //                             `JOB_STATUS IS NULL OR JOB_STATUS = '' OR JOB_STATUS = 'Pending'`
-    //                                  )
-    //                                 );
+    for (const srv of cds.services) {
+        const _dispatch = srv.dispatch;
+        srv.dispatch = async function (req) {
+            try {
+                return await Promise.resolve(_dispatch.call(this, req));
+            } catch (err) {//to catch req.reject(), query errors, coding bugs
+                try {
+                    if (!req._errorLogged) {
+                        req._errorLogged = true;
+                        const tx = db.transaction();
+                        var hostName = req.headers.host;
+                        if (!hostName) {
+                            hostName = '';
+                        }
+                        //#region JobScheduler 
+                        const method = req._.req?.method || req.method;
+                        if (method == 'POST' || (method == 'GET' && req.event == "createJobFeed")) {
+                            if (hostName.includes("localhost") == false) {//If running from BAS, Not required to update job to Error& stop it
+                                let aAct = await tx.run(`SELECT DISTINCT ACTION_URL FROM "JS_ACTIVITY_HEADER"`);
+                                aAct.push({ "ACTION_URL": "/jobs/ParallelSetjobsCreation" });//Jobs creation by set service
+                                aAct.push({ "ACTION_URL": "/jobs/resumeSetParallelJobs" });//Jobs resume by set service
+                                aAct.push({ "ACTION_URL": "/catalog/generateTempUID" });
+                                aAct.push({ "ACTION_URL": "/jobs/SyncTemplates" }); // for templates Sync from Activity to Template Tables
+                                aAct.push({ "ACTION_URL": "/catalog/jobSeedOrder" });//for old seed order application
+                                aAct.push({ "ACTION_URL": "/catalog/genProductBatch" });//For Planning configuration app, excel upload
+                                aAct.push({ "ACTION_URL": "/pal/purgePredictionModels" });//Service to purge models, predictions from characteristic configuration application    
+                                aAct.push({ "ACTION_URL": "/catalog/salesOrderCreation" });
+                                aAct.push({ "ACTION_URL": "/jobs/createJobFeed" });//jobfeed
+                                if (aAct.findIndex(a => a.ACTION_URL.includes(req.event)) != -1) {
+                                    await tx.run(
+                                        UPDATE('JS_JOB_TEMPLATEDETAILS')
+                                            .set({ JOB_STATUS: 'Error' })
+                                            .where(
+                                                `JOB_STATUS IS NULL OR JOB_STATUS = '' OR JOB_STATUS = 'Pending'`
+                                            )
+                                    );
 
-    //                              await tx.run(
-    //                              UPDATE('JS_JOB_TEMPLATEDETAILS')
-    //                                 .set({ ACTIVITY_STATUS: 'Error' })
-    //                                 .where(
-    //                                  `ACTIVITY_STATUS = 'Pending'`
-    //                             )
-    //                         );
-    //                          }
-    //                         }
-                            
-    //                     }
-                       
-    //                     //#endregion
-                       
-    //                     if(err.message == 'Internal Server Error!'){
-    //                       return;
-    //                     }
-    //                     else if (err.stack) {//for code issues
-    //                       var sSepartor = "at async next";
-    //                       if(err.stack.includes("at next")){
-    //                         sSepartor ="at next"
-    //                       }
-    //                       let sError = err.stack.split(sSepartor)[0];
-    //                       console.log("Error: ", sError);
-    //                             await tx.run(
-    //                       INSERT.into("CP_ERROR_LOGS").entries({
-    //                       MESSAGE: sError,
-    //                       SERVICE : req.event,
-    //                       TYPE:"CODE"
-    //                     }));
-    //                     }
-    //                     else if(err.query){//for incorrect queries
-    //                          let sError = err.query +","+err.message;
-    //                     console.log("Error: ", sError);
-    //                       await tx.run(
-    //                       INSERT.into("CP_ERROR_LOGS").entries({
-    //                       MESSAGE: sError,
-    //                       SERVICE : req.event,
-    //                        TYPE:"QUERY"
-    //                     }));
-    //                     }
-    //                     await tx.commit();
-    //                 }
-    //             } catch (dbErr) {
-    //                 console.error("Exception: ", dbErr)
-    //             }
-    //             req.reject(500, 'Internal Server Error!');
-    //             return
-    //         }
-    //     }
-    // }
+                                    await tx.run(
+                                        UPDATE('JS_JOB_TEMPLATEDETAILS')
+                                            .set({ ACTIVITY_STATUS: 'Error' })
+                                            .where(
+                                                `ACTIVITY_STATUS = 'Pending'`
+                                            )
+                                    );
+                                }
+                            }
+
+                        }
+
+                        //#endregion
+
+                        if (err.message == 'Internal Server Error!') {
+                            return;
+                        }
+                        else if (err.stack) {//for code issues
+                            var sSepartor = "at async next";
+                            if (err.stack.includes("at next")) {
+                                sSepartor = "at next"
+                            }
+                            let sError = err.stack.split(sSepartor)[0];
+                            console.log("Error: ", sError);
+                            await tx.run(
+                                INSERT.into("CP_ERROR_LOGS").entries({
+                                    MESSAGE: sError,
+                                    SERVICE: req.event,
+                                    TYPE: "CODE"
+                                }));
+                        }
+                        else if (err.query) {//for incorrect queries
+                            let sError = err.query + "," + err.message;
+                            console.log("Error: ", sError);
+                            await tx.run(
+                                INSERT.into("CP_ERROR_LOGS").entries({
+                                    MESSAGE: sError,
+                                    SERVICE: req.event,
+                                    TYPE: "QUERY"
+                                }));
+                        }
+                        await tx.commit();
+                    }
+                } catch (dbErr) {
+                    console.error("Exception: ", dbErr)
+                }
+                req.reject(500, 'Internal Server Error!');
+                return
+            }
+        }
+    }
 })
 //Error Handler to handle crash
   process.on('unhandledRejection', async (error) => {
