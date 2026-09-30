@@ -3,6 +3,9 @@ const xsenv = require("@sap/xsenv");
 const axios = require('axios');
 const JobSchedulerClient = require("@sap/jobs-client");
 const jwt = require("jsonwebtoken");
+const tokenCache = new Map(); // subdomain -> { authorization, expiresAt }
+const https = require('https');
+const tokenAgent = new https.Agent({ keepAlive: false }); // no pooled/stale sockets for this call
 // const moment = require('moment');
 class GenFunctions {
   constructor() { }
@@ -759,44 +762,99 @@ static getTenantId(req) {
     }
   }
   //This function returns Bearer token required for authorization
+  // static async getAuthorization(req) {
+  //   try {
+  //        const authHeader = req.headers.authorization;
+  //         if (!authHeader) {
+  //             throw new Error("Authorization header not found");
+  //         }
+  //         const jwtaccessToken = authHeader.replace("Bearer ", "");
+  //         const jwtpayload = jwt.decode(jwtaccessToken);
+  //         const subdomain = jwtpayload?.ext_attr?.zdn;
+  //         if (!subdomain) {
+  //             throw new Error("Subdomain not found in JWT");
+  //         }
+
+  //     const xsuaaService = xsenv.getServices({
+  //       uaa: {
+  //         name: 'vcplanner_mt-auth' // Replace with the exact name of the desired service instance
+  //       }
+  //     });
+  //     const clientId = xsuaaService.uaa.clientid;
+  //     const clientSecret = xsuaaService.uaa.clientsecret;
+
+
+  //     const tokenUrl = xsuaaService.uaa.url.replace("mttsbpdigital",subdomain) + '/oauth/token';
+  //     const params = new URLSearchParams();
+  //     params.append('grant_type', 'client_credentials');
+  //     params.append('client_id', clientId);
+  //     params.append('client_secret', clientSecret);
+
+  //     const response = await axios.post(tokenUrl, params);
+  //     const accessToken = response.data.access_token;
+  //     let authorization = "Bearer " +
+  //       accessToken;
+  //     return authorization;
+  //   } catch (error) {
+  //     console.log("Error obtaining access token:", error);
+  //     return '';
+  //   }
+  // }
+
   static async getAuthorization(req) {
-    try {
-         const authHeader = req.headers.authorization;
-          if (!authHeader) {
-              throw new Error("Authorization header not found");
-          }
-          const jwtaccessToken = authHeader.replace("Bearer ", "");
-          const jwtpayload = jwt.decode(jwtaccessToken);
-          const subdomain = jwtpayload?.ext_attr?.zdn;
-          if (!subdomain) {
-              throw new Error("Subdomain not found in JWT");
-          }
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    throw new Error("Authorization header not found");
+  }
+  const jwtaccessToken = authHeader.replace("Bearer ", "");
+  const jwtpayload = jwt.decode(jwtaccessToken);
+  const subdomain = jwtpayload?.ext_attr?.zdn;
+  if (!subdomain) {
+    throw new Error("Subdomain not found in JWT");
+  }
 
-      const xsuaaService = xsenv.getServices({
-        uaa: {
-          name: 'vcplanner_mt-auth' // Replace with the exact name of the desired service instance
-        }
-      });
-      const clientId = xsuaaService.uaa.clientid;
-      const clientSecret = xsuaaService.uaa.clientsecret;
+  const cached = tokenCache.get(subdomain);
+  if (cached && cached.expiresAt > Date.now() + 30000) {
+    return cached.authorization;
+  }
 
+  const xsuaaService = xsenv.getServices({ uaa: { name: 'vcplanner_mt-auth' } });
+  const clientId = xsuaaService.uaa.clientid;
+  const clientSecret = xsuaaService.uaa.clientsecret;
+  const tokenUrl = xsuaaService.uaa.url.replace("mttsbpdigital", subdomain) + '/oauth/token';
 
-      const tokenUrl = xsuaaService.uaa.url.replace("mttsbpdigital",subdomain) + '/oauth/token';
-      const params = new URLSearchParams();
-      params.append('grant_type', 'client_credentials');
-      params.append('client_id', clientId);
-      params.append('client_secret', clientSecret);
+  const params = new URLSearchParams();
+  params.append('grant_type', 'client_credentials');
+  params.append('client_id', clientId);
+  params.append('client_secret', clientSecret);
 
-      const response = await axios.post(tokenUrl, params);
-      const accessToken = response.data.access_token;
-      let authorization = "Bearer " +
-        accessToken;
-      return authorization;
-    } catch (error) {
-      console.log("Error obtaining access token:", error);
-      return '';
+  const fetchToken = () => axios.post(tokenUrl, params, {
+    httpsAgent: tokenAgent,
+    timeout: 15000
+  });
+
+  let response;
+  try {
+    response = await fetchToken();
+  } catch (err) {
+    if (['EPIPE', 'ECONNRESET'].includes(err.code)) {
+      response = await fetchToken(); // one retry on transient connection drop
+    } else {
+      throw err;
     }
   }
+
+  const accessToken = response.data.access_token;
+  const expiresIn = response.data.expires_in || 600; // seconds
+  const authorization = "Bearer " + accessToken;
+
+  tokenCache.set(subdomain, {
+    authorization,
+    expiresAt: Date.now() + expiresIn * 1000
+  });
+
+  return authorization;
+}
   // This function is to remove special characters rejected By IBP  
   static async removeSpecialChar(lString) {
     lString = lString.replace(/([()'"<>])/mg, ' ');

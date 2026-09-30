@@ -6714,7 +6714,15 @@ module.exports = async function (srv) {
                   var jobInterval = setInterval(async () => {
                      if(oCurrentJob.bJobRunning) return;
                     if (el) {//Read from Job Logs (lreadJobRunLogs),to get Job State
-                      var auth = await GenFunctions.getAuthorization(req);
+                      var auth;
+                      try {
+                        auth = await GenFunctions.getAuthorization(req);
+                      } catch (err) {
+                        console.log("Error obtaining access token in jobs:", err);
+                        // decide explicitly here — fail the request, return a specific error to the client, etc.
+                        throw err;
+                      }
+                      // var auth = await GenFunctions.getAuthorization(req);
                       let sUrl = baseUrl + '/jobs/readJobRunLogs(jobId=' + el.jobID + ',scheduleId=' + "'" + el.scheduleID + "'" + ',page_size=' + 55 + ',offset=' + 0 + ')';
                       var options = {
                         'method': 'GET',

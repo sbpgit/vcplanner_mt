@@ -20089,9 +20089,10 @@ srv.on("salesNewProcess", async (req) => {
     });
 
 
-    srv.on('productData', async (req) => {
+   srv.on('productData', async (req) => {
         try {
             let data = JSON.parse(req.data.PRODUCTDATA);
+            let shouldGeneratePartialProd = false;
             const keyMappings = {
                 LOCATION: (item) => ({
                     LOCATION_ID: item.LOCATION_ID,
@@ -20468,6 +20469,8 @@ srv.on("salesNewProcess", async (req) => {
                         const entity = "CP_" + key
                         await cds.run(UPSERT.into(entity).entries(aEntries));
                         if (key === "BOM_MAT") {
+                            const objCatFn = new Catservicefn();
+                            await objCatFn.generateDummy();
 
                             function buildParentLookup(bomData) {
                                 const parentLookup = new Map();
@@ -20529,12 +20532,15 @@ srv.on("salesNewProcess", async (req) => {
                         else if (key == 'CHARACTERISTICS_MASTER' || key == 'CHAR_VALUES_MASTER') {
                             await oMVCharfn.processCharandValues();
                         } else if (key == "PRODUCT") {
-                            const objSOFn = new SOFunctions();
-                            await objSOFn.genPartialProd();
+                            shouldGeneratePartialProd = true;
                         }
 
                     }
                 }
+            }
+            if (shouldGeneratePartialProd) {
+                const objSOFn = new SOFunctions();
+                await objSOFn.genPartialProd();
             }
 
             req.reply({

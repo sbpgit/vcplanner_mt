@@ -703,7 +703,11 @@ service CatalogService @(impl: './lib/cat-service.js',path: '/catalog') {
     error : Boolean;
 };
     function getTimeZones()                                                                                                                                                                                                                                                                                                              returns String;
-    function deleteLine(Lines: String)                                                                                                                                                                                                                                                                                                   returns String;
+    function deleteLine(Lines: String)                                                                                                                                                                                                                                                                                                   returns {
+  message : String;
+  error   : Boolean;
+};
+
     function maintainRestrHdr(LOCATION_ID: String(4), LINE_ID: String(40), RESTRICTION: String(30), RTR_DESC: String(30), RTR_QTY: Integer, VALID_FROM: Date, VALID_TO: Date, Flag: String(1), User: String)                                                                                                                             returns String;
     function maintainRestrDet(FLAG: String(1), RTRCHAR: String)                                                                                                                                                                                                                                                                          returns String;
     function maintainRestrDetail(FLAG: String(1), RTRCHAR: String, User: String)                                                                                                                                                                                                                                                         returns String;
