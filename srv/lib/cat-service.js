@@ -6555,7 +6555,13 @@ module.exports = (srv) => {
             }
             // if (req.data.Flag === "E" && i === 0) {
             try {
-                await cds.delete("CP_RESTRICT_HEADER", lsresults);
+                // await cds.delete("CP_RESTRICT_HEADER", lsresults);
+                 await cds.run(
+                    `DELETE FROM "CP_RESTRICT_HEADER" 
+                        WHERE "LOCATION_ID" = '${lsresults.LOCATION_ID}'
+                        AND "LINE_ID" = '${lsresults.LINE_ID}'
+                        AND "RESTRICTION" = '${lsresults.RESTRICTION}'
+                        `);
                 await cds.run(
                     `DELETE FROM "CP_RESTRICT_DETAILS" 
                         WHERE "LOCATION_ID" = '${req.data.LOCATION_ID}'
@@ -8118,7 +8124,16 @@ module.exports = (srv) => {
                     return responseMessage = `Deletion failed as  Restriction: ${oRtrDetailsIns.RESTRICTION} is maintained in Restriction Likelihood!`
                 }
                 try {
-                    await cds.delete("CP_RESTRICT_DETAILS", oRtrDetailsIns);
+                    // await cds.delete("CP_RESTRICT_DETAILS", oRtrDetailsIns);
+
+                    await cds.run(
+                    `DELETE FROM "CP_RESTRICT_DETAILS" 
+                    WHERE "LOCATION_ID" = '${oRtrDetailsIns.LOCATION_ID}'
+                    AND "LINE_ID" = '${oRtrDetailsIns.LINE_ID}'
+                    AND "RESTRICTION" = '${oRtrDetailsIns.RESTRICTION}'
+                    AND "CLASS_NUM" = '${oRtrDetailsIns.CLASS_NUM}'
+                    AND "CHAR_NUM" = '${oRtrDetailsIns.CHAR_NUM}'`
+                )
                     responseMessage = "Restriction Rule Deleted Successfully";
                     iCounter = aRtrChar[i].CHAR_COUNTER;
                     iRestrictCounter = aRtrChar[i].RTR_COUNTER;
@@ -20181,6 +20196,17 @@ srv.on("salesNewProcess", async (req) => {
                     CHAR_VALUE: item.CHAR_VALUE,
                     CHARVAL_DESC: item.CHAR_VDESC ? item.CHAR_VDESC : item.CHAR_VALUE,
                     CATCH_ALL: ""
+                }),
+                ASSEMBLY_COMP: (item) => ({
+                    LOCATION_ID: item.LOCATION_ID,
+                    ASSEMBLY: item.ASSEMBLY,
+                    COMPONENT: item.SUB_COMP,
+                    VALID_FROM: item.VALID_FROM,
+                    CRITICAL_COMP: item.CRITICAL_COMP || "",
+                    COMP_TYPE: item.COMP_TYPE,
+                    COMP_DESC: item.PROD_DESC,
+                    COMP_QTY: item.COMPONENT_QTY,
+                    VALID_TO: item.VALID_TO
                 }),
                 BOM_MAT: (item) => ({
                     LOCATION_ID: item.LOCATION_ID,
