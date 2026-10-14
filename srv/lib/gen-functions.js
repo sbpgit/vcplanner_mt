@@ -784,7 +784,7 @@ static getTenantId(req) {
   //     const clientSecret = xsuaaService.uaa.clientsecret;
 
 
-  //     const tokenUrl = xsuaaService.uaa.url.replace("mttsbpdigital",subdomain) + '/oauth/token';
+  //     const tokenUrl = xsuaaService.uaa.url.replace("sbp-mttdev",subdomain) + '/oauth/token';
   //     const params = new URLSearchParams();
   //     params.append('grant_type', 'client_credentials');
   //     params.append('client_id', clientId);
@@ -821,7 +821,7 @@ static getTenantId(req) {
   const xsuaaService = xsenv.getServices({ uaa: { name: 'vcplanner_mt-auth' } });
   const clientId = xsuaaService.uaa.clientid;
   const clientSecret = xsuaaService.uaa.clientsecret;
-  const tokenUrl = xsuaaService.uaa.url.replace("mttsbpdigital", subdomain) + '/oauth/token';
+  const tokenUrl = xsuaaService.uaa.url.replace("sbp-mttdev", subdomain) + '/oauth/token';
 
   const params = new URLSearchParams();
   params.append('grant_type', 'client_credentials');
@@ -929,7 +929,7 @@ static getTenantId(req) {
         throw new Error("Subdomain not found in JWT");
       }
       // const tokenUrl = `${credentials.url}/oauth/token`;
-      const tokenUrl = `${credentials.url.replace("mttsbpdigital", subdomain)}/oauth/token`;
+      const tokenUrl = `${credentials.url.replace("sbp-mttdev", subdomain)}/oauth/token`;
       
       const params = new URLSearchParams();
       params.append('grant_type', 'client_credentials');

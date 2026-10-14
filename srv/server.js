@@ -36,7 +36,7 @@ async function authenticate(req, next) {
         const clientId = xsuaaService.uaa.clientid;
         const clientSecret = xsuaaService.uaa.clientsecret;
         // const tokenUrl = xsuaaService.uaa.url + '/oauth/token';
-        const tokenUrl = xsuaaService.uaa.url.replace("mttsbpdigital", req.query.host) + '/oauth/token';
+        const tokenUrl = xsuaaService.uaa.url.replace("sbp-mttdev", req.query.host) + '/oauth/token';
         const params = new URLSearchParams();
         params.append('grant_type', 'client_credentials');
         params.append('client_id', clientId);

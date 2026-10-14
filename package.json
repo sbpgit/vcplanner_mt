@@ -195,7 +195,7 @@
         },
         "[production]": {
           "credentials": {
-            "destination": "cap_servs",
+            "destination": "InterfaceoAuth",
             "path": "v2/catalog"
           }
         }
