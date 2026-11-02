@@ -4,7 +4,7 @@ const { v1: uuidv1 } = require('uuid');
 
 const request = require('request');
 const rp = require('request-promise')
-const lbaseUrl = "https://sbpmtt-dev-vcplanner-mt-srv.cfapps.us10-001.hana.ondemand.com";
+const lbaseUrl = "https://sbp-mttdev-dev-vcplanner-mt-srv.cfapps.us10.hana.ondemand.com";
 const vcap_app = process.env.VCAP_APPLICATION;
 const GenFunctions = require("./gen-functions");
 const { getCFLogs } = require('./logs-functions');
@@ -3590,7 +3590,7 @@ module.exports = async function (srv) {
   async function _processJobFeed(req,isApplication,userName) {
     var iRefreshInterval = 1000 //1 Second
   //  var baseUrl =  req.headers['x-forwarded-proto'] + '://' + getBaseUrl();
-    var baseUrl = 'https://sbpmtt-dev-vcplanner-mt-srv.cfapps.us10-001.hana.ondemand.com' ;
+    var baseUrl = 'https://sbp-mttdev-dev-vcplanner-mt-srv.cfapps.us10.hana.ondemand.com' ;
     var iJobLimit = 1;
     var CurrJobName = "";
     var aPreferences = await cds.run(
@@ -4320,7 +4320,7 @@ module.exports = async function (srv) {
           STATUS: JOB_STATUS
         };
             // let baseUrl1 = "https://" + getBaseUrl() + `/catalog/Config_Job_Status/${id.JOb_NAME}/${id.REQ_TYPE}`
-            baseUrl1="https://sbpmtt-dev-vcplanner-mt-srv.cfapps.us10-001.hana.ondemand.com" + `/catalog/Config_Job_Status/${id.JOb_NAME}/${id.REQ_TYPE}`
+            baseUrl1="https://sbp-mttdev-dev-vcplanner-mt-srv.cfapps.us10.hana.ondemand.com" + `/catalog/Config_Job_Status/${id.JOb_NAME}/${id.REQ_TYPE}`
               let newBaseUrl = baseUrl1.replace('vcplanner-mt', 'cap-servs-mt');
               const axios = require("axios");
                 await axios.put(
