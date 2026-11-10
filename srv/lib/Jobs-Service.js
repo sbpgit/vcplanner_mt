@@ -3044,7 +3044,7 @@ module.exports = async function (srv) {
     });
   });
 
-  srv.on("addMLJob", (req) => {
+ srv.on("addMLJob", (req) => {
 
     return new Promise((resolve, reject) => {
       const scheduler = getJobscheduler(req);
@@ -3053,9 +3053,11 @@ module.exports = async function (srv) {
       let jDetails = jobDetails.replace(/%2F/g, "/");
       var inputData = JSON.parse(jDetails);
 
+      const subdomain =  GenFunctions.getTenantId(req);
       let baseUrl = req.headers['x-forwarded-proto'] + '://' + getBaseUrl();
 
-      let actionUrl = baseUrl + inputData.action;
+      let actionUrl = baseUrl + inputData.action + '?host=' + subdomain;
+
       if (scheduler) {
         var myJob = {
           name: inputData.name,
