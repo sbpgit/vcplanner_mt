@@ -2871,9 +2871,12 @@ entity ![V_UNIQUE_ID] {
     key ![PRODUCT_ID]  : String(40)  @title: 'Product';
     key ![UNIQUE_DESC] : String(100) @title: 'UNIQUE DESC';
     key ![UID_TYPE]    : String(1)   @title: 'CHARVAL_NUM';
-    key ![ACTIVE]      : Boolean     @title: 'CHAR_VALUE';
+    key ![ACTIVE]      : Boolean     @title: 'Active';
     key ![CHAR_NUM]    : String(100) @title: 'CHAR_NUM';
     key ![CHARVAL_NUM] : String(80)  @title: 'CHARVAL_NUM';
+    key ![CHAR_VALUE] : String(80)  @title: 'CHAR_VALUE';
+        ![UID_RATE]    : String(80)   @title: 'UID_RATE';
+        ![UID_CHAR_RATE]    : String(80)   @title: 'UID_CHAR_RATE';
 }
 
 @cds.persistence.exists

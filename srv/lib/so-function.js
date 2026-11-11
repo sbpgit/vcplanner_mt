@@ -1038,7 +1038,7 @@ class SOFunctions {
 //2025-02-04 - Pradeep for Internal Sales Order upload VP-1417
             const lsQtyAvail = await SELECT.one.columns("ORD_QTY")
             .from('CP_SALESH').where(`SALES_DOC  = '${aData[i].SEED_ORDER}'`);
-            if(lsQtyAvail !==null){
+            if(lsQtyAvail){
             if(lsQtyAvail.ORD_QTY !== null || lsQtyAvail.ORD_QTY !== 0){
                 let availQty = parseInt(lsQtyAvail.ORD_QTY);
                 let newQty = parseInt(aData[i].ORD_QTY);
