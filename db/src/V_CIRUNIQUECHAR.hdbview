@@ -71,8 +71,32 @@ INNER JOIN "CP_CHARACTERISTICS" AS CH
 INNER JOIN
 V_PRODCLSCHARVAL AS E
 ON E.PRODUCT_ID = B.PRODUCT_ID
-AND E.CHAR_NUM = B.CHAR_NUM
-AND E.CHARVAL_NUM = B.CHARVAL_NUM
+   AND E.CHAR_NUM = B.CHAR_NUM
+   AND (
+        E.CHARVAL_NUM = B.CHARVAL_NUM
+
+        OR
+
+        CASE
+            WHEN RIGHT(B.CHARVAL_NUM, 2) = '.0'
+            THEN LEFT(
+                B.CHARVAL_NUM,
+                LENGTH(B.CHARVAL_NUM) - 2
+            )
+            ELSE B.CHARVAL_NUM
+        END
+
+        =
+
+        CASE
+            WHEN RIGHT(E.CHARVAL_NUM, 2) = '.0'
+            THEN LEFT(
+                E.CHARVAL_NUM,
+                LENGTH(E.CHARVAL_NUM) - 2
+            )
+            ELSE E.CHARVAL_NUM
+        END
+   )
 INNER JOIN
 V_WEEK_DESCRIPTOR AS F
 ON F.WEEK_STARTDATE <= A.WEEK_DATE
@@ -150,7 +174,32 @@ INNER JOIN "CP_CHARACTERISTICS" AS CH
 INNER JOIN
 V_PRODCLSCHARVAL AS E
 ON E.PRODUCT_ID = B.PRODUCT_ID
-AND E.CHAR_NUM = B.CHAR_NUM
+   AND E.CHAR_NUM = B.CHAR_NUM
+   AND (
+        E.CHARVAL_NUM = B.CHARVAL_NUM
+
+        OR
+
+        CASE
+            WHEN RIGHT(B.CHARVAL_NUM, 2) = '.0'
+            THEN LEFT(
+                B.CHARVAL_NUM,
+                LENGTH(B.CHARVAL_NUM) - 2
+            )
+            ELSE B.CHARVAL_NUM
+        END
+
+        =
+
+        CASE
+            WHEN RIGHT(E.CHARVAL_NUM, 2) = '.0'
+            THEN LEFT(
+                E.CHARVAL_NUM,
+                LENGTH(E.CHARVAL_NUM) - 2
+            )
+            ELSE E.CHARVAL_NUM
+        END
+   )
 INNER JOIN "CP_CHARVAL_BUCKET" AS BUCKET 
 ON BUCKET.CHAR_NUM = E.CHAR_NUM
    AND B.CHARVAL_NUM LIKE_REGEXPR '^[0-9]+(\\.[0-9]+)?$'

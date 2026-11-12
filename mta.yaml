@@ -16,8 +16,8 @@ modules:
     path: gen/srv
     parameters:
       buildpack: nodejs_buildpack
-      disk-quota: 7168M
-      memory: 7168M
+      disk-quota: 7G
+      memory: 7G
       instances: 1
     build-parameters:
       ignore:

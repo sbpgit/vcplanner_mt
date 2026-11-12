@@ -2875,8 +2875,8 @@ entity ![V_UNIQUE_ID] {
     key ![CHAR_NUM]    : String(100) @title: 'CHAR_NUM';
     key ![CHARVAL_NUM] : String(80)  @title: 'CHARVAL_NUM';
     key ![CHAR_VALUE] : String(80)  @title: 'CHAR_VALUE';
-        ![UID_RATE]    : String(80)   @title: 'UID_RATE';
-        ![UID_CHAR_RATE]    : String(80)   @title: 'UID_CHAR_RATE';
+     ![UID_RATE]    : String(80)   @title: 'UID_RATE';
+     ![UID_CHAR_RATE]    : String(80)   @title: 'UID_CHAR_RATE';
 }
 
 @cds.persistence.exists

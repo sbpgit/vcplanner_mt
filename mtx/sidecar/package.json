@@ -5,7 +5,10 @@
     "@sap/cds": "^9",
     "@sap/cds-mtxs": "^3",
     "@sap/xssec": "^4",
-    "express": "^4"
+    "@sap-cloud-sdk/connectivity": "^4",
+    "@sap-cloud-sdk/http-client": "^4",
+    "@sap-cloud-sdk/resilience": "^4.5.1",
+    "axios": "^1.21.0"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^2"
@@ -17,6 +20,28 @@
     "start": "cds-serve"
   },
   "cds": {
+    "profile": "mtx-sidecar",
+  "cds": {
+    "requires": {
+      "destinations": true,
+      "licensing": {
+        "kind": "odata",
+        "model": "external/licensing",
+        "[hybrid]": {
+          "credentials": {
+            "destination": "CENTRAL_LICENSING",
+            "path": "/licensing"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "CENTRAL_LICENSING",
+            "path": "/licensing"
+          }
+        }
+      }
+    },
     "profile": "mtx-sidecar"
+  }
   }
 }

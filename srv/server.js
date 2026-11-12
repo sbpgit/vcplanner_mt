@@ -7,8 +7,15 @@ const bodyParser = require('body-parser')
 const registerUpsert  = require('../srv/lib/upsert')
 const jwt = require("jsonwebtoken");
 cloudSdkUtil.setGlobalLogLevel('debug');
+// const {
+//     fetchLicense,
+//     getTenantId,
+//     validateTenantLicense
+// } = require("./lib/license-middleware");
 
 cds.on("bootstrap", app => {
+
+    
    
     app.use(async (req, res, next) => {
         try{
@@ -22,9 +29,84 @@ cds.on("bootstrap", app => {
       
     });
     app.use(proxy());
+    // app.use(async (req, res, next) => {
+    //     // console.log("INCOMING REQUEST:", {
+    //     //     method: req.method,
+    //     //     url: req.originalUrl,
+    //     //     requestId: req.headers["x-correlationid"] ||
+    //     //                req.headers["x-request-id"]
+    //     // });
+
+    //     // // if (shouldSkipLicenseValidation(req)) {
+    //     // //     return next();
+    //     // // }
+    //     if (!shouldCheckLicense(req)) return next();
+
+    //         try {
+
+    //             const now = new Date();     
+    //             const tenantId = req.authInfo?.getZoneId?.()
+    //                 || getTenantId(req);
+
+    //             if (!tenantId) {
+    //                 // // return res.status(403).json({
+    //                 // //     error: 'Unable to identify tenant'
+    //                 // // });
+    //                 // console.log("Unable to identify tenant id");
+    //             }
+
+    //             const license =
+    //                 await validateTenantLicense(tenantId);
+
+    //             if (!license.valid) {
+    //                 // // return res.status(403).json({
+    //                 // //     error: 'LICENSE_INVALID',
+    //                 // //     message: license.message
+    //                 // // });
+    //                 // console.log("Licensing Service error", license.valid);
+    //             }
+
+    //             next();
+
+    //         } catch (error) {
+
+    //             console.error(
+    //                 'License validation failed:',
+    //                 error.message
+    //             );
+
+    //             // return res.status(503).json({
+    //             //     error: 'LICENSE_VALIDATION_UNAVAILABLE',
+    //             //     message: 'Unable to validate license'
+    //             // });
+    //             next();
+    //         }
+    //     });
     app.use(bodyParser.json({ limit: '100mb' }))
     app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }))
 });
+
+function shouldCheckLicense(req) {
+    const path = (req.originalUrl || req.url).split('?')[0];
+    return req.method === 'POST' && /\/\$batch\/?$/.test(path);
+}
+
+//  function shouldSkipLicenseValidation(req) {
+//     const url = req.originalUrl || req.url;
+
+//     // Skip OData metadata and service discovery requests
+//     if (
+//         req.method === 'HEAD' ||
+//         url.includes('$metadata') 
+//         // ||
+//         // url.includes('$batch') ||
+//         // url.endsWith('/$count')
+//     ) {
+//         return true;
+//     }
+
+//     return false;
+// }
 
 async function authenticate(req, next) {
     if (req.method == 'POST' && req.headers['user-agent'] == undefined && req.query.host) {//JobScheduler

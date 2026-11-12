@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="LicensingService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <Annotation Term="Core.Links">
+                <Collection>
+                    <Record>
+                        <PropertyValue Property="rel" String="author"/>
+                        <PropertyValue Property="href" String="https://cap.cloud.sap"/>
+                    </Record>
+                </Collection>
+            </Annotation>
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="licensing" EntityType="LicensingService.licensing"/>
+                <FunctionImport Name="validateLicense" Function="LicensingService.validateLicense"/>
+            </EntityContainer>
+            <EntityType Name="licensing">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="customerName" Type="Edm.String" MaxLength="150"/>
+                <Property Name="tenantId" Type="Edm.String" MaxLength="255"/>
+                <Property Name="validFrom" Type="Edm.Date" Nullable="false"/>
+                <Property Name="validTo" Type="Edm.Date" Nullable="false"/>
+            </EntityType>
+            <ComplexType Name="return_LicensingService_validateLicense">
+                <Property Name="valid" Type="Edm.Boolean"/>
+                <Property Name="valid_to" Type="Edm.Int64"/>
+                <Property Name="message" Type="Edm.String"/>
+            </ComplexType>
+            <Function Name="validateLicense" IsBound="false" IsComposable="false">
+                <Parameter Name="tenantId" Type="Edm.String"/>
+                <ReturnType Type="LicensingService.return_LicensingService_validateLicense"/>
+            </Function>
+            <Annotations Target="LicensingService.licensing/ID">
+                <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+            </Annotations>
+            <Annotations Target="LicensingService.validateLicense(Edm.String)/tenantId">
+                <Annotation Term="Core.OptionalParameter">
+                    <Record Type="Core.OptionalParameterType"/>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

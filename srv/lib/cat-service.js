@@ -9686,6 +9686,8 @@ module.exports = (srv) => {
                 oCIRQtys.SCENARIO = oCIRQuantities[i].SCENARIO;
                 oCIRQtys.UNIQUE_ID = oCIRQuantities[i].UNIQUE_ID;
                 oCIRQtys.CIR_QTY = oCIRQuantities[i].CIR_QTY;
+                // oCIRQtys.UNCONSUMED_FORECAST = CIRQuantities[i].CIR_QTY;
+                // oCIRQtys.OPEN_ASSEMBLY = CIRQuantities[i].CIR_QTY;
                 oCIRQtys.BFORECHNG_CIRQTY = oCIRQuantities[i].OLD_CIR_QTY;
                 oCIRQtys.COMMENTS = oCIRQuantities[i].COMMENTS;
 
@@ -9710,6 +9712,8 @@ module.exports = (srv) => {
                             CIR_QTY: oCIRQtys.CIR_QTY,
                             BFORECHNG_CIRQTY: oCIRQtys.BFORECHNG_CIRQTY,
                             SNAPSHOT_CHK: oCIRQtys.SNAPSHOT_CHK,
+                            // UNCONSUMED_FORECAST:oCIRQtys.UNCONSUMED_FORECAST,
+                            // OPEN_ASSEMBLY:oCIRQtys.OPEN_ASSEMBLY,
                             COMMENTS: oCIRQtys.COMMENTS,
                         })
                         .where(`LOCATION_ID = '${oCIRQtys.LOCATION_ID}'

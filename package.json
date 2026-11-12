@@ -57,7 +57,8 @@
     "sap-hdbext-promisfied": "^2.202306.2",
     "sizeof": "1.0.0",
     "unpdf": "^1.4.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "@sap-cloud-sdk/connectivity": "^4"
   },
   "devDependencies": {
     "@sap/hdi-deploy": "^4.9.2",

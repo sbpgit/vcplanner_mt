@@ -1,0 +1,71 @@
+{
+ "meta": {
+  "creator": "cds-dk 10.1.0"
+ },
+ "$version": "2.0",
+ "definitions": {
+  "licensing.validateLicense": {
+   "kind": "function",
+   "@cds.external": true,
+   "params": {
+    "tenantId": {
+     "type": "cds.String",
+     "default": {
+      "val": null
+     }
+    }
+   },
+   "returns": {
+    "type": "licensing.return_LicensingService_validateLicense"
+   }
+  },
+  "licensing.licensing": {
+   "kind": "entity",
+   "@cds.external": true,
+   "@cds.persistence.skip": true,
+   "elements": {
+    "ID": {
+     "key": true,
+     "type": "cds.UUID",
+     "notNull": true,
+     "@Core.ComputedDefaultValue": true
+    },
+    "customerName": {
+     "type": "cds.String",
+     "length": 150
+    },
+    "tenantId": {
+     "type": "cds.String",
+     "length": 255
+    },
+    "validFrom": {
+     "type": "cds.Date",
+     "notNull": true
+    },
+    "validTo": {
+     "type": "cds.Date",
+     "notNull": true
+    }
+   }
+  },
+  "licensing.return_LicensingService_validateLicense": {
+   "kind": "type",
+   "@cds.external": true,
+   "elements": {
+    "valid": {
+     "type": "cds.Boolean"
+    },
+    "valid_to": {
+     "type": "cds.Integer64"
+    },
+    "message": {
+     "type": "cds.String"
+    }
+   }
+  },
+  "licensing": {
+   "kind": "service",
+   "@cds.external": true
+  }
+ }
+}
